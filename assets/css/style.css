@@ -616,7 +616,7 @@ img, svg, video { max-width: 100%; }
   .footer-name { font-size: 2.6rem; }
 }
 
-/* ===== Site en plusieurs pages : menu, bandeau de page, liens « voir plus » ===== */
+/* Site en plusieurs pages : menu, bandeau de page, liens « voir plus » */
 .header-inner { gap: 16px; }
 .nav { display: none; }
 .nav a[aria-current="page"] { color: var(--paper); }
@@ -647,11 +647,12 @@ img, svg, video { max-width: 100%; }
 .site-header.menu-open .nav a { padding: 14px 4px; font-size: 1.1rem; color: var(--paper); border-bottom: 1px solid var(--night-2); }
 .site-header.menu-open .nav a::after { display: none; }
 .site-header.menu-open .nav a[aria-current="page"] { color: var(--yellow); }
-@media (min-width: 1040px) {
-  .nav, .site-header.menu-open .nav { display: flex; position: static; padding: 0; gap: 26px; box-shadow: none; animation: none; background: none; }
-  .site-header.menu-open .nav a { padding: 0; font-size: .98rem; border: 0; color: var(--mist-ink); }
+@media (min-width: 1120px) {
+  .nav, .site-header.menu-open .nav { display: flex; position: static; padding: 0; gap: 20px; box-shadow: none; animation: none; background: none; }
+  .site-header.menu-open .nav a { padding: 0; font-size: .95rem; border: 0; color: var(--mist-ink); }
   .nav-toggle { display: none; }
-  .header-inner { gap: 28px; }
+  .header-inner { gap: 24px; }
+  .brand { font-size: 1.1rem; }
 }
 
 /* Bandeau en haut des pages secondaires */
@@ -824,6 +825,14 @@ img, svg, video { max-width: 100%; }
 .quiz-teaser .more-link { justify-self: start; font-size: 1.1rem; }
 @media (min-width: 860px) { .quiz-teaser .wrap { grid-template-columns: 1fr auto; gap: 48px; } .quiz-teaser { padding-block: 72px; } }
 
+/* Encart de la calculatrice sur l'accueil : bleu nuit, pour trancher avec le test */
+.calc-teaser { background: var(--night); color: var(--paper); padding-block: 56px; }
+.calc-teaser .wrap { display: grid; gap: 20px; align-items: center; }
+.calc-teaser h2 { font-size: clamp(1.7rem, 4.6vw, 2.6rem); color: var(--paper); max-width: 20ch; }
+.calc-teaser p { color: var(--mist-ink); font-size: 1.08em; max-width: 56ch; margin-top: 10px; }
+.calc-teaser .more-link { justify-self: start; font-size: 1.1rem; color: var(--yellow); }
+@media (min-width: 860px) { .calc-teaser .wrap { grid-template-columns: 1fr auto; gap: 48px; } .calc-teaser { padding-block: 72px; } }
+
 /* Résultat v3 : lecture adaptée au mode d'achat, manques rangés par thème */
 .score-reading { color: var(--paper); font-size: 1.12em; font-weight: 600; max-width: 56ch; }
 .score-card .score-sub { color: var(--mist-ink); font-size: 1em; }
@@ -837,6 +846,9 @@ img, svg, video { max-width: 100%; }
 .dims .missing-list summary b { font-size: .98rem; }
 .dims .missing-list summary svg { width: 26px; height: 26px; padding: 5px; }
 
+/* Bibliothèque : feuille d'arrière-plan vide quand une seule page est visible */
+.doc-page-blank { display: block; }
+
 /* Bouton WhatsApp flottant */
 .wa-float {
   position: fixed; z-index: 45;
@@ -849,4 +861,8 @@ img, svg, video { max-width: 100%; }
 .wa-float:active { transform: scale(.96); }
 .wa-float svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
 .wa-float svg path + path { fill: currentColor; stroke: none; }
+/* Quand la barre d'action mobile est visible, le bouton flottant remonte pour ne pas la chevaucher. */
+@media (max-width: 959px) {
+  body.has-cta-bar .wa-float { bottom: calc(16px + 68px + env(safe-area-inset-bottom, 0px)); }
+}
 @media print { .wa-float { display: none; } }

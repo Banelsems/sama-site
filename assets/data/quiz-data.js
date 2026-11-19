@@ -1,6 +1,10 @@
-/* Contenu du test : questions, réponses, textes des résultats, numéro WhatsApp. C'est le seul fichier à modifier. */
+/* Contenu du test : questions, réponses, textes des résultats.
+   C'est le seul fichier de contenu du test (aucun JSON à tenir à jour en parallèle).
+   Le numéro WhatsApp n'est PAS géré ici : il vit dans assets/js/config.js.
+   Incrémenter store_version à chaque changement de questions (invalide la progression enregistrée). */
 window.SAMA_QUIZ = {
- "version": "3.0",
+ "version": "3.1",
+ "store_version": "3",
  "brand": "SAMA SOURCING",
  "product": "Test « Score de préparation »",
  "based_on": "La Chine n'est pas le problème — checklist « Suis-je prêt ? », chapitre 8 (version courte : 2 questions de profil + 10 questions notées)",

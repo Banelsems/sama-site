@@ -1,10 +1,69 @@
 // Sama Sourcing — interactions. Aucun suivi, aucun cookie, aucune bibliothèque.
+// Les valeurs volatiles (WhatsApp, Calendly, réseaux) viennent de assets/js/config.js.
 (function () {
   'use strict';
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canObserve = 'IntersectionObserver' in window;
 
+  /* ---------- Configuration : on applique les valeurs du fichier config.js ----------
+     Aucun build step dans ce dépôt : les liens balisés data-sama sont réécrits
+     ici au chargement ; les autres valeurs en dur (canonical, sitemap, <base>)
+     se maintiennent à la main dans chaque fichier. */
+  var CFG = window.SAMA_CONFIG || null;
+  var SAMA = window.SAMA || null;
+
+  if (CFG && SAMA) {
+    // Numéro WhatsApp : un seul endroit à changer.
+    document.querySelectorAll('[data-sama="wa"]').forEach(function (a) {
+      var text = a.getAttribute('data-wa-text') || SAMA.defaultWaText;
+      a.setAttribute('href', SAMA.waUrl(text));
+    });
+    // Réservation d'appel.
+    document.querySelectorAll('[data-sama="calendly"]').forEach(function (a) {
+      a.setAttribute('href', CFG.contact.calendly);
+    });
+    // Numéro affiché en clair (pied de page, page contact).
+    document.querySelectorAll('[data-sama="phone"]').forEach(function (el) {
+      el.textContent = CFG.contact.whatsapp.display;
+    });
+    document.querySelectorAll('[data-sama="phone-href"]').forEach(function (el) {
+      el.setAttribute('href', 'tel:+' + SAMA.digits());
+      el.textContent = CFG.contact.whatsapp.display;
+    });
+    // Réseaux sociaux : liste construite depuis la config. Un lien vide n'est
+    // jamais affiché, et plus aucun « href="#" » ne peut survivre.
+    // Sans JavaScript, le HTML garde le seul lien sûr : WhatsApp.
+    var socialList = document.querySelector('[data-social-list]');
+    if (socialList) {
+      var addSocial = function (href, label) {
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = href;
+        a.textContent = label;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        li.appendChild(a);
+        socialList.appendChild(li);
+      };
+      socialList.textContent = '';
+      addSocial(SAMA.waUrl(SAMA.defaultWaText), 'Écrire sur WhatsApp');
+      [['linkedin', 'LinkedIn'], ['instagram', 'Instagram'], ['facebook', 'Facebook'], ['tiktok', 'TikTok'], ['whatsappChannel', 'Chaîne WhatsApp']]
+        .forEach(function (pair) {
+          var url = CFG.social && CFG.social[pair[0]];
+          if (url) addSocial(url, pair[1]);
+        });
+    }
+    // Email de contact (masqué s'il n'est pas renseigné).
+    document.querySelectorAll('[data-sama="email"]').forEach(function (el) {
+      if (CFG.contact.email) { el.setAttribute('href', 'mailto:' + CFG.contact.email); el.textContent = CFG.contact.email; }
+      else el.remove();
+    });
+    // Année du pied de page.
+    document.querySelectorAll('[data-sama-year]').forEach(function (el) {
+      el.textContent = new Date().getFullYear();
+    });
+  }
 
   /* ---------- Menu mobile (☰) ---------- */
   var siteHeader = document.querySelector('.site-header');
@@ -13,27 +72,35 @@
     var setMenu = function (open) {
       siteHeader.classList.toggle('menu-open', open);
       navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      navToggle.querySelector('.visually-hidden').textContent = open ? 'Fermer le menu' : 'Ouvrir le menu';
+      var label = navToggle.querySelector('.visually-hidden');
+      if (label) label.textContent = open ? 'Fermer le menu' : 'Ouvrir le menu';
     };
     navToggle.addEventListener('click', function () { setMenu(!siteHeader.classList.contains('menu-open')); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
     document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
   }
 
-  /* ---------- Barre fixe mobile : après l'en-tête, avant l'appel final ---------- */
+  /* ---------- Barre fixe mobile : après le haut de page, avant l'appel final ---------- */
   var bar = document.getElementById('sticky-cta');
-  var hero = document.querySelector('.hero');
+  var topSection = document.querySelector('.hero') || document.querySelector('.page-hero');
   var finalSection = document.getElementById('final');
   var barLink = bar ? bar.querySelector('a') : null;
   var ticking = false;
   var onScroll = function () {
     ticking = false;
-    if (!bar || !hero || !finalSection) return;
-    var show = hero.getBoundingClientRect().bottom < 0 &&
-               finalSection.getBoundingClientRect().top > window.innerHeight;
+    if (!bar || !barLink) return;
+    var show;
+    if (topSection && finalSection) {
+      show = topSection.getBoundingClientRect().bottom < 0 &&
+             finalSection.getBoundingClientRect().top > window.innerHeight;
+    } else {
+      show = window.scrollY > 640;
+    }
     bar.classList.toggle('is-visible', show);
     bar.setAttribute('aria-hidden', show ? 'false' : 'true');
     barLink.tabIndex = show ? 0 : -1;
+    // Évite que le bouton WhatsApp flottant passe sous la barre.
+    document.body.classList.toggle('has-cta-bar', show);
   };
   window.addEventListener('scroll', function () {
     if (!ticking) { ticking = true; window.requestAnimationFrame(onScroll); }
@@ -99,7 +166,7 @@
         s.classList.toggle('is-done', k < i);
         if (!on) { var b = s.querySelector('.step-bar i'); if (b) { b.style.transition = 'none'; b.style.transform = ''; } }
         // remet les bulles à zéro pour rejouer leur entrée
-        panels[k].hidden = !on;
+        if (panels[k]) panels[k].hidden = !on;
       });
       if (byUser) stop();
       if (playing) { fill(i, true); schedule(); }
@@ -139,7 +206,8 @@
         var on = k === i;
         t.setAttribute('aria-selected', on ? 'true' : 'false');
         t.tabIndex = on ? 0 : -1;
-        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        if (panel) panel.hidden = !on;
       });
     };
     fitTabs.forEach(function (t, i) { t.addEventListener('click', function () { fitSelect(i); }); });
@@ -199,7 +267,9 @@
 
   /* ---------- Lightbox (rapport et photos) ---------- */
   var dialog = document.getElementById('lightbox');
-  if (!dialog || typeof dialog.showModal !== 'function') return; // sans support : les liens ouvrent l'image
+  if (!dialog) return;
+  if (typeof dialog.showModal !== 'function') return; // sans support : les liens ouvrent l'image directement
+
   var img = dialog.querySelector('img');
   var cap = dialog.querySelector('figcaption');
   var items = [];
@@ -237,3 +307,11 @@
   });
   dialog.addEventListener('close', function () { img.removeAttribute('src'); if (opener) opener.focus(); });
 })();
+
+// Hors ligne : enregistre le service worker (https uniquement ; ignoré en local file://).
+// Toute erreur est silencieuse : le site reste pleinement fonctionnel sans cache.
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* pas de cache, pas de casse */ });
+  });
+}

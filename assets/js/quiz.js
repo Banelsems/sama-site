@@ -1,13 +1,16 @@
 // Sama Sourcing — test « Score de préparation ».
 // Tout se passe dans le navigateur : aucune réponse n'est envoyée sur un serveur.
-// Le contenu (questions, paliers, textes) vient de assets/data/quiz.json.
+// Le contenu (questions, paliers, textes) vient de assets/data/quiz-data.js.
 (function () {
   'use strict';
 
   var root = document.getElementById('quiz');
   if (!root) return;
 
-  var STORE = 'sama-quiz-v2';
+  // Clé de stockage alignée sur la version des données (voir quiz-data.js) :
+  // changer les questions incrémente la version, donc l'ancienne progression tombe.
+  var STORE = 'sama-quiz-v3';
+  var LEGACY_STORE = 'sama-quiz-v2';
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var data = null;
   var steps = [];        // profil puis questions notées
@@ -21,8 +24,18 @@
   };
   var icon = function (id) { return '<svg aria-hidden="true"><use href="#' + id + '"/></svg>'; };
   var save = function () { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* stockage indisponible : on continue sans */ } };
-  var load = function () { try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; } };
-  var clear = function () { try { localStorage.removeItem(STORE); } catch (e) { /* rien */ } };
+  var load = function () {
+    try {
+      var raw = localStorage.getItem(STORE);
+      // Migration douce : une progression enregistrée sous l'ancienne clé est reprise une fois.
+      if (!raw) {
+        raw = localStorage.getItem(LEGACY_STORE);
+        if (raw) { localStorage.setItem(STORE, raw); localStorage.removeItem(LEGACY_STORE); }
+      }
+      return JSON.parse(raw || 'null');
+    } catch (e) { return null; }
+  };
+  var clear = function () { try { localStorage.removeItem(STORE); localStorage.removeItem(LEGACY_STORE); } catch (e) { /* rien */ } };
   var focusTitle = function () {
     var h = root.querySelector('[data-focus]');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
@@ -83,7 +96,9 @@
       .replace('{mode}', profileShort('P2', 'à distance'))
       .replace('{manques}', manques)
       .replace('{lead_id}', state.lead);
-    var num = String(data.config.whatsapp_number || '').replace(/[^\d]/g, '');
+    // Un seul numéro dans tout le site : celui de assets/js/config.js.
+    var num = (window.SAMA && window.SAMA.digits()) ||
+              String((data.config && data.config.whatsapp_number) || '').replace(/[^\d]/g, '');
     return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
   };
 
@@ -118,7 +133,7 @@
           (state.i > 0 ? '<button class="quiz-back" type="button" data-act="back">' + icon('i-back') + 'Précédent</button>' : '<span></span>') +
           '<span class="quiz-count" aria-hidden="true">' + n + ' / ' + steps.length + '</span>' +
         '</div>' +
-        '<div class="quiz-progress" role="progressbar" aria-label="Progression" aria-valuemin="0" aria-valuemax="' + steps.length + '" aria-valuenow="' + state.i + '"><i style="transform:scaleX(' + (state.i / steps.length) + ')"></i></div>' +
+        '<div class="quiz-progress" role="progressbar" aria-label="Progression" aria-valuemin="0" aria-valuemax="' + steps.length + '" aria-valuenow="' + n + '" aria-valuetext="Étape ' + n + ' sur ' + steps.length + '"><i style="transform:scaleX(' + (state.i / steps.length) + ')"></i></div>' +
         '<p class="quiz-kicker">' + kicker + '' + '</p>' +
         '<h2 class="quiz-q" data-focus>' + esc(q.text) + '</h2>' +
         '<p class="visually-hidden">Question ' + n + ' sur ' + steps.length + '</p>' +
@@ -244,18 +259,23 @@
   window.addEventListener('beforeprint', function () { root.querySelectorAll('details').forEach(function (d) { d.open = true; }); });
 
   /* ---------- Démarrage ---------- */
-  // Hors ligne : le contenu est déjà chargé par assets/data/quiz-data.js (fetch est bloqué en file://)
-  (window.SAMA_QUIZ ? Promise.resolve(window.SAMA_QUIZ) : fetch('assets/data/quiz.json?v=3', { cache: 'no-cache' })
-    .then(function (res) { if (!res.ok) throw new Error(res.status); return res.json(); }))
-    .then(function (json) {
-      data = json;
-      steps = data.profile.map(function (p) { return { kind: 'profile', item: p }; })
-        .concat(data.questions.map(function (q) { return { kind: 'question', item: q }; }));
-      var saved = load();
-      if (saved && saved.done) { state = saved; show(); }   // résultat déjà obtenu : on le réaffiche
-      else renderIntro();
-    })
-    .catch(function () {
-      root.innerHTML = '<div class="quiz-card"><p>Le test n\'a pas pu se charger. Vérifie ta connexion, puis recharge la page.</p></div>';
-    });
+  // Hors ligne et en file://, `fetch` est bloqué : le contenu est déjà chargé
+  // par assets/data/quiz-data.js (script classique). Il n'y a donc pas de
+  // second chemin à maintenir — un seul fichier de contenu, un seul chargement.
+  if (!window.SAMA_QUIZ) {
+    root.innerHTML =
+      '<div class="quiz-card"><p>Le test n\'a pas pu se charger : le fichier de contenu est absent.</p>' +
+      '<p class="quiz-note">Recharge la page. Si le problème continue, écris-nous sur ' +
+      '<a href="' + ((window.SAMA && window.SAMA.waUrl('Bonjour, le test ne se charge pas sur votre site.')) || 'https://wa.me/8619824786223') + '" target="_blank" rel="noopener">WhatsApp</a>.</p></div>';
+    return;
+  }
+
+  data = window.SAMA_QUIZ;
+  // Aligne la clé de stockage sur la version des données (ex. « 3 »).
+  if (data.config && data.config.store_version) STORE = 'sama-quiz-v' + String(data.config.store_version);
+  steps = data.profile.map(function (p) { return { kind: 'profile', item: p }; })
+    .concat(data.questions.map(function (q) { return { kind: 'question', item: q }; }));
+  var saved = load();
+  if (saved && saved.done) { state = saved; show(); }   // résultat déjà obtenu : on le réaffiche
+  else renderIntro();
 })();

@@ -1,0 +1,43 @@
+# En-têtes HTTP réels — Cloudflare Pages / Netlify / un proxy devant GitHub Pages.
+#
+# GitHub Pages ne permet PAS de définir des en-têtes HTTP : ce fichier y est inerte
+# (il est simplement servi comme un fichier texte). Il sert dès que le domaine passe
+# derrière Cloudflare (ou tout autre hébergeur qui lit _headers).
+#
+# À garder aligné avec la balise <meta http-equiv="Content-Security-Policy"> des pages :
+# ici, la CSP complète (avec frame-ancestors, impossible à déclarer en meta).
+
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; manifest-src 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=(), serial=(), midi=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Robots-Tag: index, follow, max-snippet:-1, max-image-preview:large
+  Cache-Control: public, max-age=0, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/docs/*
+  Cache-Control: public, max-age=604800
+  Content-Disposition: inline
+
+/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+
+/404.html
+  X-Robots-Tag: noindex, follow
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="only light">
+  <!--
+    Page 404 servie automatiquement par GitHub Pages (et par la plupart des hébergeurs).
+    <base> rend les liens valides quelle que soit la profondeur de l'URL demandée.
+    Si tu changes d'URL de base, mets ce <base> à jour à la main
+    (aucun script de build dans ce dépôt).
+  -->
+  <base href="https://samasourcing.site/">
+  <title>Page introuvable (404) · Sama Sourcing</title>
+  <meta name="robots" content="noindex, follow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'">
+  <meta name="theme-color" content="#0A1A3A">
+  <!-- Le 404 est volontairement autonome : aucune ressource externe, pour rester
+       lisible même si style.css, les polices ou le domaine ne répondent pas. -->
+  <!--
+    Styles volontairement autonomes : si style.css ne charge pas (URL de base encore
+    sur un domaine qui n'existe pas, par exemple juste après un fork), la page reste
+    présentable. Les var() gardent une valeur de repli aux couleurs de la marque.
+  -->
+  <style>
+    :root { color-scheme: only light; }
+    body { margin: 0; font-family: Figtree, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+    .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+    .error-page { display: grid; place-items: start; padding-block: 64px 96px; background: var(--night, #0A1A3A); color: var(--paper, #FFFDF8); min-height: 100dvh; }
+    .error-inner { display: grid; gap: 22px; max-width: 760px; }
+    .error-code { margin: 0; font-family: var(--display, "Bricolage Grotesque", Georgia, serif); font-weight: 800; font-size: clamp(3.4rem, 14vw, 7rem); line-height: .9; color: var(--yellow, #FFD43B); letter-spacing: -.05em; }
+    .error-inner h1 { margin: 0; font-size: clamp(1.8rem, 5.4vw, 2.9rem); line-height: 1.08; color: var(--paper, #FFFDF8); }
+    .error-lead, .error-note { margin: 0; color: var(--mist-ink, #B9C6DC); font-size: 1.05rem; line-height: 1.55; max-width: 56ch; }
+    .error-note { font-size: .92rem; }
+    .error-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+    .error-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 12px 20px; border-radius: 999px; font-weight: 700; font-size: .95rem; text-decoration: none; }
+    .error-actions .btn-primary { background: var(--blue, #2563EB); color: #fff; }
+    .error-actions .btn-yellow { background: var(--yellow, #FFD43B); color: #0A1A3A; }
+    .error-actions .btn-wa { background: #25D366; color: #072A17; }
+    .error-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 22px 0 0; list-style: none; border-top: 1px solid var(--night-2, #1B2C4F); }
+    .error-links a { color: var(--paper, #FFFDF8); font-weight: 600; text-decoration: none; border-bottom: 2px solid transparent; }
+    .error-links a:hover, .error-links a:focus-visible { border-bottom-color: var(--yellow, #FFD43B); }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    @media (max-width: 480px) { .error-actions .btn { width: 100%; } }
+  </style>
+</head>
+<body class="error-page">
+  <div class="wrap error-inner">
+    <p class="error-code" aria-hidden="true">404</p>
+    <h1>Cette page n'existe pas.</h1>
+    <p class="error-lead">Le lien est ancien, ou l'adresse contient une faute de frappe. Rien n'est cassé de ton côté — et tout ce qui compte est encore là.</p>
+
+    <div class="error-actions">
+      <a class="btn btn-primary" href="index.html">Retour à l'accueil</a>
+      <a class="btn btn-yellow" href="calculatrice.html">Calculer mon vrai prix</a>
+      <a class="btn btn-wa" href="https://wa.me/8619824786223?text=Bonjour%20Sama%20Sourcing%2C%20je%20cherche%20une%20page%20de%20votre%20site." target="_blank" rel="noopener" data-sama="wa">Écrire sur WhatsApp<span class="visually-hidden"> (nouvel onglet)</span></a>
+    </div>
+
+    <ul class="error-links" aria-label="Pages du site">
+      <li><a href="score-de-preparation.html">Le test de préparation</a></li>
+      <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
+      <li><a href="documents.html">Documents</a></li>
+      <li><a href="questions.html">Questions fréquentes</a></li>
+      <li><a href="mon-histoire.html">Notre histoire</a></li>
+    </ul>
+
+    <p class="error-note">Tu cherchais un document précis ? Tous les PDF (guide, équipe, compte rendu, devis) sont sur la page <a href="documents.html" style="color:var(--yellow)">Documents</a>.</p>
+  </div>
+
+</body>
+</html>

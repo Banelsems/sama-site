@@ -1,53 +1,159 @@
-# Site Sama Sourcing — export hors ligne (17 novembre 2026)
+# Site Sama Sourcing
 
-Site statique en HTML, CSS et JavaScript simples. Aucun framework, aucun build, aucun serveur nécessaire.
+Site vitrine statique : HTML, CSS et JavaScript simples. Aucun framework, aucun serveur, aucune base de données, aucun cookie, aucun tracker. Le site s'ouvre directement en double-cliquant sur `index.html` et fonctionne hors ligne (la calculatrice et le test calculent dans le navigateur).
 
-## Ouvrir le site
-
-1. Dézippe le fichier.
-2. Ouvre le dossier `sama-site`.
-3. Double-clique sur `index.html`. Le site s'ouvre dans ton navigateur, même sans connexion.
+Positionnement : « La Chine n'est pas le problème — ta préparation, si. »
+Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 
 ## Les pages
 
-| Fichier | Page |
-|---|---|
-| `index.html` | Accueil |
-| `score-de-preparation.html` | Le test « Score de préparation » (12 questions) |
-| `comment-ca-marche.html` | Comment ça marche |
-| `mon-histoire.html` | Notre histoire |
-| `preuves.html` | Preuves (documents et captures masqués) |
-| `questions.html` | Questions fréquentes |
+| Fichier | Page | Rôle |
+|---|---|---|
+| `index.html` | Accueil | promesse, trois niveaux de préparation, objections |
+| `score-de-preparation.html` | Le test | 12 questions → score sur 10 |
+| `calculatrice.html` | Calculatrice « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
+| `comment-ca-marche.html` | Comment ça marche | méthode en 6 étapes |
+| `mon-histoire.html` | Notre histoire | origine, parcours |
+| `preuves.html` | Preuves | compte rendu, devis, captures masquées |
+| `documents.html` | Documents | bibliothèque PDF à télécharger |
+| `questions.html` | Questions | FAQ (8 réponses) |
+| `404.html` | Erreur | page servie automatiquement par GitHub Pages |
 
 ## Les dossiers
 
-| Dossier | Contenu |
+| Chemin | Contenu |
 |---|---|
-| `assets/css/` | La feuille de style (`style.css`) |
-| `assets/js/` | `main.js` (menu, animations, galerie) et `quiz.js` (le test) |
-| `assets/data/` | Le contenu du test : `quiz-data.js` |
-| `assets/fonts/` | Les polices Bricolage Grotesque et Figtree, en local (licence SIL Open Font License) |
-| `assets/img/` | Photos, captures masquées, icônes, image de partage |
-| `docs/` | Les 2 PDF anonymisés (compte rendu de visite, devis) |
+| `assets/css/` | `style.css` (tout le site) et `calculatrice.css` (la calculatrice seule) |
+| `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (la calculatrice) |
+| `assets/data/` | `quiz-data.js` : questions, scores, textes du test |
+| `assets/fonts/` | Bricolage Grotesque et Figtree, servies en local (SIL Open Font License) |
+| `assets/img/` | photos WebP, captures masquées, icônes, `og.jpg` et `og-calculatrice.jpg` |
+| `docs/` | les PDF publics (guide, présentation de l'équipe, écosystème, compte rendu, devis) |
+| `tools/build.py` | contrôle de cohérence + bascule d'URL de base (voir plus bas) |
+| `sw.js` | cache hors ligne (service worker, actif uniquement en HTTPS) |
+| `manifest.webmanifest` | nom, icônes et couleurs pour l'installation sur mobile |
+| `_headers` | en-têtes HTTP réels (Cloudflare / Netlify) ; ignoré par GitHub Pages |
+| `robots.txt`, `sitemap.xml`, `llms.txt` | indexation, plan du site, résumé pour les IA |
+| `CNAME.example` | gabarit du domaine personnalisé |
 
-## Ce qui a besoin d'Internet
+## Ce qui se règle dans `assets/js/config.js`
 
-Le site s'affiche entièrement hors ligne. Seuls ces liens ouvrent un service externe quand on clique dessus :
+Un seul fichier à modifier pour les données qui changent souvent :
 
-- **Réserver mon appel** → Calendly (`calendly.com/samasourcing/appel-decouverte`)
-- **Bouton WhatsApp flottant** et **bouton WhatsApp du résultat du test** → `wa.me`, vers le +86 198 2478 6223
-- **Partager le test** → WhatsApp
+- le numéro **WhatsApp** (`contact.whatsapp`) — les liens `data-sama="wa"` sont réécrits au chargement, aucune page à rouvrir ;
+- le lien **Calendly** (`contact.calendly`) ;
+- les **réseaux sociaux** (`social.*`) — une valeur vide suffit à retirer proprement le lien du pied de page ;
+- l'**URL de base** (`site.baseUrl`) ;
+- les **valeurs indicatives** de la calculatrice : taux de change de repli, tarifs de transport, version du stockage local.
 
-Le site n'a ni formulaire, ni base de données, ni compte utilisateur. Le test calcule le score dans le navigateur et garde la progression sur l'appareil du visiteur (localStorage). Rien n'est envoyé.
+`main.js` applique ces valeurs aux liens balisés `data-sama` et reconstruit la liste `[data-social-list]` au chargement. C'est le seul mécanisme de gabarit du site.
+
+## Outils : `tools/build.py`
+
+Les pages sont écrites à la main (aucun générateur, aucun dossier `partials`). L'outil ne construit rien, il **vérifie** et **bascule** :
+
+```sh
+python3 tools/build.py                 # contrôle : nav, pied de page, URL de base, sitemap, robots
+python3 tools/build.py --base https://<pseudo>.github.io/sama-sourcing/
+python3 tools/build.py --domain samasourcing.site        # base + fichier CNAME
+python3 tools/build.py --domain samasourcing.site --no-cname
+```
+
+Le contrôle vérifie que la navigation (8 liens, calculatrice incluse) et le pied de page sont identiques sur les 8 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
+
+La bascule remplace l'URL de base dans les `canonical`, `og:url`, `twitter:image`, `sitemap.xml`, `robots.txt`, `llms.txt`, `<base>` de `404.html` et `config.js`, en une passe. Aucun autre fichier n'est touché.
+
+## Hors ligne
+
+- `sw.js` met en cache les pages et les ressources après la première visite (HTTPS uniquement ; en `file://` il ne s'enregistre pas, ce qui est normal). Stratégie : réseau d'abord pour les pages, cache d'abord pour les ressources. **Après une modification de fichier, incrémente `VERSION` en tête de `sw.js`** pour forcer le rafraîchissement des caches.
+- Le test et la calculatrice gardent leurs données dans `localStorage` (`sama-quiz-v3`, `sama-calc-v1`). Aucune requête réseau, aucune donnée envoyée.
+
+## Sécurité
+
+- Chaque page porte une **CSP stricte en balise `meta`** : `default-src 'self'`, aucun script tiers, aucun formulaire distant (`form-action 'none'`), aucun `eval`.
+- `referrer="strict-origin-when-cross-origin"`, `<meta name="color-scheme" content="only light">`.
+- Aucune dépendance externe : polices auto-hébergées, aucune CDN, aucun analytics.
+- GitHub Pages **ne permet pas** d'en-têtes HTTP personnalisés : la CSP passe donc par `meta` (sans `frame-ancestors`, impossible en `meta`).
+- Pour de vrais en-têtes (`Strict-Transport-Security`, `X-Frame-Options: DENY`, `Permissions-Policy`, `frame-ancestors 'none'`), le fichier `_headers` est prêt : il suffit de servir le domaine derrière Cloudflare (ou Netlify). Sur GitHub Pages, ce fichier est simplement publié comme un fichier texte, sans effet.
+
+## Mettre en ligne (GitHub Pages)
+
+### 1. Créer le dépôt et pousser
+
+```sh
+cd sama-site
+git init
+git add -A
+git commit -m "chore(site): site statique production-ready"
+git branch -M main
+git remote add origin https://github.com/<compte>/sama-sourcing.git
+git push -u origin main
+```
+
+`index.html` doit rester **à la racine du dépôt** (pas dans un sous-dossier).
+
+### 2. Activer GitHub Pages
+
+1. Dépôt → **Settings** → **Pages**.
+2. **Build and deployment** : Source = `Deploy from a branch`, Branch = `main`, Folder = `/ (root)`.
+3. Enregistrer, attendre le déploiement (1 à 2 minutes).
+4. Le site est servi à `https://<compte>.github.io/sama-sourcing/`.
+
+### 3. Mettre les URL au bon domaine
+
+Le site est déjà réglé sur `https://samasourcing.site/`. Pour publier d'abord sur l'URL GitHub, une seule commande :
+
+```sh
+python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/
+git add -A && git commit -m "chore(seo): base URL github.io" && git push
+```
+
+Cela réécrit canonical, Open Graph, `sitemap.xml`, `robots.txt`, `llms.txt`, `<base>` de `404.html` et `config.js` d'un coup — sans toucher au contenu.
+
+### 4. Activer HTTPS
+
+**Settings → Pages** → cocher **Enforce HTTPS** dès que le certificat est émis (« Certificate provisioned »). Le service worker hors ligne ne s'active qu'en HTTPS : c'est cette étape qui le rend opérationnel.
+
+### 5. Domaine personnalisé (optionnel)
+
+```sh
+python3 tools/build.py --domain samasourcing.site
+git add -A && git commit -m "chore(deploy): domaine personnalisé" && git push
+```
+
+Puis chez le registrar / DNS :
+
+| Type | Nom | Valeur |
+|---|---|---|
+| A | `@` | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` |
+| CNAME | `www` | `<compte>.github.io` |
+
+Dans **Settings → Pages**, renseigner `samasourcing.site` (Custom domain), attendre la vérification DNS, puis cocher **Enforce HTTPS**. Le fichier `CNAME` écrit par la commande doit être commité.
+
+### 6. Vrais en-têtes de sécurité (optionnel, Cloudflare)
+
+Le domaine chez Cloudflare (proxy activé) : créer une règle **Transform Rules → Modify response headers** à partir de `_headers`, ou héberger le site sur **Cloudflare Pages** qui lit `_headers` nativement. Attention : sur Cloudflare, garder `Always Use HTTPS` et le mode SSL **Full (strict)**.
+
+### 7. Vérifications après mise en ligne
+
+- `https://<domaine>/robots.txt` et `/sitemap.xml` s'ouvrent et contiennent les bonnes URL.
+- Une URL inexistante affiche bien `404.html` (ex. `/nimporte-quoi`).
+- `https://search.google.com/test/rich-results` sur l'accueil, la calculatrice et la FAQ : Organization, WebSite, WebApplication, FAQPage, BreadcrumbList doivent être détectés.
+- Sur une URL `*.github.io/projet/`, le `robots.txt` du dépôt reste consultable mais les robots utilisent celui du domaine `github.io` — d'où l'intérêt du domaine personnalisé.
 
 ## Modifier le test
 
-Change le texte dans `assets/data/quiz-data.js` (après `window.SAMA_QUIZ = `). C'est le seul fichier qui contient le test : il n'y a pas de copie à tenir à jour.
+Tout le contenu du quiz vit dans `assets/data/quiz-data.js` (objet `window.SAMA_QUIZ`). Après une modification de structure, incrémenter `store_version` (le stockage local `sama-quiz-v3` est invalidé si la version change, et l'ancien `sama-quiz-v2` est migré une fois).
 
-## Mettre en ligne plus tard
+## Ajouter un document à la bibliothèque
 
-Envoie tout le contenu du dossier `sama-site` à la racine de l'hébergement (par exemple `public_html` chez Hostinger). Les liens `canonical` et l'image de partage pointent déjà vers `https://samasourcing.site/`.
+1. Déposer le PDF dans `docs/`.
+2. Générer l'aperçu de couverture (800 px et 1600 px, WebP) dans `assets/img/`.
+3. Ajouter une carte `<li class="doc">` dans `documents.html` en copiant une carte existante (boutons Ouvrir / Télécharger).
+4. Ajouter l'entrée dans `sitemap.xml` si la page change de poids, et dans `preuves.html` si le document sert de preuve.
 
-## À compléter
+## Conventions
 
-- Liens du pied de page (chaîne WhatsApp, LinkedIn, Instagram, Facebook) : encore `#`.
+- Français, tutoiement, phrases courtes, pas de jargon non expliqué.
+- Aucun emoji, aucune promesse chiffrée non vérifiable.
+- Les scripts portent un `?v=N` : incrémenter à chaque modification de `style.css`, `main.js`, `quiz.js`, `calculatrice.js` ou `config.js`.

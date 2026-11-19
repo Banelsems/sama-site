@@ -1,0 +1,55 @@
+# Sama Sourcing
+
+> Sama Sourcing prépare les acheteurs africains avant qu'ils paient ou qu'ils voyagent en Chine : vérification des fournisseurs, échantillons, négociation en mandarin, inspection avant le solde, expédition et suivi. Positionnement : « La Chine n'est pas le problème — ta préparation, si ».
+
+Ce fichier résume le site pour les moteurs de recherche et les assistants IA. Il est public, sans restriction de lecture ni de citation. Site statique : aucun cookie, aucun tracker, aucune inscription, aucun back-end.
+
+## Identité
+
+- Nom : Sama Sourcing
+- Activité : accompagnement à l'achat et à l'import depuis la Chine (sourcing, vérification, contrôle, logistique)
+- Langue du site : français
+- Équipe sur place en Chine depuis 2023 ; structure créée en 2026
+- Bureau : Marché Binwang, zone C, porte 3, 4e étage, n° 425-2, Yiwu, Zhejiang, Chine (中文：宾王市场C区3号门，3楼26号上4楼425-2号)
+- WhatsApp : +86 198 2478 6223
+- Rendez-vous : https://calendly.com/samasourcing/appel-decouverte
+- Pays desservis : RD Congo, Cameroun, Côte d'Ivoire, Nigeria, Sénégal, Congo-Brazzaville, Gabon, Burkina Faso, Mali, Togo, Bénin. Diaspora africaine en général.
+
+## Chiffres cités sur le site
+
+- Plus de 100 acheteurs aidés avant leur premier paiement ou leur premier voyage
+- 150 000 à 200 000 USD d'achats préparés
+- Deux formules : accompagnement à distance (depuis la Chine) et accompagnement sur place (voyage d'affaires)
+- Appel découverte de 15 minutes, gratuit
+
+## Pages du site
+
+- [Accueil](https://samasourcing.site/) — positionnement, les trois niveaux de préparation, objections fréquentes.
+- [Le test (score de préparation)](https://samasourcing.site/score-de-preparation.html) — 12 questions, score sur 10, points manquants avant de payer. Sans email ni inscription.
+- [Calculatrice « Vrai Prix d'une Pièce »](https://samasourcing.site/calculatrice.html) — coût de revient réel (landed cost) : fret, douane, TVA, change, pertes, frais portuaires, livraison ; prix de vente conseillé et alertes de risque.
+- [Comment ça marche](https://samasourcing.site/comment-ca-marche.html) — méthode en 6 étapes, de l'appel à l'expédition.
+- [Notre histoire](https://samasourcing.site/mon-histoire.html) — origine du projet, parcours de l'équipe.
+- [Preuves](https://samasourcing.site/preuves.html) — compte rendu de visite d'usine, devis client, captures WhatsApp (informations confidentielles masquées).
+- [Documents](https://samasourcing.site/documents.html) — bibliothèque : guide « La Chine n'est pas le problème » (41 p.), présentation de l'équipe, écosystème de produits, exemples de documents clients (PDF à télécharger).
+- [Questions](https://samasourcing.site/questions.html) — réponses courtes : faux fournisseur, budget, conformité, langue, prix.
+
+## Définitions utilisées par la calculatrice
+
+- **Coût de revient réel (landed cost)** : tout ce qu'une pièce te coûte une fois arrivée et vendable — prix usine, fret, assurance, frais de paiement, droits de douane, TVA, frais portuaires et de clearing, livraison locale, pertes, plus la marge de sécurité de change.
+- **FOB / CIF** : FOB = prix au départ de l'usine ou du port chinois ; CIF = FOB + fret + assurance. La douane se calcule généralement sur la valeur CIF.
+- **CBM / LCL / FCL** : CBM = mètre cube (unité de volume pour le fret maritime) ; LCL = groupage (tu paies au CBM) ; FCL = conteneur complet 20 ou 40 pieds (prix forfaitaire).
+- **Code HS** : nomenclature douanière internationale qui détermine le taux de droits applicable à un produit.
+- **Clearing** : dédouanement de la marchandise par un agent agréé au port d'arrivée, avec les frais associés.
+- **Marge sur prix de vente** : bénéfice exprimé en pourcentage du prix de vente final, et non du prix d'achat (30 % de marge sur vente = 42,9 % de majoration).
+- **Marge de sécurité de change** : réserve ajoutée au calcul (5 à 15 % recommandé) pour absorber la variation du taux entre la commande et le paiement.
+
+## Ce que le site ne fait pas
+
+- Aucun cookie, aucun tracker publicitaire, aucun formulaire qui envoie des données à un serveur.
+- Aucune inscription, aucun compte, aucune newsletter.
+- Aucune promesse de résultat : les chiffres affichés sont ceux présentés sur le site, à titre indicatif.
+
+## Contact
+
+- WhatsApp (le plus rapide) : https://wa.me/8619824786223
+- Appel découverte gratuit : https://calendly.com/samasourcing/appel-decouverte

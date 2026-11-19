@@ -1,0 +1,15 @@
+{
+  "name": "Sama Sourcing",
+  "short_name": "Sama",
+  "description": "Préparer un achat en Chine : test de préparation, calculatrice du vrai prix, guides et documents.",
+  "lang": "fr",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#0A1A3A",
+  "theme_color": "#0A1A3A",
+  "icons": [
+    { "src": "assets/img/pwa-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/img/pwa-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

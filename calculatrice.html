@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="only light">
+  <title>Calculatrice : le vrai prix d'une pièce importée de Chine</title>
+  <meta name="description" content="Calcule ton coût de revient réel par pièce : usine, transport, douane, change, pertes, port et livraison. Prix de vente conseillé, alertes, partage WhatsApp. Gratuit, sans inscription.">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://samasourcing.site/calculatrice.html">
+  <link rel="alternate" hreflang="fr" href="https://samasourcing.site/calculatrice.html">
+  <link rel="alternate" hreflang="x-default" href="https://samasourcing.site/calculatrice.html">
+
+  <!-- Sécurité : aucune ressource externe, aucun script tiers, aucun formulaire distant.
+       « style-src 'unsafe-inline' » est nécessaire aux rares styles calculés en JS. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; manifest-src 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Sama Sourcing">
+  <meta property="og:url" content="https://samasourcing.site/calculatrice.html">
+  <meta property="og:title" content="Le vrai prix d'une pièce : calculatrice coût de revient Chine → Afrique">
+  <meta property="og:description" content="Le prix usine n'est pas ton coût. Calcule le coût de revient réel par pièce, jusqu'à ta boutique, et le prix de vente conseillé.">
+  <meta property="og:image" content="https://samasourcing.site/assets/img/og-calculatrice.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Calculatrice Sama Sourcing : le vrai prix d'une pièce, du prix usine au coût de revient réel">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Le vrai prix d'une pièce : calculatrice coût de revient Chine → Afrique">
+  <meta name="twitter:description" content="Usine, fret, douane, change, pertes, port : le coût de revient réel par pièce, et le prix de vente conseillé.">
+  <meta name="twitter:image" content="https://samasourcing.site/assets/img/og-calculatrice.jpg">
+  <meta name="twitter:image:alt" content="Calculatrice Sama Sourcing : le vrai prix d'une pièce">
+  <meta name="theme-color" content="#0A1A3A">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=23">
+  <link rel="stylesheet" href="assets/css/calculatrice.css?v=3">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://samasourcing.site/#organization",
+        "name": "Sama Sourcing",
+        "alternateName": "Sama Sourcing Chine",
+        "url": "https://samasourcing.site/",
+        "logo": "https://samasourcing.site/assets/img/favicon-32.png",
+        "image": "https://samasourcing.site/assets/img/og.jpg",
+        "description": "Sama Sourcing prépare les acheteurs africains avant qu'ils paient ou qu'ils voyagent en Chine : vérification des fournisseurs, échantillons, négociation en mandarin, inspection avant le solde, expédition.",
+        "foundingDate": "2026",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Marché Binwang, zone C, porte 3, 4e étage, n° 425-2",
+          "addressLocality": "Yiwu",
+          "addressRegion": "Zhejiang",
+          "addressCountry": "CN"
+        },
+        "areaServed": ["CD", "CM", "CI", "NG", "SN", "CG", "GA", "BF", "ML", "TG", "BJ"],
+        "knowsLanguage": ["fr", "zh", "en"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+8619824786223",
+          "availableLanguage": ["fr", "zh", "en"],
+          "areaServed": "Afrique"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://samasourcing.site/#website",
+        "url": "https://samasourcing.site/",
+        "name": "Sama Sourcing",
+        "inLanguage": "fr",
+        "publisher": { "@id": "https://samasourcing.site/#organization" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://samasourcing.site/calculatrice.html#webpage",
+        "url": "https://samasourcing.site/calculatrice.html",
+        "name": "Calculatrice : le vrai prix d'une pièce importée de Chine",
+        "description": "Calcul du coût de revient réel d'une pièce importée de Chine vers l'Afrique : prix usine, fret, douane, change, pertes, frais portuaires et livraison locale.",
+        "isPartOf": { "@id": "https://samasourcing.site/#website" },
+        "about": { "@id": "https://samasourcing.site/calculatrice.html#app" },
+        "inLanguage": "fr",
+        "primaryImageOfPage": "https://samasourcing.site/assets/img/og-calculatrice.jpg"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://samasourcing.site/calculatrice.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://samasourcing.site/" },
+          { "@type": "ListItem", "position": 2, "name": "Calculatrice du vrai prix", "item": "https://samasourcing.site/calculatrice.html" }
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://samasourcing.site/calculatrice.html#app",
+        "name": "Calculatrice « Vrai prix d'une pièce »",
+        "url": "https://samasourcing.site/calculatrice.html",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Calcul du coût de revient à l'import (landed cost)",
+        "operatingSystem": "Web, iOS, Android",
+        "browserRequirements": "Fonctionne sans installation, sans compte, sans connexion après le premier chargement.",
+        "isAccessibleForFree": true,
+        "inLanguage": "fr",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "Coût de revient unitaire réel, par pièce vendable",
+          "Coût total de la commande, en dollars et en monnaie locale",
+          "Prix de vente conseillé à 30 %, 50 % et 80 % de marge",
+          "Marge de sécurité de change réglable (5 à 15 %)",
+          "Modes de transport LCL, FCL 20 pieds, FCL 40 pieds, aérien, express",
+          "Droits de douane, TVA et prélèvements par pays de destination",
+          "Estimation des pertes : casse, défauts, colis perdus",
+          "Alertes sur le change, les pertes et une douane sous-estimée",
+          "Partage du résultat sur WhatsApp et impression en PDF"
+        ],
+        "publisher": { "@id": "https://samasourcing.site/#organization" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body id="calc">
+  <!-- Icônes : un seul trait, réutilisées partout. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path class="i-hand" d="M12 7v5l3 2" pathLength="1"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" pathLength="1"/><path d="M20 20l-4-4" pathLength="1"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7h15a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" pathLength="1"/><path d="M3 7l12-4v4" pathLength="1"/><circle cx="16.5" cy="13.5" r="1" pathLength="1"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" pathLength="1"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5" pathLength="1"/><path d="M10.5 18.5h3" pathLength="1"/></symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z" pathLength="1"/><path d="M14 3v4h4M9 12h6M9 16h4" pathLength="1"/></symbol>
+      <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2" pathLength="1"/><path d="M16 10l5-3v10l-5-3" pathLength="1"/></symbol>
+      <symbol id="i-ship" viewBox="0 0 24 24"><path d="M3 16l2 5h14l2-5z" pathLength="1"/><path d="M5 16V9h14v7" pathLength="1"/><path d="M9 9V5h6v4" pathLength="1"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" pathLength="1"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" pathLength="1"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" pathLength="1"/><path d="M8 10h8M8 13h5" pathLength="1"/></symbol>
+      <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" pathLength="1"/><path d="M9 7V4h6v3M3 13h18" pathLength="1"/></symbol>
+      <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 20V10l6 4v-4l6 4V5h6v15z" pathLength="1"/><path d="M7 17h2M12 17h2M17 17h2" pathLength="1"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z" pathLength="1"/><path d="M3 13l9 5 9-5" pathLength="1"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" pathLength="1"/><circle cx="12" cy="9" r="2.5" pathLength="1"/></symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4" pathLength="1"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" pathLength="1"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></symbol>
+      <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="3" pathLength="1"/><path d="M7.5 7h9" pathLength="1"/><circle cx="8.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="15.5" cy="12" r="1.2"/><circle cx="8.5" cy="16.5" r="1.2"/><circle cx="12" cy="16.5" r="1.2"/><circle cx="15.5" cy="16.5" r="1.2"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l9 16H3z" pathLength="1"/><path d="M12 9v5M12 17h.01" pathLength="1"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2" pathLength="1"/><path d="M15 5H6a2 2 0 0 0-2 2v9" pathLength="1"/></symbol>
+      <symbol id="i-print" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="6" pathLength="1"/><rect x="4" y="9" width="16" height="8" rx="2" pathLength="1"/><path d="M8 17h8v4H8z" pathLength="1"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z" pathLength="1"/><path d="M8 3v6h7V3M8 21v-7h8v7" pathLength="1"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.3" pathLength="1"/><path d="M4 4v5h5" pathLength="1"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">S</span>Sama Sourcing</a>
+      <nav class="nav" id="menu" aria-label="Menu principal">
+          <a href="index.html">Accueil</a>
+          <a href="score-de-preparation.html">Le test</a>
+          <a href="calculatrice.html" aria-current="page">Calculatrice</a>
+          <a href="comment-ca-marche.html">Comment ça marche</a>
+          <a href="mon-histoire.html">Notre histoire</a>
+          <a href="preuves.html">Preuves</a>
+          <a href="documents.html">Documents</a>
+          <a href="questions.html">Questions</a>
+      </nav>
+      <a class="btn btn-small" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly">Réserver<span class="visually-hidden"> mon appel (nouvel onglet)</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu"><span class="visually-hidden">Ouvrir le menu</span><span class="nav-toggle-bars" aria-hidden="true"></span></button>
+    </div>
+  </header>
+
+  <main id="contenu">
+
+    <section class="page-hero" aria-labelledby="t-page">
+      <div class="wrap">
+        <h1 id="t-page">Le vrai prix d'une pièce</h1>
+        <p>Le prix usine, c'est le début de la facture. Voici ce que chaque pièce te coûte vraiment, une fois le fret, la douane, le change et les pertes payés — jusqu'à ta boutique.</p>
+        <ul class="calc-hero-facts">
+          <li><svg aria-hidden="true"><use href="#i-calc"/></svg>Résultat immédiat, sans compte ni email</li>
+          <li><svg aria-hidden="true"><use href="#i-wallet"/></svg>Prix de vente conseillé à 30 %, 50 % et 80 %</li>
+          <li><svg aria-hidden="true"><use href="#i-chat"/></svg>Résultat partageable sur WhatsApp</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- La formule, en clair : c'est aussi ce que les moteurs et les IA lisent en premier. -->
+    <section class="calc-intro" aria-labelledby="t-formule">
+      <div class="wrap">
+        <h2 id="t-formule">La formule, sans jargon</h2>
+        <p class="calc-formula">
+          <span>Coût de revient par pièce</span>
+          <span class="calc-formula-op" aria-hidden="true">=</span>
+          <span class="calc-formula-frac">
+            <span>Prix usine + Transport + Douane &amp; taxes + Frais de paiement + Assurance + Frais portuaires &amp; clearing + Livraison locale</span>
+            <span>÷ Nombre de pièces <b>vendables</b></span>
+          </span>
+        </p>
+        <div class="calc-intro-grid">
+          <p><b>Pourquoi « vendables » et pas « commandées » ?</b> Parce qu'une pièce cassée, défectueuse ou perdue se paie quand même, mais ne se vend pas. Si tu commandes 1 000 pièces avec 6 % de pertes, ton coût se répartit sur 940 pièces, pas sur 1 000.</p>
+          <p><b>Pourquoi une marge de change ?</b> Tu paies en dollars ou en yuans, tu vends en francs ou en nairas. Si ta monnaie baisse entre les deux, ton coût réel monte sans que personne ne te prévienne. La marge de sécurité est là pour ça.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="calc-shell">
+
+      <!-- Bandeau de résultats, collé sous l'en-tête sur mobile -->
+      <div class="calc-live" id="calc-live">
+        <span class="calc-live-label">Coût de revient</span>
+        <b id="live-unit">—</b>
+        <a class="calc-live-link" href="#resultat">Voir le détail<span class="visually-hidden"> du calcul</span></a>
+      </div>
+
+      <form class="calc-form" id="calc-form" novalidate>
+
+        <!-- 1. La commande -->
+        <fieldset class="calc-group" id="g-commande">
+          <legend><span class="calc-step" aria-hidden="true">1</span>La commande<span class="calc-group-note">Ce que tu achètes, et à quel prix</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="prix-usine">Prix usine, par pièce</label>
+              <div class="calc-input">
+                <input id="prix-usine" name="prix-usine" type="number" inputmode="decimal" min="0" step="0.01" value="3.5" aria-describedby="h-prix-usine">
+                <span class="calc-unit" data-unit="achat" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-prix-usine">Le prix annoncé par le fournisseur, avant tout le reste.</p>
+            </div>
+            <div class="calc-field">
+              <label for="devise-achat">Devise de la facture</label>
+              <div class="calc-input">
+                <select id="devise-achat" name="devise-achat" aria-describedby="h-devise-achat">
+                  <option value="CNY">Yuan (CNY)</option>
+                  <option value="USD" selected>Dollar US (USD)</option>
+                  <option value="EUR">Euro (EUR)</option>
+                  <option value="AUTRE">Autre devise</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="h-devise-achat">La devise dans laquelle l'usine te facture.</p>
+            </div>
+            <div class="calc-field" id="field-devise-autre" hidden>
+              <label for="devise-autre">Code de ta devise</label>
+              <div class="calc-input">
+                <input id="devise-autre" name="devise-autre" type="text" maxlength="5" value="" placeholder="GBP" autocomplete="off" aria-describedby="h-devise-autre">
+              </div>
+              <p class="calc-hint" id="h-devise-autre">Trois lettres : GBP, INR, AED, TRY…</p>
+            </div>
+            <div class="calc-field">
+              <label for="quantite">Quantité commandée</label>
+              <div class="calc-input">
+                <input id="quantite" name="quantite" type="number" inputmode="numeric" min="1" step="1" value="1200" aria-describedby="h-quantite">
+                <span class="calc-unit" aria-hidden="true">pièces</span>
+              </div>
+              <p class="calc-hint" id="h-quantite">Ce que tu paies à l'usine, pertes comprises.</p>
+            </div>
+          </div>
+          <p class="calc-line"><span>Valeur marchandise</span><b id="out-valeur">—</b></p>
+        </fieldset>
+
+        <!-- 2. Le change et le risque de change -->
+        <fieldset class="calc-group" id="g-change">
+          <legend><span class="calc-step" aria-hidden="true">2</span>Le change<span class="calc-group-note">Le taux du jour, et le coussin de sécurité</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field" id="field-taux-cny" hidden>
+              <label for="taux-cny">1 dollar US = ? yuans</label>
+              <div class="calc-input">
+                <input id="taux-cny" name="taux-cny" type="number" inputmode="decimal" min="0" step="0.01" value="7.15" aria-describedby="h-taux">
+              </div>
+              <p class="calc-hint" id="h-taux-cny">Taux du jour, pas celui du mois dernier.</p>
+            </div>
+            <div class="calc-field" id="field-taux-eur" hidden>
+              <label for="taux-eur">1 dollar US = ? euros</label>
+              <div class="calc-input">
+                <input id="taux-eur" name="taux-eur" type="number" inputmode="decimal" min="0" step="0.01" value="0.86" aria-describedby="h-taux">
+              </div>
+              <p class="calc-hint" id="h-taux-eur">Taux du jour, pas celui du mois dernier.</p>
+            </div>
+            <div class="calc-field" id="field-taux-autre" hidden>
+              <label for="taux-autre">1 dollar US = ? <span id="lbl-devise-autre">GBP</span></label>
+              <div class="calc-input">
+                <input id="taux-autre" name="taux-autre" type="number" inputmode="decimal" min="0" step="0.0001" value="0.79" aria-describedby="h-taux-autre">
+              </div>
+              <p class="calc-hint" id="h-taux-autre">Le taux de ta banque, frais exclus.</p>
+            </div>
+            <div class="calc-field">
+              <label for="devise-locale">Tu vends en</label>
+              <div class="calc-input">
+                <select id="devise-locale" name="devise-locale" aria-describedby="h-devise-locale">
+                  <option value="CDF" selected>Franc congolais (CDF)</option>
+                  <option value="XOF">Franc CFA BCEAO (XOF)</option>
+                  <option value="XAF">Franc CFA BEAC (XAF)</option>
+                  <option value="NGN">Naira (NGN)</option>
+                  <option value="GHS">Cedi (GHS)</option>
+                  <option value="KES">Shilling kényan (KES)</option>
+                  <option value="ZAR">Rand (ZAR)</option>
+                  <option value="USD">Dollar US (USD)</option>
+                  <option value="EUR">Euro (EUR)</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="h-devise-locale">La monnaie dans laquelle tu encaisses tes ventes.</p>
+            </div>
+            <div class="calc-field">
+              <label for="taux-local">1 dollar US = ? <span id="lbl-devise-locale">francs congolais</span></label>
+              <div class="calc-input">
+                <input id="taux-local" name="taux-local" type="number" inputmode="decimal" min="0" step="1" value="2800" aria-describedby="h-taux-local">
+                <span class="calc-unit" id="unit-taux-local" aria-hidden="true">CDF</span>
+              </div>
+              <p class="calc-hint" id="h-taux-local">Taux du marché, celui auquel tu changes vraiment.</p>
+            </div>
+            <div class="calc-field calc-field-wide">
+              <label for="marge-change">Marge de sécurité de change : <output id="out-marge" for="marge-change">0 %</output></label>
+              <div class="calc-input calc-input-range">
+                <input id="marge-change" name="marge-change" type="range" min="0" max="20" step="1" value="8" aria-describedby="h-marge-change">
+              </div>
+              <p class="calc-hint" id="h-marge-change">Recommandé : 5 à 15 %. À 0 %, tu paries que ta monnaie ne bougera pas. À 15 %, tu couvres une dévaluation forte. Ce pourcentage s'ajoute à ton coût final, en monnaie locale.</p>
+            </div>
+          </div>
+          <details class="calc-help">
+            <summary>Où trouver un taux correct ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div>
+              <p>Demande à ta banque ou à ton changeur le taux réel appliqué, frais compris — c'est souvent 2 à 4 % plus cher que le taux affiché sur les sites. Prends ensuite <b>le taux le plus mauvais pour toi</b> parmi ceux que tu peux réellement obtenir : c'est celui qui doit entrer dans le calcul.</p>
+            </div>
+          </details>
+        </fieldset>
+
+        <!-- 3. Le transport -->
+        <fieldset class="calc-group" id="g-transport">
+          <legend><span class="calc-step" aria-hidden="true">3</span>Le transport<span class="calc-group-note">De l'usine au port de destination</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="transport-mode">Mode de transport</label>
+              <div class="calc-input">
+                <select id="transport-mode" name="transport-mode" aria-describedby="h-transport-mode">
+                  <option value="lcl" selected>LCL — groupage maritime (par CBM)</option>
+                  <option value="fcl20">FCL — conteneur 20 pieds</option>
+                  <option value="fcl40">FCL — conteneur 40 pieds</option>
+                  <option value="air">Aérien (par kg)</option>
+                  <option value="express">Express (par kg)</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="h-transport-mode">Le mode que tu as réellement réservé, pas celui que tu espères.</p>
+            </div>
+            <div class="calc-field">
+              <label for="transport-qte" id="t-qte-label">Volume</label>
+              <div class="calc-input">
+                <input id="transport-qte" name="transport-qte" type="number" inputmode="decimal" min="0" step="0.1" value="8" aria-describedby="h-transport-qte">
+                <span class="calc-unit" id="t-qte-unit" aria-hidden="true">CBM</span>
+              </div>
+              <p class="calc-hint" id="h-transport-qte">Le volume facturable, pas le volume estimé au doigt mouillé.</p>
+            </div>
+            <div class="calc-field">
+              <label for="transport-tarif" id="t-tarif-label">Tarif par CBM</label>
+              <div class="calc-input">
+                <input id="transport-tarif" name="transport-tarif" type="number" inputmode="decimal" min="0" step="0.5" value="110" aria-describedby="h-transport-tarif">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-transport-tarif">Le prix du transitaire, hors frais annexes.</p>
+            </div>
+            <div class="calc-field">
+              <label for="transport-forfait">Forfait total (si tu as un devis)</label>
+              <div class="calc-input">
+                <input id="transport-forfait" name="transport-forfait" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-transport-forfait">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-transport-forfait">Renseigne-le et il remplace le calcul par CBM ou par kg.</p>
+            </div>
+            <div class="calc-field">
+              <label for="transport-annexes">Frais annexes (THC, documents, camion usine → port)</label>
+              <div class="calc-input">
+                <input id="transport-annexes" name="transport-annexes" type="number" inputmode="decimal" min="0" step="1" value="180" aria-describedby="h-transport-annexes">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-transport-annexes">Souvent oubliés : ils sortent pourtant de ta poche.</p>
+            </div>
+          </div>
+          <p class="calc-line"><span>Transport retenu</span><b id="out-transport">—</b></p>
+          <details class="calc-help">
+            <summary>Les tarifs pré-remplis sont-ils fiables ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div>
+              <p>Non : ce sont des <b>ordres de grandeur</b> (Chine → Afrique de l'Ouest et centrale, 2026), pour que la page soit utilisable tout de suite. Un devis de transitaire les remplace toujours. Le fret maritime bouge vite, et le port de destination change tout.</p>
+            </div>
+          </details>
+        </fieldset>
+
+        <!-- 4. La douane -->
+        <fieldset class="calc-group" id="g-douane">
+          <legend><span class="calc-step" aria-hidden="true">4</span>La douane<span class="calc-group-note">Droits, TVA, prélèvements — la ligne qui fâche</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="pays">Pays de destination</label>
+              <div class="calc-input">
+                <select id="pays" name="pays" aria-describedby="pays-hint">
+                  <option value="goma" selected>Goma / RDC (port de Matadi)</option>
+                  <option value="douala">Douala / Cameroun</option>
+                  <option value="abidjan">Abidjan / Côte d'Ivoire</option>
+                  <option value="lagos">Lagos / Nigeria</option>
+                  <option value="autre">Autre destination</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="pays-hint">Changer de pays pré-remplit les taux indicatifs ci-dessous.</p>
+            </div>
+            <div class="calc-field">
+              <label for="hs-code">Code HS approximatif</label>
+              <div class="calc-input">
+                <input id="hs-code" name="hs-code" type="text" inputmode="numeric" maxlength="12" value="" placeholder="ex. 6403" autocomplete="off" aria-describedby="h-hs-code">
+              </div>
+              <p class="calc-hint" id="h-hs-code">Le code douanier de ta marchandise : c'est lui qui fixe le taux de droit.</p>
+            </div>
+            <div class="calc-field">
+              <label for="douane-droit">Droits de douane</label>
+              <div class="calc-input">
+                <input id="douane-droit" name="douane-droit" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="15" aria-describedby="h-douane-droit">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+              <p class="calc-hint" id="h-douane-droit">Sur la valeur CIF (marchandise + fret + assurance).</p>
+            </div>
+            <div class="calc-field">
+              <label for="douane-tva">TVA / TVA d'importation</label>
+              <div class="calc-input">
+                <input id="douane-tva" name="douane-tva" type="number" inputmode="decimal" min="0" max="40" step="0.01" value="16" aria-describedby="h-douane-tva">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+              <p class="calc-hint" id="h-douane-tva">Calculée sur la valeur CIF <b>plus</b> les droits.</p>
+            </div>
+            <div class="calc-field">
+              <label for="douane-autres">Autres prélèvements</label>
+              <div class="calc-input">
+                <input id="douane-autres" name="douane-autres" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="2" aria-describedby="h-douane-autres">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+              <p class="calc-hint" id="h-douane-autres">Redevances, contrôles, taxes locales sur la valeur CIF.</p>
+            </div>
+            <div class="calc-field">
+              <label for="douane-forfait">Frais fixes de dédouanement</label>
+              <div class="calc-input">
+                <input id="douane-forfait" name="douane-forfait" type="number" inputmode="decimal" min="0" step="1" value="120" aria-describedby="h-douane-forfait">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-douane-forfait">Déclarant, magasin sous douane, amendes éventuelles.</p>
+            </div>
+          </div>
+          <p class="calc-line"><span>Valeur CIF (base de taxation)</span><b id="out-cif">—</b></p>
+          <div class="calc-note calc-note-warn" id="pays-note" role="note">
+            <svg aria-hidden="true"><use href="#i-alert"/></svg>
+            <p><b>Valeurs indicatives, pas un verdict.</b> Les taux dépendent du code HS et du régime appliqué. Un transitaire ou un déclarant te donne le chiffre exact en quelques minutes — et souvent, il est plus élevé que ce qu'on croit.</p>
+          </div>
+          <details class="calc-help">
+            <summary>Ce que l'on oublie presque toujours<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+            <div>
+              <p>La TVA se paie sur la valeur <b>avec</b> les droits, pas sur la valeur seule : 15 % de droits puis 16 % de TVA ne font pas 31 %, mais 33,4 % du total. S'ajoutent les redevances locales, le stockage au port si les documents traînent, et parfois une « motivation » de dossier. Prévois 5 à 10 % de marge d'erreur en plus de ce que tu calcules ici.</p>
+            </div>
+          </details>
+        </fieldset>
+
+        <!-- 5. Paiement et assurance -->
+        <fieldset class="calc-group" id="g-paiement">
+          <legend><span class="calc-step" aria-hidden="true">5</span>Paiement &amp; assurance<span class="calc-group-note">Le prix de l'argent qui circule</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="paiement-mode">Moyen de paiement</label>
+              <div class="calc-input">
+                <select id="paiement-mode" name="paiement-mode" aria-describedby="h-paiement-mode">
+                  <option value="tt" selected>Virement bancaire (TT)</option>
+                  <option value="alipay">Alipay / WeChat Pay</option>
+                  <option value="wu">Western Union / MoneyGram</option>
+                  <option value="lc">Lettre de crédit (L/C)</option>
+                  <option value="autre">Autre / plusieurs moyens</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="h-paiement-mode">Changer de moyen pré-remplit le taux indicatif des frais.</p>
+            </div>
+            <div class="calc-field">
+              <label for="paiement-taux">Frais de paiement</label>
+              <div class="calc-input">
+                <input id="paiement-taux" name="paiement-taux" type="number" inputmode="decimal" min="0" max="20" step="0.01" value="1.5" aria-describedby="h-paiement-taux">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+              <p class="calc-hint" id="h-paiement-taux">Sur la valeur marchandise seulement, pas sur tout le coût.</p>
+            </div>
+            <div class="calc-field">
+              <label for="paiement-fixe">Frais bancaires fixes</label>
+              <div class="calc-input">
+                <input id="paiement-fixe" name="paiement-fixe" type="number" inputmode="decimal" min="0" step="1" value="45" aria-describedby="h-paiement-fixe">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-paiement-fixe">Frais de virement, commissions fixes, frais de dossier.</p>
+            </div>
+            <div class="calc-field">
+              <label for="assurance-taux">Assurance cargo</label>
+              <div class="calc-input">
+                <input id="assurance-taux" name="assurance-taux" type="number" inputmode="decimal" min="0" max="5" step="0.01" value="0.4" aria-describedby="h-assurance-taux">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+              <p class="calc-hint" id="h-assurance-taux">Sur la valeur CIF. Utile : 0,3 à 0,6 %. Facultative sur le papier, coûteuse à oublier en pratique.</p>
+            </div>
+            <div class="calc-field">
+              <label for="assurance-fixe">ou montant fixe d'assurance</label>
+              <div class="calc-input">
+                <input id="assurance-fixe" name="assurance-fixe" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-assurance-fixe">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-assurance-fixe">Renseigné, il remplace le pourcentage.</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 6. Port et livraison -->
+        <fieldset class="calc-group" id="g-port">
+          <legend><span class="calc-step" aria-hidden="true">6</span>Port &amp; livraison locale<span class="calc-group-note">Du quai jusqu'à ta boutique</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="port-frais">Frais portuaires</label>
+              <div class="calc-input">
+                <input id="port-frais" name="port-frais" type="number" inputmode="decimal" min="0" step="1" value="900" aria-describedby="h-port-frais">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-port-frais">Manutention, stockage, taxes de port, acconage.</p>
+            </div>
+            <div class="calc-field">
+              <label for="port-clearing">Agent de clearing / transitaire local</label>
+              <div class="calc-input">
+                <input id="port-clearing" name="port-clearing" type="number" inputmode="decimal" min="0" step="1" value="350" aria-describedby="h-port-clearing">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-port-clearing">Honoraires du déclarant, hors droits et taxes.</p>
+            </div>
+            <div class="calc-field">
+              <label for="port-inland">Transport jusqu'à ta boutique</label>
+              <div class="calc-input">
+                <input id="port-inland" name="port-inland" type="number" inputmode="decimal" min="0" step="1" value="1200" aria-describedby="h-port-inland">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-port-inland">Camion, essence, péages, déchargement. Matadi → Goma, c'est long.</p>
+            </div>
+            <div class="calc-field">
+              <label for="port-divers">Divers (attente, faux frais, pourboires)</label>
+              <div class="calc-input">
+                <input id="port-divers" name="port-divers" type="number" inputmode="decimal" min="0" step="1" value="150" aria-describedby="h-port-divers">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-port-divers">Personne ne les budgète, tout le monde les paie.</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 7. Les pertes : ce qui réduit le nombre de pièces vendables -->
+        <fieldset class="calc-group" id="g-pertes">
+          <legend><span class="calc-step" aria-hidden="true">7</span>Les pertes<span class="calc-group-note">Ce que tu paies mais que tu ne vends pas</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="perte-casse">Casse / pièces abîmées</label>
+              <div class="calc-input">
+                <input id="perte-casse" name="perte-casse" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="2" aria-describedby="h-pertes">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+            <div class="calc-field">
+              <label for="perte-defauts">Défauts (invendables)</label>
+              <div class="calc-input">
+                <input id="perte-defauts" name="perte-defauts" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="3" aria-describedby="h-pertes">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+            <div class="calc-field">
+              <label for="perte-colis">Colis perdus / volés</label>
+              <div class="calc-input">
+                <input id="perte-colis" name="perte-colis" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="1" aria-describedby="h-pertes">
+                <span class="calc-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+            <div class="calc-field calc-field-readout">
+              <label for="out-pertes">Pertes cumulées</label>
+              <div class="calc-input">
+                <output id="out-pertes" for="perte-casse perte-defauts perte-colis">0 %</output>
+              </div>
+              <p class="calc-hint" id="h-pertes">Casse, défauts, colis perdus : estime-les toi-même. En dessous de 3 % au total, tu te racontes une histoire.</p>
+            </div>
+          </div>
+          <p class="calc-line"><span>Pièces réellement vendables</span><b id="out-vendables">—</b></p>
+        </fieldset>
+
+        <!-- 8. Le prix de vente (facultatif) -->
+        <fieldset class="calc-group" id="g-vente">
+          <legend><span class="calc-step" aria-hidden="true">8</span>Ton prix de vente<span class="calc-group-note">Facultatif — pour voir ta vraie marge</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="prix-vente">Prix auquel tu comptes vendre, par pièce</label>
+              <div class="calc-input">
+                <input id="prix-vente" name="prix-vente" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-prix-vente">
+                <span class="calc-unit" id="unit-prix-vente" aria-hidden="true">CDF</span>
+              </div>
+              <p class="calc-hint" id="h-prix-vente">Laisse à 0 si tu ne sais pas encore : les prix conseillés s'affichent quand même.</p>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- Panneau de résultats -->
+      <aside class="calc-side" id="resultat" aria-labelledby="t-resultat">
+        <div class="calc-result">
+          <p class="calc-kicker">Coût de revient réel, par pièce vendable</p>
+          <p class="calc-demo-note">Exemple pré-rempli pour te montrer le mécanisme — remplace par tes chiffres. <button type="button" class="calc-demo-reset" id="btn-reset-top">Tout effacer</button></p>
+          <h2 id="t-resultat" class="calc-big"><b id="out-unitaire">—</b><span class="calc-big-cur" id="out-unitaire-cur"></span></h2>
+          <p class="calc-sans-change" id="out-sans-change">—</p>
+          <p class="calc-explain">C'est ce que chaque pièce te coûte vraiment, une fois tout payé — pas ce que l'usine annonce.</p>
+          <p class="visually-hidden" id="calc-announce" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="calc-card calc-compare" id="out-compare-card">
+          <h3>Tu pensais quoi ?</h3>
+          <p class="calc-compare-line" id="out-compare">—</p>
+          <p class="calc-explain" id="out-compare-explain">Chaque intermédiaire, chaque taxe, chaque perte ajoute un étage entre le prix usine et ton prix de revient.</p>
+        </div>
+
+        <div class="calc-card">
+          <h3>Ta commande, en entier</h3>
+          <dl class="calc-dl">
+            <div><dt>Coût total, en monnaie locale</dt><dd id="out-total-local">—</dd></div>
+            <div><dt>Coût total, en dollars</dt><dd id="out-total-usd">—</dd></div>
+            <div><dt>Pièces vendables</dt><dd id="out-qty-sellable">—</dd></div>
+            <div><dt>Coût de revient des pièces perdues</dt><dd id="out-perte-cost">—</dd></div>
+          </dl>
+          <p class="calc-explain">Le coût des pièces perdues n'est pas une ligne en plus : il est déjà réparti sur les pièces vendables.</p>
+        </div>
+
+        <div class="calc-card">
+          <h3>Prix de vente conseillés</h3>
+          <ul class="calc-prices" id="out-prices"></ul>
+          <p class="calc-explain">La marge se calcule sur le <b>prix de vente</b>, pas sur le coût. À 50 %, tu gardes 50 centimes par dollar encaissé — l'erreur la plus fréquente chez les nouveaux importateurs.</p>
+        </div>
+
+        <div class="calc-card">
+          <h3>D'où vient chaque dollar</h3>
+          <ul class="calc-breakdown" id="out-breakdown"></ul>
+          <p class="calc-explanation" id="out-breakdown-note">Lecture : part de chaque poste dans le coût total rendu boutique.</p>
+        </div>
+
+        <div class="calc-card" id="out-alerts-card">
+          <h3>Points de vigilance</h3>
+          <ul class="calc-alerts" id="out-alerts"></ul>
+        </div>
+
+        <div class="calc-actions">
+          <a class="btn btn-wa" id="btn-wa" href="https://wa.me/8619824786223" target="_blank" rel="noopener" data-sama="wa" data-wa-text="Bonjour Sama Sourcing, j'ai un calcul de coût de revient à vérifier.">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg>Envoyer sur WhatsApp
+          </a>
+          <button class="btn btn-outline btn-small" type="button" id="btn-copy">
+            <svg aria-hidden="true"><use href="#i-copy"/></svg>Copier le détail
+          </button>
+          <button class="btn btn-outline btn-small" type="button" id="btn-print">
+            <svg aria-hidden="true"><use href="#i-print"/></svg>Imprimer / PDF
+          </button>
+          <button class="btn btn-outline btn-small" type="button" id="btn-save">
+            <svg aria-hidden="true"><use href="#i-save"/></svg>Enregistrer ce calcul
+          </button>
+          <button class="btn btn-outline btn-small" type="button" id="btn-reset">
+            <svg aria-hidden="true"><use href="#i-reset"/></svg>Repartir de zéro
+          </button>
+        </div>
+        <p class="calc-status" id="calc-status" role="status" aria-live="polite"></p>
+
+        <div class="calc-saved" id="calc-saved-wrap" hidden>
+          <h3>Tes calculs enregistrés</h3>
+          <p class="calc-note">Gardés sur cet appareil uniquement. Rien n'est envoyé.</p>
+          <ul class="calc-saved-list" id="calc-saved"></ul>
+        </div>
+
+        <p class="calc-disclaimer">Estimation, pas un devis. Les taux de douane, de fret et de change varient selon ton code HS, ton transitaire et le jour. Aucune donnée n'est transmise : tout se calcule dans ton navigateur.</p>
+      </aside>
+    </div>
+
+    <!-- Ce que l'outil ne peut pas savoir : la partie honnête, et celle que les IA citent. -->
+    <section class="section calc-limits" aria-labelledby="t-limites">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="t-limites">Ce que cette calculatrice ne dit pas</h2>
+          <p class="sub">Un chiffre juste sur des hypothèses fausses reste un chiffre faux. Voici les cinq choses qu'aucune calculatrice ne peut remplir à ta place.</p>
+        </div>
+        <ul class="cards cards-3">
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <b>Le temps</b>
+            <span>Production, transit maritime (souvent 30 à 60 jours vers l'Afrique de l'Ouest), dédouanement et route : ton argent travaille parfois trois mois avant la première vente. Compte ce délai dans ton prix.</span>
+          </li>
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-search"/></svg></span>
+            <b>La qualité réelle</b>
+            <span>La calculatrice suppose que la marchandise est conforme. Un échantillon vérifié et une inspection avant le solde, c'est ce qui rend cette hypothèse vraie.</span>
+          </li>
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span>
+            <b>La TVA récupérable</b>
+            <span>Si tu es assujetti et que tu déclares, la TVA d'importation n'est pas un coût final. Sinon, elle l'est entièrement. La différence change ta marge de plusieurs points.</span>
+          </li>
+        </ul>
+        <dl class="calc-lexique">
+          <div>
+            <dt>Coût de revient (landed cost)</dt>
+            <dd>Le coût complet d'une unité rendue chez toi : marchandise, fret, assurance, douane, frais de port, transport final, pertes. C'est la seule base saine pour fixer un prix de vente.</dd>
+          </div>
+          <div>
+            <dt>CIF et FOB</dt>
+            <dd>FOB : la marchandise chargée au port chinois, fret non compris. CIF : FOB + fret + assurance, jusqu'au port de destination. La douane taxe le plus souvent la valeur CIF.</dd>
+          </div>
+          <div>
+            <dt>CBM, LCL, FCL</dt>
+            <dd>Le CBM est un mètre cube : l'unité du fret maritime en groupage (LCL). Un conteneur complet (FCL) se paie au conteneur, 20 ou 40 pieds, qu'il soit plein ou non.</dd>
+          </div>
+          <div>
+            <dt>Code HS</dt>
+            <dd>La nomenclature douanière mondiale. Deux produits proches peuvent avoir deux codes, donc deux taux de droits. C'est le premier chiffre à demander à ton déclarant.</dd>
+          </div>
+          <div>
+            <dt>Clearing</dt>
+            <dd>Le passage en douane, et par extension l'agent qui s'en occupe. Ses honoraires ne sont pas les droits : ce sont deux lignes différentes.</dd>
+          </div>
+          <div>
+            <dt>Marge sur prix de vente</dt>
+            <dd>Une marge de 50 % sur le prix de vente signifie prix = coût ÷ (1 − 0,50), soit deux fois le coût. Une « marge de 50 % sur le coût » donnerait un résultat très différent.</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Appel final -->
+    <section class="final" id="final" aria-labelledby="t-final">
+      <div class="wrap final-inner">
+        <h2 id="t-final">Ton chiffre est posé. Maintenant, on le vérifie ?</h2>
+        <p>En 15 minutes, gratuit : on regarde tes hypothèses (fret, code HS, taux, pertes) et on te dit ce qui cloche avant que l'argent parte.</p>
+        <a class="btn btn-yellow" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly">Réserver mon appel</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bloc imprimé, rempli par le JS : lisible sans capture d'écran -->
+  <div class="calc-print" id="calc-print" aria-hidden="true"></div>
+
+  <!-- Pied de page -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="footer-name">Sama Sourcing</p>
+      <ul class="footer-nav" aria-label="Pages">
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="score-de-preparation.html">Le test</a></li>
+          <li><a href="calculatrice.html">Calculatrice</a></li>
+          <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
+          <li><a href="mon-histoire.html">Notre histoire</a></li>
+          <li><a href="preuves.html">Preuves</a></li>
+          <li><a href="documents.html">Documents</a></li>
+          <li><a href="questions.html">Questions</a></li>
+      </ul>
+      <div class="footer-row">
+        <p>Sama Sourcing · Marché Binwang, zone C, Yiwu, Chine · <a href="tel:+8619824786223" data-sama="phone-href">+86 198 2478 6223</a> · © <span data-sama-year>2026</span></p>
+        <ul class="social" data-social-list aria-label="Nous écrire">
+          <li><a href="https://wa.me/8619824786223?text=Bonjour%20Sama%20Sourcing%2C%20je%20veux%20pr%C3%A9parer%20un%20achat%20en%20Chine." target="_blank" rel="noopener" data-sama="wa">Écrire sur WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Barre d'action mobile -->
+  <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+    <a class="btn btn-primary" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly" tabindex="-1">Réserver mon appel<span class="visually-hidden"> (nouvel onglet)</span></a>
+  </div>
+
+  <!-- Bouton WhatsApp flottant -->
+  <a class="wa-float" href="https://wa.me/8619824786223?text=Bonjour%20Sama%20Sourcing%2C%20je%20veux%20pr%C3%A9parer%20un%20achat%20en%20Chine." target="_blank" rel="noopener" data-sama="wa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9c-1-.4-2-1.4-2.4-2.4l.9-1-1-2z"/></svg>
+    <span class="visually-hidden">Écrire à Sama Sourcing sur WhatsApp (nouvel onglet)</span>
+  </a>
+
+  <script src="assets/js/config.js?v=1" defer></script>
+  <script src="assets/js/main.js?v=8" defer></script>
+  <script src="assets/js/calculatrice.js?v=2" defer></script>
+</body>
+</html>
