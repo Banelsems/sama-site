@@ -11,7 +11,9 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 |---|---|---|
 | `index.html` | Accueil | promesse, trois niveaux de préparation, objections |
 | `score-de-preparation.html` | Le test | 12 questions → score sur 10 |
-| `calculatrice.html` | Calculatrice « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
+| `outils.html` | Outils | le menu Outils : les deux calculatrices et la bibliothèque |
+| `calculatrice.html` | Calcul « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
+| `calcul-transport.html` | Calcul transport & CBM | volume des colis, poids taxable, fret |
 | `comment-ca-marche.html` | Comment ça marche | méthode en 6 étapes |
 | `mon-histoire.html` | Notre histoire | origine, parcours |
 | `preuves.html` | Preuves | compte rendu, devis, captures masquées |
@@ -19,15 +21,29 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 | `questions.html` | Questions | FAQ (8 réponses) |
 | `404.html` | Erreur | page servie automatiquement par GitHub Pages |
 
+## Le menu Outils
+
+La navigation tient en sept entrées : **Accueil · Le test · Outils ▾ · Comment ça marche · Notre histoire · Preuves · Questions**. « Outils » est un bouton qui ouvre un panneau de trois liens, et renvoie vers `outils.html` (« Tous les outils ») :
+
+| Entrée | Page | Ce qu'elle fait |
+|---|---|---|
+| Vrai prix d'une pièce | `calculatrice.html` | coût de revient réel, prix de vente conseillé, alertes |
+| Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison |
+| Documents | `documents.html` | bibliothèque PDF |
+
+Le panneau se ferme au clic extérieur, à `Échap`, et quand on choisit un lien. Au clavier il reste utilisable : le bouton porte `aria-expanded` et `aria-controls`, les liens suivent dans l'ordre. En dessous de 1120 px (et dans le menu mobile) le panneau s'affiche en liste indentée plutôt qu'en carte flottante.
+
+Les deux calculateurs se parlent : le calcul transport peut envoyer son fret au calcul du coût de revient, par l'URL `calculatrice.html?fret=<montant>&annexes=<montant>&mode=<lcl|fcl20|fcl40|air|express>&src=fret`. Le calcul de destination pré-remplit « transport forfaitaire », « annexes » et le mode, puis affiche un statut « Fret importé depuis le calcul transport ». Ces paramètres ne sont lus que si `src=fret` : un lien ordinaire ne peut pas écraser tes saisies enregistrées.
+
 ## Les dossiers
 
 | Chemin | Contenu |
 |---|---|
-| `assets/css/` | `style.css` (tout le site) et `calculatrice.css` (la calculatrice seule) |
-| `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (la calculatrice) |
+| `assets/css/` | `style.css` (tout le site) et `calculatrice.css` (les deux calculateurs) |
+| `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (coût de revient), `calcul-transport.js` (fret et CBM) |
 | `assets/data/` | `quiz-data.js` : questions, scores, textes du test |
 | `assets/fonts/` | Bricolage Grotesque et Figtree, servies en local (SIL Open Font License) |
-| `assets/img/` | photos WebP, captures masquées, icônes, `og.jpg` et `og-calculatrice.jpg` |
+| `assets/img/` | photos WebP, captures masquées, icônes, `og.jpg`, `og-calculatrice.jpg` et `og-transport.jpg` |
 | `docs/` | les PDF publics (guide, présentation de l'équipe, écosystème, compte rendu, devis) |
 | `tools/build.py` | contrôle de cohérence + bascule d'URL de base (voir plus bas) |
 | `sw.js` | cache hors ligne (service worker, actif uniquement en HTTPS) |
@@ -59,14 +75,14 @@ python3 tools/build.py --domain samasourcing.site        # base + fichier CNAME
 python3 tools/build.py --domain samasourcing.site --no-cname
 ```
 
-Le contrôle vérifie que la navigation (8 liens, calculatrice incluse) et le pied de page sont identiques sur les 8 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
+Le contrôle vérifie que la navigation (7 entrées, menu Outils compris) et le pied de page sont identiques sur les 10 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
 
 La bascule remplace l'URL de base dans les `canonical`, `og:url`, `twitter:image`, `sitemap.xml`, `robots.txt`, `llms.txt`, `<base>` de `404.html` et `config.js`, en une passe. Aucun autre fichier n'est touché.
 
 ## Hors ligne
 
 - `sw.js` met en cache les pages et les ressources après la première visite (HTTPS uniquement ; en `file://` il ne s'enregistre pas, ce qui est normal). Stratégie : réseau d'abord pour les pages, cache d'abord pour les ressources. **Après une modification de fichier, incrémente `VERSION` en tête de `sw.js`** pour forcer le rafraîchissement des caches.
-- Le test et la calculatrice gardent leurs données dans `localStorage` (`sama-quiz-v3`, `sama-calc-v1`). Aucune requête réseau, aucune donnée envoyée.
+- Le test et les deux calculateurs gardent leurs données dans `localStorage` (`sama-quiz-v3`, `sama-calc-v1`, `sama-fret-v1`). Aucune requête réseau, aucune donnée envoyée.
 
 ## Sécurité
 

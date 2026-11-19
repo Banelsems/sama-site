@@ -779,6 +779,31 @@
     });
   }
 
+  /* ---------- Passerelle depuis le calcul de fret ----------
+     calcul-transport.html renvoie « ?fret=…&annexes=…&mode=…&src=fret ».
+     On l'applique après l'état sauvegardé, et avant le premier rendu : le
+     chiffre importé gagne, mais tout reste modifiable ensuite. */
+  var bridgeFromFreight = function () {
+    if (!window.URLSearchParams) return false;
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('src') !== 'fret') return false;
+    var changed = false;
+    var fret = parseFloat(params.get('fret'));
+    var annexes = parseFloat(params.get('annexes'));
+    var mode = params.get('mode');
+    var forfait = $('transport-forfait');
+    if (forfait && isFinite(fret) && fret > 0) { forfait.value = String(Math.round(fret * 100) / 100); changed = true; }
+    var annexesEl = $('transport-annexes');
+    if (annexesEl && isFinite(annexes) && annexes >= 0) { annexesEl.value = String(Math.round(annexes * 100) / 100); changed = true; }
+    var modeSel = $('transport-mode');
+    if (modeSel && mode) {
+      for (var i = 0; i < modeSel.options.length; i++) {
+        if (modeSel.options[i].value === mode) { modeSel.selectedIndex = i; changed = true; break; }
+      }
+    }
+    return changed;
+  };
+
   /* ---------- Démarrage ---------- */
   initial = readAll();
   var stored = store();
@@ -790,7 +815,11 @@
     try { localStorage.removeItem(STORE); } catch (e) { /* rien */ }
   }
   renderSaved();
-  update(false);
+  var importedFreight = bridgeFromFreight();
+  update(importedFreight);
+  if (importedFreight) {
+    setStatus('Fret importé depuis le calcul transport. Vérifie le taux de change et les droits : ce sont eux qui bougent le plus.');
+  }
 
   // L'impression relance un rendu pour être sûre que le bloc est à jour.
   window.addEventListener('beforeprint', function () { update(false); });

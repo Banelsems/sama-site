@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Sitemap de Sama Sourcing — 8 pages.
+  Sitemap de Sama Sourcing — 10 pages.
   Les URL suivent site.baseUrl de assets/js/config.js — mises à jour à la main
   (aucun script de build dans ce dépôt).
 -->
@@ -14,6 +14,18 @@
   <url>
     <loc>https://samasourcing.site/calculatrice.html</loc>
     <lastmod>2026-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://samasourcing.site/outils.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://samasourcing.site/calcul-transport.html</loc>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>

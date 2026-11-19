@@ -26,11 +26,13 @@ Ce fichier résume le site pour les moteurs de recherche et les assistants IA. I
 
 - [Accueil](https://samasourcing.site/) — positionnement, les trois niveaux de préparation, objections fréquentes.
 - [Le test (score de préparation)](https://samasourcing.site/score-de-preparation.html) — 12 questions, score sur 10, points manquants avant de payer. Sans email ni inscription.
+- [Outils](https://samasourcing.site/outils.html) — le menu Outils : deux calculatrices complémentaires et la bibliothèque de documents. Rien ne quitte le navigateur.
 - [Calculatrice « Vrai Prix d'une Pièce »](https://samasourcing.site/calculatrice.html) — coût de revient réel (landed cost) : fret, douane, TVA, change, pertes, frais portuaires, livraison ; prix de vente conseillé et alertes de risque.
+- [Calcul transport & CBM](https://samasourcing.site/calcul-transport.html) — volume des colis en mètres cubes, poids taxable (règle W/M, poids volumétrique 1 m³ ≈ 167 kg), coût du fret en groupage, conteneur 20/40 pieds, aérien ou express, avec comparaison des modes et report du fret dans la calculatrice du coût de revient.
 - [Comment ça marche](https://samasourcing.site/comment-ca-marche.html) — méthode en 6 étapes, de l'appel à l'expédition.
 - [Notre histoire](https://samasourcing.site/mon-histoire.html) — origine du projet, parcours de l'équipe.
 - [Preuves](https://samasourcing.site/preuves.html) — compte rendu de visite d'usine, devis client, captures WhatsApp (informations confidentielles masquées).
-- [Documents](https://samasourcing.site/documents.html) — bibliothèque : guide « La Chine n'est pas le problème » (41 p.), présentation de l'équipe, écosystème de produits, exemples de documents clients (PDF à télécharger).
+- [Documents](https://samasourcing.site/documents.html) — bibliothèque, accessible depuis le menu Outils : guide « La Chine n'est pas le problème » (41 p.), présentation de l'équipe, écosystème de produits, exemples de documents clients (PDF à télécharger).
 - [Questions](https://samasourcing.site/questions.html) — réponses courtes : faux fournisseur, budget, conformité, langue, prix.
 
 ## Définitions utilisées par la calculatrice
@@ -42,6 +44,11 @@ Ce fichier résume le site pour les moteurs de recherche et les assistants IA. I
 - **Clearing** : dédouanement de la marchandise par un agent agréé au port d'arrivée, avec les frais associés.
 - **Marge sur prix de vente** : bénéfice exprimé en pourcentage du prix de vente final, et non du prix d'achat (30 % de marge sur vente = 42,9 % de majoration).
 - **Marge de sécurité de change** : réserve ajoutée au calcul (5 à 15 % recommandé) pour absorber la variation du taux entre la commande et le paiement.
+- **W/M (poids ou mesure)** : règle du fret maritime en groupage ; le transporteur facture la plus élevée des deux unités, 1 m³ ou 1 000 kg.
+- **Poids volumétrique** : poids fictif calculé sur l'encombrement d'un colis. En aérien, 6 000 cm³ valent 1 kg (environ 167 kg par m³) ; certains express appliquent 5 000 (200 kg par m³).
+- **THC (Terminal Handling Charge)** : manutention au terminal portuaire, facturée au départ et à l'arrivée ; c'est une annexe du devis, pas le fret.
+- **Colis hors gabarit** : colis dépassant les dimensions ou le poids standard de manutention ; surtaxé, parfois refusé en express.
+- **Minimum facturé** : quantité minimale que le transitaire facture même si l'envoi est plus petit (souvent 1 m³ en groupage, 45 kg en aérien).
 
 ## Ce que le site ne fait pas
 

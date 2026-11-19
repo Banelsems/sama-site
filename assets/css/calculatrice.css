@@ -237,7 +237,8 @@
   .calc-print { display: block; color: #000; }
   .calc-print-wrap { display: grid; gap: 14px; }
   .calc-print-brand { font-size: 9pt; letter-spacing: .1em; text-transform: uppercase; color: #333; }
-  .calc-print-head h1 { font-size: 18pt; line-height: 1.1; margin: 0; }
+  .calc-print-head h1,
+  .calc-print-head h2 { font-size: 18pt; line-height: 1.1; margin: 0; }
   .calc-print-meta { font-size: 9pt; color: #444; }
   .calc-print-hero { display: grid; gap: 2px; padding: 10px 12px; border: 1px solid #bbb; border-radius: 6px; }
   .calc-print-hero p { font-size: 9pt; color: #444; margin: 0; }
@@ -262,3 +263,74 @@
   .calc-card { padding: 16px 14px; }
   .calc-actions .btn { width: 100%; justify-content: center; }
 }
+
+/* ==========================================================================
+   Calcul de fret (calcul-transport.html) : lignes de colis, comparaison, alertes
+   Ces styles prolongent la même grille que la calculatrice du vrai prix.
+   ========================================================================== */
+.vt-mode-note {
+  margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--sky);
+  color: var(--ink-2); font-size: .86rem; line-height: 1.45;
+}
+.vt-rows { display: grid; gap: 10px; margin-top: 4px; }
+.vt-row {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+  padding: 12px 12px 14px; border-radius: 14px; background: var(--sky);
+}
+.vt-cell-name { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 34px; gap: 8px; align-items: end; }
+.vt-cell { display: grid; gap: 4px; min-width: 0; }
+.vt-cell label, .vt-lab { display: block; font-size: .7rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.vt-cell input {
+  width: 100%; min-width: 0; min-height: 44px; padding: 9px 10px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
+  font: inherit; font-size: .95rem; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.vt-cell input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, .13); }
+.vt-cell input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.vt-cell input[type="number"]::-webkit-inner-spin-button,
+.vt-cell input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.vt-row-meta { grid-column: 1 / -1; margin: 2px 0 0; font-size: .78rem; font-weight: 700; color: var(--blue-deep); font-variant-numeric: tabular-nums; }
+.vt-row-meta.is-empty { color: var(--ink-2); font-weight: 500; }
+.vt-del {
+  display: grid; place-items: center; align-self: end; width: 34px; height: 44px; padding: 0;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
+  color: var(--ink-2); font-size: 1.2rem; line-height: 1; cursor: pointer;
+}
+.vt-del:hover { border-color: var(--error, #D92D20); color: var(--error, #D92D20); }
+@media (min-width: 900px) {
+  .vt-row { grid-template-columns: minmax(190px, 1.9fr) repeat(5, minmax(60px, .75fr)); align-items: end; padding: 12px; }
+  .vt-cell-name { grid-column: auto; }
+  .vt-row-meta { grid-column: auto; }
+}
+.vt-add-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.vt-add-row .btn { min-height: 42px; padding: 9px 18px; font-size: .92rem; }
+.vt-add-row .btn svg { width: 16px; height: 16px; flex: none; stroke-width: 2.4; }
+
+/* Case à cocher W/M : une ligne lisible, pas une case posée dans le vide. */
+.calc-check {
+  display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer;
+}
+.calc-check input { flex: none; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--blue); }
+.calc-check span { font-size: .92rem; font-weight: 700; line-height: 1.35; color: var(--ink); }
+
+/* Comparaison des options maritimes */
+.vt-cmp { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.vt-cmp-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.vt-cmp-row:last-child { border-bottom: 0; }
+.vt-cmp-name { font-weight: 700; font-size: .92rem; color: var(--ink); }
+.vt-cmp-name b { display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 999px; background: var(--yellow); color: var(--night); font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; }
+.vt-cmp-cost { font-family: var(--display); font-weight: 800; font-size: 1.02rem; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vt-cmp-note { grid-column: 1 / -1; font-size: .78rem; color: var(--ink-2); }
+.vt-cmp-row.is-best .vt-cmp-cost { color: var(--blue-deep); }
+
+/* Alertes de fret */
+.vt-alerts { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.vt-alert { padding: 11px 13px; border-radius: 12px; font-size: .86rem; line-height: 1.45; }
+.vt-alert-warn { background: var(--warn-soft, #FEF0E1); color: var(--warn, #B54708); }
+.vt-alert-info { background: var(--sky); color: var(--ink); }
+.vt-alert-ok { background: #EAF7EE; color: #17663A; }
+
+/* Passerelle vers la calculatrice du coût de revient */
+.vt-bridge svg { width: 18px; height: 18px; }
+.vt-bridge .is-disabled { opacity: .55; pointer-events: none; }

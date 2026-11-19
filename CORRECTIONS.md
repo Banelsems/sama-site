@@ -107,7 +107,42 @@ Cas de contrôle exécuté dans le navigateur (exemple livré avec la page) :
 → 30 175 069 CDF à 1 USD = 2 800 CDF ; 1 128 pièces vendables (6 % de pertes) ;
 **26 751 CDF par pièce**, soit 9,55 USD, **×2,73** le prix usine. Prix conseillé à 50 % : 53 502 CDF.
 
-## 5. Ce qui reste à faire par le propriétaire du site
+## 5. Menu Outils et deuxième calculateur (20 novembre 2026)
+
+Demande : un vrai menu « Outils » qui contient la calculatrice et les documents, et un **deuxième** calculateur en plus de l'existant, inspiré d'applications déjà publiées sur un autre lien.
+
+### 5.1 Ce qui a été lu dans les trois liens fournis
+
+Les liens 1 et 2 ouvrent la **même** application (`app_17jcc4k1178`, « SAMA-Calculateur ») : seule l'ancre change dans l'URL. Le troisième (`app_17jcbuyc4xj`, « sama-markets ») est une autre application. L'export du code source demandait un droit d'édition que ce compte n'a pas ; tout a donc été lu à l'écran, vue par vue.
+
+| Source | Ce qui était dedans | Retenu ? |
+|---|---|---|
+| SAMA-Calculateur — vue « Prix & change » | plusieurs lignes d'articles, saisie en CNY, taux du courtier avec paliers, **commission cachée** dans une fiche interne et une proforma | **Non** : l'intérêt de cette vue est justement de masquer la commission au client. La publier revient à publier la marge. Le site dit l'inverse : tout est montré, rien n'est gonflé. |
+| SAMA-Calculateur — vue « Transport / CBM » | CBM par colis (L × l × H ÷ 1 000 000), règle **W/M** (1 m³ = 1 000 kg), **poids volumétrique** (1 m³ = 167 kg, soit 6 000), facturation au CBM ou au kg | **Oui**, c'est la base du nouveau calculateur : mêmes formules, mêmes unités, calcul vivant à chaque frappe |
+| SAMA-Calculateur — vue « Historique » | export CSV des calculs passés | Non : le site n'a pas de stockage serveur, et cinq brouillons suffisent dans `localStorage` |
+| SAMA-Calculateur — aide et formules | panneau repliable expliquant chaque formule | Oui, sous forme de lexique fixe en bas de page (six entrées) plutôt que d'un tiroir |
+| sama-markets | 29 marchés dans 6 villes, position, tarifs officiels de taxi | Non **pour cette livraison** : les adresses de marché demandent une vérification terrain, et les tarifs de taxi changent. À reprendre plus tard si le besoin est confirmé. |
+
+Rien de la vue « Prix & change » n'a été copié : ni le champ de commission cachée, ni la proforma. Le nouveau calculateur ne calcule que ce que le transitaire facture réellement, et le dit.
+
+### 5.2 La navigation
+
+- Sept entrées partout : Accueil · Le test · **Outils ▾** · Comment ça marche · Notre histoire · Preuves · Questions. Le pied de page suit la même liste, avec `outils.html`.
+- « Outils » est un bouton, pas un lien : `aria-expanded`, `aria-controls`, `aria-haspopup`. Il ouvre trois entrées (Vrai prix d'une pièce, Transport & CBM, Documents) plus une ligne « Tous les outils » vers `outils.html`.
+- Fermeture au clic extérieur, à `Échap` (le focus retourne sur le bouton), et après le choix d'un lien. Survolement automatique seulement au-dessus de 1120 px et sur un appareil qui a un pointeur.
+- La pastille jaune « page courante » est posée à l'exécution par `main.js`, pas écrite dans le HTML : `tools/build.py` compare les blocs de navigation entre pages et aurait signalé la différence.
+
+### 5.3 La page `calcul-transport.html`
+
+Modes : groupage (LCL, au CBM ou à la tonne, minimum facturé), conteneur 20′ et 40′ (au conteneur), aérien (au kg taxable, minimum 45 kg), express. Entrées : lignes de colis (nom, quantité, L, l, H, kg), tarif, nombre de conteneurs, minimum, diviseur volumétrique (6 000 ou 5 000), annexes. Sorties : total CBM, poids réel, poids volumétrique, kg taxables, fret, total, coût au kg, au CBM, au colis, comparaison LCL / 20′ / 40′, alertes.
+
+Vérifié à la main sur l'exemple par défaut, 12 colis de 60 × 50 × 40 cm et 18 kg : 1,440 m³, 216,0 kg, 158,40 $ de fret, 338,40 $ avec 180 $ d'annexes, 1,44 CBM facturé, 1,57 $/kg, 235 $/m³, 28,20 $/colis ; comparaison 338 $ (groupage) contre 3 980 $ (20′) et 5 380 $ (40′), « le moins cher » sur le groupage.
+
+Le calculateur existant n'a pas bougé : même page, mêmes calculs, mêmes champs. Un bouton du nouveau calculateur passe le relais à l'ancien (`?fret=&annexes=&mode=&src=fret`), qui pré-remplit son transport forfaitaire et ses annexes. Sans `src=fret`, rien n'est lu : un lien partagé ne peut pas modifier un brouillon enregistré.
+
+Dix pages au total (plus la 404) ; les deux nouvelles sont dans `sitemap.xml`, `sw.js` et `llms.txt` : `outils.html` et `calcul-transport.html`, avec `og-transport.jpg` pour le partage.
+
+## 6. Ce qui reste à faire par le propriétaire du site
 
 1. Renseigner les réseaux sociaux dans `config.js` (ou les laisser vides : les liens disparaissent proprement).
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.

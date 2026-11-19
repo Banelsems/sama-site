@@ -5,11 +5,13 @@
 
    Après une modification de fichier, incrémente VERSION pour forcer la mise à jour.
 */
-var VERSION = 'sama-2026-11-19';
+var VERSION = 'sama-2026-11-20';
 var CORE = [
   './',
   'index.html',
+  'outils.html',
   'calculatrice.html',
+  'calcul-transport.html',
   'score-de-preparation.html',
   'comment-ca-marche.html',
   'mon-histoire.html',
@@ -24,11 +26,13 @@ var CORE = [
   'assets/js/main.js',
   'assets/js/quiz.js',
   'assets/js/calculatrice.js',
+  'assets/js/calcul-transport.js',
   'assets/data/quiz-data.js',
   'assets/img/favicon.svg',
   'assets/img/hero-800.webp',
   'assets/img/hero-1600.webp',
   'assets/img/og.jpg',
+  'assets/img/og-transport.jpg',
   'manifest.webmanifest'
 ];
 

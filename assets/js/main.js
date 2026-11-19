@@ -80,6 +80,46 @@
     document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
   }
 
+  /* ---------- Sous-menu « Outils » ----------
+     Un bouton, pas un lien : aria-expanded + hidden. Il s'ouvre au clic et au
+     survol (souris seulement), se ferme par Échap, par clic extérieur et quand
+     le focus sort du bloc. Si le JS ne tourne pas, le menu reste fermé : les
+     outils restent atteignables par outils.html et par le pied de page. */
+  var toolsNav = document.querySelector('[data-nav-tools]');
+  var toolsBtn = toolsNav ? toolsNav.querySelector('.nav-tools-btn') : null;
+  var toolsMenu = document.getElementById('nav-tools-menu');
+  if (toolsNav && toolsBtn && toolsMenu) {
+    var setTools = function (open) {
+      toolsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) toolsMenu.removeAttribute('hidden');
+      else toolsMenu.setAttribute('hidden', '');
+    };
+    var isOpen = function () { return toolsBtn.getAttribute('aria-expanded') === 'true'; };
+    // État initial : le sous-menu est ouvert si la page courante est un outil,
+    // uniquement en mobile (en desktop le panneau flottant resterait ouvert).
+    toolsBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      setTools(!isOpen());
+    });
+    var hoverQuery = window.matchMedia('(hover: hover) and (min-width: 1120px)');
+    toolsNav.addEventListener('mouseenter', function () { if (hoverQuery.matches) setTools(true); });
+    toolsNav.addEventListener('mouseleave', function () { if (hoverQuery.matches) setTools(false); });
+    document.addEventListener('click', function (e) {
+      if (isOpen() && !toolsNav.contains(e.target)) setTools(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) { setTools(false); toolsBtn.focus(); }
+    });
+    toolsNav.addEventListener('focusout', function (e) {
+      if (!toolsNav.contains(e.relatedTarget)) setTools(false);
+    });
+    // Un clic sur un outil referme le sous-menu et le menu mobile.
+    toolsMenu.addEventListener('click', function (e) { if (e.target.closest('a')) setTools(false); });
+    // Page courante = un outil : le parent s'allume, sans toucher au HTML
+    // (le contrôle de cohérence doit voir la même nav sur toutes les pages).
+    if (toolsMenu.querySelector('a[aria-current="page"]')) toolsBtn.classList.add('is-current');
+  }
+
   /* ---------- Barre fixe mobile : après le haut de page, avant l'appel final ---------- */
   var bar = document.getElementById('sticky-cta');
   var topSection = document.querySelector('.hero') || document.querySelector('.page-hero');

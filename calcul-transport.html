@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="only light">
+  <title>Calcul transport & CBM : volume, poids taxable, fret | Sama Sourcing</title>
+  <meta name="description" content="Calcule le volume de tes cartons en m³, le poids taxable (règle W/M, poids volumétrique) et le coût du fret : groupage, conteneur 20 ou 40 pieds, aérien. Comparaison et alertes, sans compte.">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://samasourcing.site/calcul-transport.html">
+  <link rel="alternate" hreflang="fr" href="https://samasourcing.site/calcul-transport.html">
+  <link rel="alternate" hreflang="x-default" href="https://samasourcing.site/calcul-transport.html">
+
+  <!-- Sécurité : aucune ressource externe, aucun script tiers, aucun formulaire distant. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; manifest-src 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Sama Sourcing">
+  <meta property="og:url" content="https://samasourcing.site/calcul-transport.html">
+  <meta property="og:title" content="Le fret avant la réservation : volume, poids taxable, coût">
+  <meta property="og:description" content="CBM par colis, règle W/M, poids volumétrique, groupage ou conteneur : ce que le transitaire va vraiment facturer.">
+  <meta property="og:image" content="https://samasourcing.site/assets/img/og-transport.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Calcul de fret Sama Sourcing : volume, poids taxable, coût du transport">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Le fret avant la réservation : volume, poids taxable, coût">
+  <meta name="twitter:description" content="CBM par colis, règle W/M, poids volumétrique, groupage ou conteneur : ce que le transitaire va vraiment facturer.">
+  <meta name="twitter:image" content="https://samasourcing.site/assets/img/og-transport.jpg">
+  <meta name="twitter:image:alt" content="Calcul de fret Sama Sourcing : volume, poids taxable, coût du transport">
+  <meta name="theme-color" content="#0A1A3A">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=24">
+  <link rel="stylesheet" href="assets/css/calculatrice.css?v=4">
+
+  <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://samasourcing.site/#organization",
+        "name": "Sama Sourcing",
+        "alternateName": "Sama Sourcing Chine",
+        "url": "https://samasourcing.site/",
+        "logo": "https://samasourcing.site/assets/img/favicon-32.png",
+        "image": "https://samasourcing.site/assets/img/og.jpg",
+        "description": "Sama Sourcing prépare les acheteurs africains avant qu'ils paient ou qu'ils voyagent en Chine : vérification des fournisseurs, échantillons, négociation en mandarin, inspection avant le solde, expédition.",
+        "foundingDate": "2026",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Marché Binwang, zone C, porte 3, 4e étage, n° 425-2",
+          "addressLocality": "Yiwu",
+          "addressRegion": "Zhejiang",
+          "addressCountry": "CN"
+        },
+        "areaServed": ["CD", "CM", "CI", "NG", "SN", "CG", "GA", "BF", "ML", "TG", "BJ"],
+        "knowsLanguage": ["fr", "zh", "en"],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+8619824786223",
+          "availableLanguage": ["fr", "zh", "en"],
+          "areaServed": "Afrique"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://samasourcing.site/#website",
+        "url": "https://samasourcing.site/",
+        "name": "Sama Sourcing",
+        "inLanguage": "fr",
+        "publisher": { "@id": "https://samasourcing.site/#organization" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://samasourcing.site/calcul-transport.html#webpage",
+        "url": "https://samasourcing.site/calcul-transport.html",
+        "name": "Calcul transport et CBM : volume, poids taxable, coût du fret",
+        "description": "Calcul du volume de colis en mètres cubes, du poids taxable (règle W/M, poids volumétrique) et du coût du fret maritime en groupage ou en conteneur, ou aérien.",
+        "isPartOf": { "@id": "https://samasourcing.site/#website" },
+        "about": { "@id": "https://samasourcing.site/calcul-transport.html#app" },
+        "inLanguage": "fr",
+        "primaryImageOfPage": "https://samasourcing.site/assets/img/og-transport.jpg"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://samasourcing.site/calcul-transport.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://samasourcing.site/" },
+          { "@type": "ListItem", "position": 2, "name": "Outils", "item": "https://samasourcing.site/outils.html" },
+          { "@type": "ListItem", "position": 3, "name": "Transport et CBM", "item": "https://samasourcing.site/calcul-transport.html" }
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://samasourcing.site/calcul-transport.html#app",
+        "name": "Calcul de fret « Transport & CBM »",
+        "url": "https://samasourcing.site/calcul-transport.html",
+        "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Calcul de fret maritime et aérien",
+        "operatingSystem": "Web, iOS, Android",
+        "browserRequirements": "Fonctionne sans installation, sans compte, sans connexion après le premier chargement.",
+        "isAccessibleForFree": true,
+        "inLanguage": "fr",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "Volume CBM par colis, calculé à partir des dimensions en centimètres",
+          "Règle W/M : 1 m³ = 1 000 kg, facturation de l'unité la plus élevée",
+          "Poids volumétrique aérien : diviseur 6 000 ou 5 000",
+          "Groupage LCL au m³, conteneur 20 ou 40 pieds, aérien et express au kilo",
+          "Minimum facturé du transitaire appliqué automatiquement",
+          "Comparaison du groupage et des deux conteneurs pour le même volume",
+          "Alertes : cargaison dense, conteneur à moitié vide, colis hors gabarit",
+          "Partage du résultat sur WhatsApp, impression en PDF, report vers la calculatrice du coût de revient"
+        ],
+        "publisher": { "@id": "https://samasourcing.site/#organization" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body id="fret">
+  <!-- Icônes : un seul trait, réutilisées partout. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path class="i-hand" d="M12 7v5l3 2" pathLength="1"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" pathLength="1"/><path d="M20 20l-4-4" pathLength="1"/></symbol>
+      <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7h15a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" pathLength="1"/><path d="M3 7l12-4v4" pathLength="1"/><circle cx="16.5" cy="13.5" r="1" pathLength="1"/></symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" pathLength="1"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" pathLength="1"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5" pathLength="1"/><path d="M10.5 18.5h3" pathLength="1"/></symbol>
+      <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z" pathLength="1"/><path d="M14 3v4h4M9 12h6M9 16h4" pathLength="1"/></symbol>
+      <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2" pathLength="1"/><path d="M16 10l5-3v10l-5-3" pathLength="1"/></symbol>
+      <symbol id="i-ship" viewBox="0 0 24 24"><path d="M3 16l2 5h14l2-5z" pathLength="1"/><path d="M5 16V9h14v7" pathLength="1"/><path d="M9 9V5h6v4" pathLength="1"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" pathLength="1"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17" pathLength="1"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" pathLength="1"/><path d="M8 10h8M8 13h5" pathLength="1"/></symbol>
+      <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" pathLength="1"/><path d="M9 7V4h6v3M3 13h18" pathLength="1"/></symbol>
+      <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 20V10l6 4v-4l6 4V5h6v15z" pathLength="1"/><path d="M7 17h2M12 17h2M17 17h2" pathLength="1"/></symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z" pathLength="1"/><path d="M3 13l9 5 9-5" pathLength="1"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" pathLength="1"/><circle cx="12" cy="9" r="2.5" pathLength="1"/></symbol>
+      <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4" pathLength="1"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" pathLength="1"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></symbol>
+      <symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2.5" width="16" height="19" rx="3" pathLength="1"/><path d="M7.5 7h9" pathLength="1"/><circle cx="8.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="15.5" cy="12" r="1.2"/><circle cx="8.5" cy="16.5" r="1.2"/><circle cx="12" cy="16.5" r="1.2"/><circle cx="15.5" cy="16.5" r="1.2"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l9 16H3z" pathLength="1"/><path d="M12 9v5M12 17h.01" pathLength="1"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2" pathLength="1"/><path d="M15 5H6a2 2 0 0 0-2 2v9" pathLength="1"/></symbol>
+      <symbol id="i-print" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="6" pathLength="1"/><rect x="4" y="9" width="16" height="8" rx="2" pathLength="1"/><path d="M8 17h8v4H8z" pathLength="1"/></symbol>
+      <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z" pathLength="1"/><path d="M8 3v6h7V3M8 21v-7h8v7" pathLength="1"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.3" pathLength="1"/><path d="M4 4v5h5" pathLength="1"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">S</span>Sama Sourcing</a>
+      <nav class="nav" id="menu" aria-label="Menu principal">
+          <a href="index.html">Accueil</a>
+          <a href="score-de-preparation.html">Le test</a>
+        <div class="nav-tools" data-nav-tools>
+          <button class="nav-tools-btn" type="button" aria-expanded="false" aria-controls="nav-tools-menu" aria-haspopup="true">
+            Outils<span class="nav-tools-caret" aria-hidden="true"></span>
+          </button>
+          <div class="nav-tools-menu" id="nav-tools-menu" hidden>
+            <a href="calculatrice.html"><span class="nt-title">Vrai prix d’une pièce</span><span class="nt-desc">Produit, fret, douane, change, pertes</span></a>
+            <a href="calcul-transport.html" aria-current="page"><span class="nt-title">Transport &amp; CBM</span><span class="nt-desc">Volume, poids taxable, fret maritime ou aérien</span></a>
+            <a href="documents.html"><span class="nt-title">Documents</span><span class="nt-desc">Guides et PDF à télécharger</span></a>
+            <a class="nav-tools-all" href="outils.html">Tous les outils</a>
+          </div>
+        </div>
+          <a href="comment-ca-marche.html">Comment ça marche</a>
+          <a href="mon-histoire.html">Notre histoire</a>
+          <a href="preuves.html">Preuves</a>
+          <a href="questions.html">Questions</a>
+      </nav>
+      <a class="btn btn-small" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly">Réserver<span class="visually-hidden"> mon appel (nouvel onglet)</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu"><span class="visually-hidden">Ouvrir le menu</span><span class="nav-toggle-bars" aria-hidden="true"></span></button>
+    </div>
+  </header>
+
+  <main id="contenu">
+
+    <section class="page-hero" aria-labelledby="t-page">
+      <div class="wrap">
+        <h1 id="t-page">Le fret, calculé avant de réserver</h1>
+        <p>Douze cartons de 60 × 50 × 40 cm, ce n'est pas « un demi-mètre cube » : c'est 1,44 m³. Et si tu passes en aérien, le transitaire facture le volume, pas la balance. Voici ce qu'il va vraiment compter.</p>
+        <ul class="calc-hero-facts">
+          <li><svg aria-hidden="true"><use href="#i-ship"/></svg>Mètres cubes par colis, en direct</li>
+          <li><svg aria-hidden="true"><use href="#i-layers"/></svg>Règle W/M et poids volumétrique</li>
+          <li><svg aria-hidden="true"><use href="#i-calc"/></svg>Groupage, 20 pieds, 40 pieds comparés</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Les formules, en clair : ce que les moteurs et les IA lisent en premier. -->
+    <section class="calc-intro" aria-labelledby="t-formule">
+      <div class="wrap">
+        <h2 id="t-formule">Les formules, sans jargon</h2>
+        <p class="calc-formula">
+          <span>Volume d'un colis</span>
+          <span class="calc-formula-op" aria-hidden="true">=</span>
+          <span class="calc-formula-frac">
+            <span>L × l × H (cm)</span>
+            <span>1 000 000</span>
+          </span>
+          <span>× nombre de colis</span>
+        </p>
+        <div class="calc-intro-grid">
+          <p><b>Maritime, groupage (LCL).</b> Le transitaire facture le volume, mais applique la règle <b>W/M</b> : 1 m³ vaut 1 000 kg. Une cargaison dense paie donc au poids. C'est toujours l'unité la plus élevée des deux qui compte.</p>
+          <p><b>Aérien.</b> Le poids taxable est le plus grand du poids réel et du poids volumétrique, lui-même calculé avec 1 m³ ≈ 167 kg (soit 6 000 cm³ par kilo). Un carton léger et encombrant se paie comme s'il pesait lourd.</p>
+          <p><b>Conteneur complet (FCL).</b> Tu paies le conteneur, qu'il soit plein ou vide. C'est pour ça que la comparaison groupage / 20 pieds / 40 pieds compte plus que le prix au m³ affiché.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="calc-shell">
+      <div class="calc-live" id="calc-live">
+        <span class="calc-live-label">Transport estimé</span>
+        <b id="vt-live">—</b>
+        <a class="calc-live-link" href="#resultat">Voir le détail<span class="visually-hidden"> du calcul</span></a>
+      </div>
+
+      <form class="calc-form" id="vt-form" novalidate>
+
+        <!-- 1. Le mode -->
+        <fieldset class="calc-group" id="g-mode">
+          <legend><span class="calc-step" aria-hidden="true">1</span>Le mode<span class="calc-group-note">Ce que tu as réservé, pas ce que tu espères</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field calc-field-wide">
+              <label for="vt-mode">Mode de transport</label>
+              <div class="calc-input">
+                <select id="vt-mode" name="vt-mode" aria-describedby="vt-mode-note">
+                  <option value="lcl" selected>Maritime — groupage (LCL), au m³</option>
+                  <option value="fcl20">Maritime — conteneur 20 pieds</option>
+                  <option value="fcl40">Maritime — conteneur 40 pieds</option>
+                  <option value="air">Aérien — au kilo taxable</option>
+                  <option value="express">Express — porte à porte</option>
+                </select>
+              </div>
+              <p class="vt-mode-note" id="vt-mode-note">Groupage : tu paies le volume occupé, souvent avec un minimum de 1 m³.</p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 2. Les colis -->
+        <fieldset class="calc-group" id="g-colis">
+          <legend><span class="calc-step" aria-hidden="true">2</span>Les colis<span class="calc-group-note">Dimensions en centimètres, poids brut par colis</span></legend>
+
+          <div class="vt-rows" id="vt-rows"></div>
+
+          <template id="vt-tpl">
+            <div class="vt-row">
+              <div class="vt-cell vt-cell-name">
+                <div class="vt-cell">
+                  <span class="vt-lab" aria-hidden="true">Désignation</span>
+                  <input data-k="name" type="text" maxlength="40" placeholder="Carton textile" autocomplete="off" aria-label="Désignation du colis">
+                </div>
+                <button class="vt-del" type="button" aria-label="Retirer ce colis">×</button>
+                <p class="vt-row-meta" data-meta>À renseigner</p>
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">Colis</span>
+                <input data-k="qty" type="number" inputmode="numeric" min="0" step="1" placeholder="12" aria-label="Nombre de colis identiques">
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">L (cm)</span>
+                <input data-k="l" type="number" inputmode="decimal" min="0" step="1" placeholder="60" aria-label="Longueur en centimètres">
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">l (cm)</span>
+                <input data-k="w" type="number" inputmode="decimal" min="0" step="1" placeholder="50" aria-label="Largeur en centimètres">
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">H (cm)</span>
+                <input data-k="h" type="number" inputmode="decimal" min="0" step="1" placeholder="40" aria-label="Hauteur en centimètres">
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">kg / colis</span>
+                <input data-k="kg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="18" aria-label="Poids brut par colis en kilos">
+              </div>
+            </div>
+          </template>
+
+          <div class="vt-add-row">
+            <button class="btn btn-outline btn-small" type="button" id="vt-add">
+              <svg aria-hidden="true"><use href="#i-plus"/></svg>Ajouter un colis
+            </button>
+            <button class="btn btn-outline btn-small" type="button" id="vt-demo">
+              <svg aria-hidden="true"><use href="#i-play"/></svg>Charger l'exemple
+            </button>
+          </div>
+
+          <p class="calc-line"><span>Volume total</span><b id="vt-cbm">—</b></p>
+          <p class="calc-line"><span>Poids réel total</span><b id="vt-kg">—</b></p>
+          <p class="calc-line"><span id="vt-vol-kg-label">Poids en tonnes (W/M)</span><b id="vt-vol-kg">—</b></p>
+        </fieldset>
+
+        <!-- 3. Le prix du transitaire -->
+        <fieldset class="calc-group" id="g-tarif">
+          <legend><span class="calc-step" aria-hidden="true">3</span>Le prix du transitaire<span class="calc-group-note">Son devis, hors annexes</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label for="vt-tarif" id="t-tarif-label">Prix du m³</label>
+              <div class="calc-input">
+                <input id="vt-tarif" name="vt-tarif" type="number" inputmode="decimal" min="0" step="1" value="110" aria-describedby="h-vt-tarif">
+                <span class="calc-unit" id="unit-tarif" aria-hidden="true">$/CBM</span>
+              </div>
+              <p class="calc-hint" id="h-vt-tarif">Le prix annoncé pour ce mode, hors annexes. Change-le dès que tu as un devis.</p>
+            </div>
+            <div class="calc-field" id="vt-field-conteneurs" hidden>
+              <label for="vt-conteneurs">Nombre de conteneurs</label>
+              <div class="calc-input">
+                <input id="vt-conteneurs" name="vt-conteneurs" type="number" inputmode="numeric" min="1" max="12" step="1" value="1" aria-describedby="h-vt-conteneurs">
+                <span class="calc-unit" aria-hidden="true">×</span>
+              </div>
+              <p class="calc-hint" id="h-vt-conteneurs">Deux conteneurs, c'est deux fois le prix — et souvent deux fois les annexes.</p>
+            </div>
+            <div class="calc-field" id="vt-field-minimum" hidden>
+              <label for="vt-minimum">Minimum facturé</label>
+              <div class="calc-input">
+                <input id="vt-minimum" name="vt-minimum" type="number" inputmode="decimal" min="0" step="0.1" value="1" aria-describedby="h-vt-minimum">
+                <span class="calc-unit" aria-hidden="true">CBM</span>
+              </div>
+              <p class="calc-hint" id="h-vt-minimum">La plupart des groupeurs facturent 1 m³ minimum, certains 2. L'aérien facture souvent 45 kg minimum.</p>
+            </div>
+            <div class="calc-field" id="vt-field-diviseur" hidden>
+              <label for="vt-diviseur">Diviseur volumétrique</label>
+              <div class="calc-input">
+                <select id="vt-diviseur" name="vt-diviseur" aria-describedby="h-vt-diviseur">
+                  <option value="6000" selected>6 000 — 1 m³ ≈ 167 kg (standard)</option>
+                  <option value="5000">5 000 — 1 m³ = 200 kg (plus cher)</option>
+                </select>
+              </div>
+              <p class="calc-hint" id="h-vt-diviseur">Le chiffre que ton transitaire applique. 6 000 est le plus courant, l'express facture souvent 5 000.</p>
+            </div>
+            <div class="calc-field calc-field-wide" id="vt-field-wm">
+              <label class="calc-check" for="vt-wm">
+                <input id="vt-wm" name="vt-wm" type="checkbox" checked aria-describedby="h-vt-wm">
+                <span><b>Règle W/M (poids ou mesure)</b></span>
+              </label>
+              <p class="calc-hint" id="h-vt-wm">Cochée : le transitaire facture l'unité la plus élevée entre le volume (1 m³) et le poids (1 000 kg). Décoche seulement si son devis dit « au volume uniquement ».</p>
+            </div>
+          </div>
+          <p class="calc-line"><span>Fret retenu</span><b id="vt-freight">—</b></p>
+          <details class="calc-help">
+            <summary>Pourquoi 1 m³ = 167 kg ?<span aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></span></summary>
+            <p>Un avion facture la place occupée, pas seulement la masse : un carton de plumes bloque autant de soute qu'un carton de fer. La convention est un rapport volume / poids. Avec 6 000 cm³ par kilo, 1 m³ (1 000 000 cm³) pèse « 167 kg » aux yeux du transporteur. Un diviseur plus petit (5 000) rend le volume encore plus cher : c'est un choix commercial du transitaire, pas une loi physique.</p>
+          </details>
+        </fieldset>
+
+        <!-- 4. Les annexes -->
+        <fieldset class="calc-group" id="g-annexes">
+          <legend><span class="calc-step" aria-hidden="true">4</span>Les annexes<span class="calc-group-note">Le devis les oublie souvent, la facture non</span></legend>
+          <div class="calc-grid">
+            <div class="calc-field calc-field-wide">
+              <label for="vt-annexes">Annexes du transitaire</label>
+              <div class="calc-input">
+                <input id="vt-annexes" name="vt-annexes" type="number" inputmode="decimal" min="0" step="1" value="180" aria-describedby="h-vt-annexes">
+                <span class="calc-unit" aria-hidden="true">USD</span>
+              </div>
+              <p class="calc-hint" id="h-vt-annexes">Connaissement (B/L), THC, frais de documents, magasinage, livraison au port. Un groupage réel tourne souvent entre 120 et 250 $.</p>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- Panneau de résultats -->
+      <aside class="calc-side" id="resultat" aria-labelledby="t-resultat">
+        <div class="calc-result">
+          <p class="calc-kicker">Transport estimé, du départ usine au port</p>
+          <p class="calc-demo-note">Exemple pré-rempli : 12 cartons, 60 × 50 × 40 cm, 18 kg, groupage. <button type="button" class="calc-demo-reset" id="vt-reset">Tout effacer</button></p>
+          <h2 id="t-resultat" class="calc-big"><b id="vt-total">—</b><span class="calc-big-cur">USD</span></h2>
+          <p class="calc-sans-change" id="vt-count">—</p>
+          <p class="calc-explain">C'est le fret que tu vas payer, annexes comprises — pas le prix au m³ affiché sur le devis.</p>
+          <p class="visually-hidden" id="vt-live-text" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="calc-card">
+          <h3>Ce qui est facturé</h3>
+          <dl class="calc-dl">
+            <div><dt>Unités facturées</dt><dd id="vt-units">—</dd></div>
+            <div><dt>Annexes</dt><dd id="vt-annexes-out">—</dd></div>
+            <div><dt>Coût au kilo réel</dt><dd id="vt-perkg">—</dd></div>
+            <div><dt>Coût au m³</dt><dd id="vt-percbm">—</dd></div>
+            <div><dt>Coût par colis</dt><dd id="vt-percolis">—</dd></div>
+          </dl>
+          <p class="calc-explain">Le coût au kilo est calculé sur le poids <b>réel</b>, pas sur le poids taxable : c'est ce que tu paies par kilo de marchandise que tu peux vendre.</p>
+        </div>
+
+        <div class="calc-card">
+          <h3>Et avec un autre mode ?</h3>
+          <ul class="vt-cmp" id="vt-compare"></ul>
+          <p class="calc-explain">Même volume, mêmes annexes. Les prix des conteneurs sont des ordres de grandeur 2026 : demande toujours les deux devis avant de réserver.</p>
+        </div>
+
+        <div class="calc-card">
+          <h3>Points de vigilance</h3>
+          <ul class="vt-alerts" id="vt-alerts"></ul>
+        </div>
+
+        <div class="calc-actions">
+          <a class="btn btn-wa" id="vt-wa" href="https://wa.me/8619824786223" target="_blank" rel="noopener" data-sama="wa">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg><span id="vt-wa-label">Vérifier ce fret sur WhatsApp</span>
+          </a>
+          <button class="btn btn-outline btn-small" type="button" id="vt-copy">
+            <svg aria-hidden="true"><use href="#i-copy"/></svg>Copier le détail
+          </button>
+          <button class="btn btn-outline btn-small" type="button" id="vt-print-btn">
+            <svg aria-hidden="true"><use href="#i-print"/></svg>Imprimer / PDF
+          </button>
+          <a class="btn btn-outline btn-small vt-bridge" id="vt-to-calc" href="calculatrice.html">
+            <svg aria-hidden="true"><use href="#i-calc"/></svg>Reporter dans le coût de revient
+          </a>
+        </div>
+        <p class="calc-status" id="vt-status" role="status" aria-live="polite"></p>
+
+        <p class="calc-disclaimer">Estimation, pas un devis. Le fret réel dépend du taux du jour, des surcharges (BAF, CAF, THC) et de la place disponible. Aucune donnée n'est transmise : tout se calcule dans ton navigateur.</p>
+      </aside>
+    </div>
+
+    <!-- La partie honnête : ce que le calcul ne peut pas savoir. -->
+    <section class="section calc-limits" aria-labelledby="t-limites">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="t-limites">Ce que ce calcul ne dit pas</h2>
+          <p class="sub">Le fret est la ligne la plus négociable et la plus surfacturée d'un import. Quatre angles morts à garder en tête.</p>
+        </div>
+        <ul class="cards cards-3">
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-wallet"/></svg></span>
+            <b>Les surcharges</b>
+            <span>BAF (carburant), CAF (change), THC au départ et à l'arrivée, magasinage : le devis « 110 $/m³ » devient souvent 180 $ une fois tout ajouté. Demande un prix tout compris, écrit.</span>
+          </li>
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <b>Le délai</b>
+            <span>Le groupage attend d'être complet : deux à quatre semaines de plus qu'un conteneur. Un tarif moins cher qui arrive un mois après ta saison n'est pas moins cher.</span>
+          </li>
+          <li class="card">
+            <span class="flip-icon"><svg aria-hidden="true"><use href="#i-alert"/></svg></span>
+            <b>Les marchandises particulières</span>
+            <span>Batteries, liquides, cosmétiques, produits alimentaires : classes dangereuses ou contrôlées, tarifs et interdictions à part. Aucune calculatrice ne les couvre.</span>
+          </li>
+        </ul>
+        <dl class="calc-lexique">
+          <div><dt>CBM</dt><dd>Mètre cube. L'unité reine du fret maritime en groupage : L × l × H en centimètres, divisé par 1 000 000.</dd></div>
+          <div><dt>W/M (poids ou mesure)</dt><dd>La règle qui facture la plus élevée des deux unités : 1 m³ ou 1 000 kg. Une cargaison dense paie au poids, une cargaison légère au volume.</dd></div>
+          <div><dt>Poids volumétrique</dt><dd>Le poids « fictif » d'un colis calculé sur son encombrement. En aérien, 6 000 cm³ valent 1 kg, soit environ 167 kg par m³.</dd></div>
+          <div><dt>LCL et FCL</dt><dd>LCL : groupage, tu partages le conteneur et paies ta part en m³. FCL : conteneur complet, tu paies le conteneur, plein ou vide.</dd></div>
+          <div><dt>THC</dt><dd>Terminal Handling Charge : manutention au terminal, facturée au départ et à l'arrivée. C'est une annexe, pas le fret.</dd></div>
+          <div><dt>Hors gabarit</dt><dd>Tout colis qui dépasse les dimensions ou le poids standard d'un colis manutentionnable. Surcôté, parfois refusé en express.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="final" id="final" aria-labelledby="t-final">
+      <div class="wrap final-inner">
+        <h2 id="t-final">Ton fret est chiffré. On vérifie le reste ?</h2>
+        <p>En 15 minutes, gratuit : on regarde le devis du transitaire (surcharges, minimum, W/M) et on te dit ce qui se cache dans le prix au m³.</p>
+        <a class="btn btn-yellow" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly">Réserver mon appel</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bloc imprimé, rempli par le JS -->
+  <div class="calc-print" id="vt-print" aria-hidden="true">
+    <div class="calc-print-wrap">
+      <div class="calc-print-head">
+        <p class="calc-print-brand">Sama Sourcing · samasourcing.site</p>
+        <h2>Calcul de fret — volume, poids taxable, coût</h2>
+        <p class="calc-print-meta">Estimation faite dans le navigateur. À faire confirmer par écrit par le transitaire.</p>
+      </div>
+      <div id="vt-print-totals"></div>
+      <div id="vt-print-body"></div>
+      <p class="calc-print-foot">Montants en dollars US. Le fret réel dépend du taux du jour, des surcharges et de la place disponible.</p>
+    </div>
+  </div>
+
+  <!-- Pied de page -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="footer-name">Sama Sourcing</p>
+      <ul class="footer-nav" aria-label="Pages">
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="score-de-preparation.html">Le test</a></li>
+          <li><a href="outils.html">Outils</a></li>
+          <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
+          <li><a href="mon-histoire.html">Notre histoire</a></li>
+          <li><a href="preuves.html">Preuves</a></li>
+          <li><a href="questions.html">Questions</a></li>
+      </ul>
+      <div class="footer-row">
+        <p>Sama Sourcing · Marché Binwang, zone C, Yiwu, Chine · <a href="tel:+8619824786223" data-sama="phone-href">+86 198 2478 6223</a> · © <span data-sama-year>2026</span></p>
+        <ul class="social" data-social-list aria-label="Nous écrire">
+          <li><a href="https://wa.me/8619824786223?text=Bonjour%20Sama%20Sourcing%2C%20je%20veux%20pr%C3%A9parer%20un%20achat%20en%20Chine." target="_blank" rel="noopener" data-sama="wa">Écrire sur WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Barre d'action mobile -->
+  <div class="sticky-cta" id="sticky-cta" aria-hidden="true">
+    <a class="btn btn-primary" href="https://calendly.com/samasourcing/appel-decouverte" target="_blank" rel="noopener" data-sama="calendly" tabindex="-1">Réserver mon appel<span class="visually-hidden"> (nouvel onglet)</span></a>
+  </div>
+
+  <!-- Bouton WhatsApp flottant -->
+  <a class="wa-float" href="https://wa.me/8619824786223?text=Bonjour%20Sama%20Sourcing%2C%20je%20veux%20pr%C3%A9parer%20un%20achat%20en%20Chine." target="_blank" rel="noopener" data-sama="wa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2-1-1 .9c-1-.4-2-1.4-2.4-2.4l.9-1-1-2z"/></svg>
+    <span class="visually-hidden">Écrire à Sama Sourcing sur WhatsApp (nouvel onglet)</span>
+  </a>
+
+  <script src="assets/js/config.js?v=1" defer></script>
+  <script src="assets/js/main.js?v=9" defer></script>
+  <script src="assets/js/calcul-transport.js?v=1" defer></script>
+</body>
+</html>

@@ -866,3 +866,89 @@ img, svg, video { max-width: 100%; }
   body.has-cta-bar .wa-float { bottom: calc(16px + 68px + env(safe-area-inset-bottom, 0px)); }
 }
 @media print { .wa-float { display: none; } }
+
+/* ==========================================================================
+   Menu « Outils » + hub outils.html
+   Un seul point d'entrée pour la calculatrice du vrai prix, le calcul de fret
+   et la bibliothèque de documents. Le sous-menu est un vrai bouton accessible :
+   aria-expanded, fermeture par Échap ou clic extérieur, jamais de lien mort.
+   ========================================================================== */
+.nav-tools { position: relative; display: flex; align-items: center; }
+.nav-tools-btn {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 8px;
+  margin: 0; padding: 0; border: 0; background: none; color: var(--mist-ink);
+  font: inherit; font-weight: 500; font-size: 1rem; line-height: 1.2; cursor: pointer; text-align: left;
+}
+.nav-tools-btn::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--yellow);
+  transform: scaleX(0); transform-origin: left; transition: transform 250ms var(--ease-out);
+}
+.nav-tools-btn:hover { color: var(--paper); }
+.nav-tools-btn:hover::after, .nav-tools-btn[aria-expanded="true"]::after { transform: scaleX(1); }
+.nav-tools-btn[aria-expanded="true"] { color: var(--paper); }
+.nav-tools-btn.is-current { color: var(--paper); }
+.nav-tools-btn.is-current::after { transform: scaleX(1); }
+.nav-tools-caret {
+  width: 7px; height: 7px; margin-top: -3px; border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform 200ms var(--ease-out);
+}
+.nav-tools-btn[aria-expanded="true"] .nav-tools-caret { transform: rotate(-135deg); margin-top: 2px; }
+#nav-tools-menu {
+  display: grid; gap: 2px; margin: 6px 0 10px 10px; padding: 4px 0 4px 12px;
+  border-left: 2px solid var(--night-2); list-style: none;
+}
+#nav-tools-menu[hidden] { display: none; }
+#nav-tools-menu a {
+  display: grid; gap: 2px; padding: 9px 6px; border: 0; border-radius: 8px;
+  color: var(--paper); font-size: .95rem; font-weight: 700; text-decoration: none;
+}
+#nav-tools-menu a::after { display: none; }
+#nav-tools-menu a:hover { background: rgba(255, 255, 255, .08); color: var(--paper); }
+#nav-tools-menu a[aria-current="page"] { color: var(--yellow); }
+.nt-title { display: block; line-height: 1.25; }
+.nt-desc { display: block; margin-top: 2px; color: var(--mist-ink); font-size: .8rem; font-weight: 500; line-height: 1.35; }
+#nav-tools-menu .nav-tools-all { margin-top: 4px; color: var(--yellow); font-size: .82rem; font-weight: 700; letter-spacing: .01em; }
+#nav-tools-menu .nav-tools-all:hover { background: none; text-decoration: underline; text-underline-offset: 3px; }
+.site-header.menu-open .nav-tools { display: block; }
+.site-header.menu-open .nav-tools-btn { padding: 14px 4px; font-size: 1.1rem; color: var(--paper); border-bottom: 1px solid var(--night-2); }
+.site-header.menu-open .nav-tools-btn::after { display: none; }
+.site-header.menu-open .nav-tools-btn.is-current { color: var(--yellow); }
+@media (min-width: 1120px) {
+  .nav-tools { display: flex; }
+  .nav-tools-btn { padding: 0; font-size: .95rem; color: var(--mist-ink); }
+  #nav-tools-menu {
+    position: absolute; top: calc(100% + 15px); left: -16px; z-index: 70;
+    width: 308px; margin: 0; padding: 8px; gap: 2px;
+    background: var(--night); border: 1px solid var(--night-2); border-radius: 16px;
+    box-shadow: 0 28px 56px -28px rgba(0, 0, 0, .75); animation: nt-in 180ms var(--ease-out);
+  }
+  #nav-tools-menu a { padding: 10px 12px; font-size: .95rem; color: var(--paper); }
+  #nav-tools-menu .nav-tools-all { margin-top: 4px; border-top: 1px solid var(--night-2); border-radius: 0 0 8px 8px; padding-top: 12px; }
+}
+@keyframes nt-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #nav-tools-menu { animation: none; } }
+@media print { .nav-tools { display: none; } }
+
+/* Hub : les trois outils, en cartes cliquables */
+.tool-grid { display: grid; gap: 16px; margin-top: 30px; }
+@media (min-width: 780px) { .tool-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1080px) { .tool-grid--three { grid-template-columns: repeat(3, 1fr); } .tool-grid--three > :first-child { grid-column: span 1; } }
+.tool-card {
+  display: flex; flex-direction: column; gap: 12px; padding: 28px 26px 24px;
+  border: 1px solid var(--line, #D3DCEC); border-radius: var(--r-md); background: var(--paper);
+  box-shadow: 0 26px 60px -48px rgba(10, 26, 58, .55);
+  transition: transform 250ms var(--ease-out), box-shadow 250ms ease;
+}
+.tool-card:hover { transform: translateY(-3px); box-shadow: 0 34px 70px -46px rgba(10, 26, 58, .5); }
+.tool-card h3 { margin: 0; font-family: var(--display); font-size: 1.42rem; font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; }
+.tool-card p { margin: 0; color: var(--ink-2); }
+.tool-tag {
+  align-self: flex-start; padding: 5px 10px; border-radius: 999px; background: var(--sky);
+  color: var(--blue-deep); font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+}
+.tool-card ul { display: grid; gap: 7px; margin: 2px 0 0; padding: 0; list-style: none; color: var(--ink-2); font-size: .93rem; }
+.tool-card ul li { display: grid; grid-template-columns: 14px 1fr; gap: 6px; align-items: start; }
+.tool-card ul li::before { content: "—"; color: var(--blue-deep); font-weight: 700; }
+.tool-card .tool-go { margin-top: auto; padding-top: 8px; }
+.tool-card .tool-go .more-link { font-size: .95rem; }
+.tool-note { display: flex; align-items: flex-start; gap: 10px; margin-top: 26px; font-size: .9rem; color: var(--ink-2); }
