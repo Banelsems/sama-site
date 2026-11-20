@@ -39,7 +39,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css?v=25">
-  <link rel="stylesheet" href="assets/css/marches.css?v=5">
+  <link rel="stylesheet" href="assets/css/marches.css?v=7">
 
   <script type="application/ld+json">
 {
@@ -279,25 +279,21 @@
   </header>
 
   <main id="contenu">
-  <div class="mkt-app">
-    <header class="site-header">
-      <div class="wrap header-inner">
-        <a class="brand" href="#/" aria-label="SAMA Markets, revenir à la liste des villes">
-          <span class="brand-mark" aria-hidden="true">S</span>
-          <span class="brand-text">SAMA Markets</span>
-        </a>
-        <nav class="nav" aria-label="Villes et outils des marchés">
-          <a href="#/" data-nav="home">Villes</a>
-          <a href="#/taxi" data-nav="taxi">Taxi</a>
-          <a href="#/about" data-nav="about">À propos</a>
-        </nav>
-        <div class="lang-switch" role="group" aria-label="Langue de cette page">
-          <button type="button" data-lang="fr" aria-pressed="true">FR</button>
-          <button type="button" data-lang="en" aria-pressed="false">EN</button>
-        </div>
+  <div class="mkt-bar">
+    <div class="wrap mkt-bar-inner">
+      <nav class="mkt-tabs" aria-label="Les marchés, le taxi, à propos">
+        <a href="#/" data-nav="home">Villes</a>
+        <a href="#/taxi" data-nav="taxi">Taxi</a>
+        <a href="#/about" data-nav="about">À propos</a>
+      </nav>
+      <div class="mkt-lang" role="group" aria-label="Langue de cette page">
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
-    </header>
+    </div>
+  </div>
 
+  <div class="mkt-app">
     <div id="app">
       <section class="hero">
         <div class="wrap">
@@ -401,6 +397,6 @@
   <script src="assets/js/config.js?v=1" defer></script>
   <script src="assets/js/main.js?v=11" defer></script>
   <script src="assets/data/marches.js?v=2" defer></script>
-  <script src="assets/js/marches.js?v=2" defer></script>
+  <script src="assets/js/marches.js?v=3" defer></script>
 </body>
 </html>

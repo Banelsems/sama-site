@@ -205,7 +205,7 @@ Un script de conversion (`build_marches.py`, hors du dépôt) découpe le fichie
 - `html` et `*` sont supprimés (ils viseraient toute la page), les `@media` sont traités en récursif, les `@keyframes` restent globales sous leurs noms propres (`spin`, `rise-safe`, `pop`) ;
 - le bloc `:root` est conservé tel quel : ses variables (`--night`, `--paper`, `--line`…) sont déjà celles du site, et les redéclarer sous `.mkt-app` les aurait figées pour toute la page.
 
-Par-dessus, une trentaine de lignes d'adaptation : la barre de l'application (noire, collante, `.site-header`) devient une sous-barre claire et statique sous la navigation du site ; le hero et le `page-hero` de l'app perdent la moitié de leur réserve verticale ; sous 720 px, ses trois liens (Villes, Taxi, À propos) passent sur une seconde ligne au lieu de disparaître — sans eux, un client au téléphone ne peut plus changer d'outil depuis le haut de la page.
+Par-dessus, une vingtaine de lignes d'adaptation, plus une quinzaine pour la sous-barre : la barre de marque de l'application (logo, nom, trois liens, bascule FR/EN) est supprimée et remplacée par une sous-barre `.mkt-bar` aux couleurs du site — fond papier, filet gris, soulignement jaune au survol. Le hero et le `page-hero` reprennent exactement le rythme des `.page-hero` du site (56/64 px, 88/96 px au-delà de 960 px, titre en `clamp(2.2rem, 6.4vw, 3.8rem)`, chapô à 1,12 rem sur 52 caractères).
 
 ### 7.3 La page `marches.html`
 
@@ -233,6 +233,18 @@ Par-dessus, une trentaine de lignes d'adaptation : la barre de l'application (no
 - Onze marchés sur vingt-neuf n'ont pas d'épingle vérifiée : la fiche affiche « épingle à confirmer » et le bouton Amap propose une recherche par nom, pas un point sur la carte. C'est une information, pas un défaut à masquer.
 - Aucun prix, aucune marge, aucun devis : l'annuaire donne des portes, pas des tarifs.
 - L'application garde sa propre navigation par ancre (`#/city/…`, `#/m/…`) : ces URL ne sont pas indexées individuellement, c'est pourquoi l'annuaire en clair existe en bas de page.
+### 7.7 Deuxième passe : un seul site, pas une application posée dessus
+
+La première version fonctionnait, mais elle se lisait comme deux sites l'un sous l'autre : la barre sombre du site, puis une seconde barre sombre avec le logo et le nom de l'application, puis un hero aux dimensions de l'application. Corrigé ainsi :
+
+- **La barre de marque de l'app est partie.** Ses trois liens et la bascule FR/EN sont repris par une sous-barre claire, sans logo ni nom d'application : la page n'affiche plus qu'une marque, celle du site. Les fichiers de style gardent la structure de l'app, mais cette barre appartient désormais au vocabulaire du site.
+- **Le hero suit le site.** Mêmes réserve verticale, même taille de titre, même mesure de chapô que `outils.html` ou `preuves.html` : en passant d'une page à l'autre, la ligne de titre ne bouge plus.
+- **Un repère qui reste allumé.** « Villes » garde `aria-current="page"` quand on descend dans une ville, une catégorie ou une fiche marché : on est toujours dans l'annuaire, et le visiteur sait où il est.
+- **Sur mobile, la fiche marché a sa propre barre d'action collée en bas.** Le bouton WhatsApp du site remonte de 96 px quand cette barre est affichée, pour ne plus masquer « Open in Amap ».
+- **Code mort retiré** : les règles qui visaient l'ancienne barre de l'application, et le média qui faisait passer ses liens sur une seconde ligne.
+
+Vérifié ensuite : `python3 tools/build.py` (12 pages, aucun écart) ; contrôle des liens, `id` et `aria` (13 fichiers, 0 erreur, 0 alerte) ; navigateur en 1078 px et en 390 px — accueil, ville (Guangzhou, 9 marchés), fiche (十三行), estimateur taxi, bascule FR/EN : `scrollWidth` = 390 partout, aucun débordement, aucune erreur console. `marches.css` passe en `?v=7`, `assets/js/marches.js` en `?v=3`, et `sw.js` en `sama-2026-11-21b` pour que le cache hors ligne prenne la nouvelle feuille.
+
 
 ## 8. Ce qui reste à faire par le propriétaire du site
 

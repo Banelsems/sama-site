@@ -288,36 +288,16 @@
 .mkt-app .lang-switch button[aria-pressed="true"] { background: var(--paper); color: var(--night);}
 
 /* =====================================================================
-   Adaptation au site Sama Sourcing
-   La barre de l'app devient une sous-barre claire, sous la navigation du
-   site : elle sert à passer de « Villes » à « Taxi » et à changer de langue.
+   Intégration au site (21 novembre 2026)
+   L'app n'a plus de barre de marque : le site garde la sienne, et une
+   sous-barre claire porte ses trois liens et la langue. Le hero reprend
+   le rythme exact des .page-hero du site (56/64 px, 88/96 px au large).
    ===================================================================== */
-.mkt-app .site-header {
-  position: static; z-index: auto;
-  background: var(--sky); color: var(--ink);
-  border-bottom: 1px solid var(--line);
-}
-.mkt-app .header-inner { min-height: 56px; }
-.mkt-app .nav a { color: var(--ink-2); }
-.mkt-app .nav a:hover, .mkt-app .nav a[aria-current="page"] { color: var(--night); }
-.mkt-app .brand { color: var(--night); font-size: 1rem; }
-.mkt-app .brand-mark { width: 30px; height: 30px; font-size: .95rem; }
-.mkt-app .lang-switch { border-color: var(--line); background: var(--paper); }
-.mkt-app .lang-switch button { color: var(--ink-2); }
-.mkt-app .lang-switch button[aria-pressed="true"] { background: var(--night); color: var(--paper); }
-/* La page garde le hero de l'app : il est déjà écrit pour ce sujet. */
-.mkt-app .hero, .mkt-app .page-hero { padding-block: 32px 44px; }
-@media (min-width: 960px) { .mkt-app .hero, .mkt-app .page-hero { padding-block: 40px 56px; } }
-
-/* Sous 720 px, la barre de l'app garde ses trois liens : ils passent sous la
-   marque, sur une seule ligne. Sans eux, un client au téléphone ne pourrait
-   pas passer de « Villes » à « Taxi » depuis le haut de la page. */
-@media (max-width: 719px) {
-  .mkt-app .header-inner { flex-wrap: wrap; min-height: 0; padding-block: 8px 2px; row-gap: 2px; }
-  .mkt-app .nav { display: flex; order: 3; width: 100%; gap: 20px; font-size: .95rem; }
-  .mkt-app .nav a::after { bottom: -2px; }
-  .mkt-app .lang-switch { margin-left: auto; }
-}
+.mkt-app .hero { padding-block: 56px 64px; gap: 16px; }
+.mkt-app .hero .wrap { gap: 16px; }
+.mkt-app .hero h1 { max-width: 20ch; font-size: clamp(2.2rem, 6.4vw, 3.8rem); }
+.mkt-app .hero-sub { font-size: 1.12em; max-width: 52ch; }
+@media (min-width: 960px) { .mkt-app .hero { padding-block: 88px 96px; } }
 
 /* Les composants du site priment hors de l'app : rien à faire ici. */
 
@@ -332,6 +312,36 @@
   background: var(--sky); color: var(--ink-2); font-size: .95rem; line-height: 1.55;
 }
 .mkt-app .fallback-note a { color: var(--blue); font-weight: 700; }
+
+/* Sous-barre de la page : les trois vues de l'annuaire et la langue.
+   Elle emprunte le vocabulaire du site (papier, ligne, soulignement jaune),
+   sans marque ni logo : la page reste une page du site. */
+.mkt-bar { background: var(--paper); border-bottom: 1px solid var(--line); }
+.mkt-bar-inner { display: flex; align-items: center; gap: 18px; min-height: 52px; }
+.mkt-tabs { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-right: auto; }
+.mkt-tabs a {
+  position: relative; padding: 15px 0 13px; color: var(--ink-2);
+  font-size: .95rem; font-weight: 600; text-decoration: none;
+}
+.mkt-tabs a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 7px; height: 2px;
+  background: var(--yellow); transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+.mkt-tabs a:hover, .mkt-tabs a[aria-current="page"] { color: var(--night); }
+.mkt-tabs a:hover::after, .mkt-tabs a[aria-current="page"]::after { transform: scaleX(1); }
+.mkt-lang { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.mkt-lang button {
+  min-height: 34px; padding: 2px 12px; border: 0; background: transparent;
+  color: var(--ink-2); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer;
+}
+.mkt-lang button[aria-pressed="true"] { background: var(--night); color: var(--paper); }
+
+/* Sur mobile, la fiche marché a sa propre barre d'actions collée en bas :
+   on remonte le bouton WhatsApp du site pour ne pas masquer « Open in Amap ». */
+@media (max-width: 719px) {
+  body:has(.mkt-app .sticky-bar) .wa-float { bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+}
 
 .dir-city {
   margin: 0 0 10px; border: 1px solid var(--line); border-radius: var(--r-md);

@@ -52,7 +52,7 @@ Les deux calculateurs se parlent : le calcul transport peut envoyer son fret au 
 
 | Chemin | Contenu |
 |---|---|
-| `assets/css/` | `style.css` (tout le site), `calculatrice.css` (les deux calculateurs) et `marches.css` (l'annuaire, scopé sous `.mkt-app`) |
+| `assets/css/` | `style.css` (tout le site), `calculatrice.css` (les deux calculateurs) et `marches.css` (l'annuaire, scopé sous `.mkt-app`, plus sa sous-barre `.mkt-bar`) |
 | `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (coût de revient), `calcul-transport.js` (fret et CBM), `marches.js` (annuaire des marchés) |
 | `assets/data/` | `quiz-data.js` (questions, scores, textes du test) et `marches.js` (villes, marchés, tarifs de taxi, textes FR/EN) |
 | `assets/fonts/` | Bricolage Grotesque et Figtree, servies en local (SIL Open Font License) |

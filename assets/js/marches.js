@@ -344,7 +344,7 @@ function currentView(){
 function renderNav(){
   const r = routeInfo();
   document.querySelectorAll('[data-nav]').forEach(a => {
-    const on = (a.dataset.nav === 'home' && r.v === 'home') || (a.dataset.nav === 'taxi' && r.v === 'taxi') || (a.dataset.nav === 'about' && r.v === 'about');
+    const on = (a.dataset.nav === 'home' && ['home','city','cat','market','fav'].indexOf(r.v) > -1) || (a.dataset.nav === 'taxi' && r.v === 'taxi') || (a.dataset.nav === 'about' && r.v === 'about');
     if (on) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
   });
   document.documentElement.lang = state.lang;
