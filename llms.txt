@@ -26,10 +26,11 @@ Ce fichier résume le site pour les moteurs de recherche et les assistants IA. I
 
 - [Accueil](https://samasourcing.site/) — positionnement, les trois niveaux de préparation, objections fréquentes.
 - [Le test (score de préparation)](https://samasourcing.site/score-de-preparation.html) — 12 questions, score sur 10, points manquants avant de payer. Sans email ni inscription.
-- [Outils](https://samasourcing.site/outils.html) — le menu Outils : deux calculatrices complémentaires (le vrai prix d'une pièce, le fret). Rien ne quitte le navigateur.
+- [Outils](https://samasourcing.site/outils.html) — le menu Outils : deux calculatrices (le vrai prix d'une pièce, le fret) et l'annuaire des marchés de gros. Rien ne quitte le navigateur.
 - [Bibliothèque](https://samasourcing.site/bibliotheque.html) — le menu Bibliothèque : le test de préparation et les documents à télécharger, réunis sur une page.
 - [Calculatrice « Vrai Prix d'une Pièce »](https://samasourcing.site/calculatrice.html) — coût de revient réel (landed cost) : fret, douane, TVA, change, pertes, frais portuaires, livraison ; prix de vente conseillé et alertes de risque.
 - [Calcul transport & CBM](https://samasourcing.site/calcul-transport.html) — volume des colis en mètres cubes, poids taxable (règle W/M, poids volumétrique 1 m³ ≈ 167 kg), coût du fret en groupage, conteneur 20/40 pieds, aérien ou express, avec comparaison des modes et report du fret dans la calculatrice du coût de revient.
+- [Marchés de gros & taxi](https://samasourcing.site/marches.html) — annuaire de 29 marchés de gros dans 6 villes chinoises (Guangzhou, Yiwu, Pékin, Shanghai, Shenzhen, Foshan) : nom et adresse en chinois, pinyin, métro, horaires, épingle Amap (coordonnées GCJ-02), estimation du prix du taxi depuis la gare ou l'aéroport, favoris locaux, FR/EN. 11 fiches n'ont pas encore d'épingle vérifiée. La même donnée est écrite en clair au bas de la page, lisible sans JavaScript.
 - [Comment ça marche](https://samasourcing.site/comment-ca-marche.html) — méthode en 6 étapes, de l'appel à l'expédition.
 - [Notre histoire](https://samasourcing.site/mon-histoire.html) — origine du projet, parcours de l'équipe.
 - [Preuves](https://samasourcing.site/preuves.html) — compte rendu de visite d'usine, devis client, captures WhatsApp (informations confidentielles masquées).
@@ -55,6 +56,7 @@ Ce fichier résume le site pour les moteurs de recherche et les assistants IA. I
 
 - Aucun cookie, aucun tracker publicitaire, aucun formulaire qui envoie des données à un serveur.
 - Aucune inscription, aucun compte, aucune newsletter.
+- Aucun prix de vente, aucune marge, aucun devis dans l'annuaire des marchés : il donne des portes, pas des tarifs.
 - Aucune promesse de résultat : les chiffres affichés sont ceux présentés sur le site, à titre indicatif.
 
 ## Contact

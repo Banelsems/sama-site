@@ -1,0 +1,267 @@
+/* Sama Sourcing — données des marchés de gros (Chine, nov. 2026).
+   29 marchés, 6 villes, 12 catégories. Source : app SAMA Markets v1.0. */
+window.SAMA_MARKETS = (function () {
+'use strict';
+
+/* =====================================================================
+   1. Données
+   ===================================================================== */
+const CITIES = [
+  { id:'guangzhou', zh:'广州', name:'Guangzhou', sp:{fr:'Textile, cuir, cosmétiques, pièces auto',en:'Clothing, leather, cosmetics, auto parts'} },
+  { id:'foshan', zh:'佛山', name:'Foshan', sp:{fr:'Meubles, carrelage, robinetterie',en:'Furniture, tiles, plumbing'} },
+  { id:'shenzhen', zh:'深圳', name:'Shenzhen', sp:{fr:'Électronique, composants, bijoux',en:'Electronics, components, jewellery'} },
+  { id:'yiwu', zh:'义乌', name:'Yiwu', sp:{fr:'Petits articles, accessoires, machines',en:'Small goods, accessories, machines'} },
+  { id:'shanghai', zh:'上海', name:'Shanghai', sp:{fr:'Prêt-à-porter, bazar, cadeaux',en:'Clothing, bazaar, gifts'} },
+  { id:'beijing', zh:'北京', name:'Pékin', sp:{fr:'Perles, soie, artisanat',en:'Pearls, silk, crafts'} }
+];
+
+const CATS = [
+  { id:'textile', fr:'Textile & prêt-à-porter', en:'Clothing & apparel' },
+  { id:'fabric', fr:'Tissus & accessoires', en:'Fabrics & trims' },
+  { id:'shoes', fr:'Chaussures & sacs', en:'Shoes & bags' },
+  { id:'electronics', fr:'Électronique', en:'Electronics' },
+  { id:'components', fr:'Composants & réparation', en:'Parts & repair' },
+  { id:'auto', fr:'Pièces auto', en:'Auto parts' },
+  { id:'machines', fr:'Machines & outils', en:'Machines & tools' },
+  { id:'furniture', fr:'Meubles', en:'Furniture' },
+  { id:'construction', fr:'Construction & finitions', en:'Building materials' },
+  { id:'beauty', fr:'Cosmétiques & coiffure', en:'Beauty & hair' },
+  { id:'jewelry', fr:'Bijoux & perles', en:'Jewellery & pearls' },
+  { id:'packing', fr:'Emballage, jouets', en:'Packaging & toys' }
+];
+
+const MARKETS = [
+  /* ---- Guangzhou ---- */
+  { id:'gz-ssl', c:'guangzhou', zh:'十三行服装批发市场', py:'Shísānháng', en:'Shisanhang Clothing Market',
+    addr:'广州市荔湾区十三行路1号', district:'荔湾区', metro:'文化公园 (L6/L8), sortie D', hours:'08:00–16:30',
+    type:'wholesale', cats:['textile'], lat:23.110897, lng:113.250508,
+    note:{fr:'Le gros des boutiques est dans 新中国大厦. Viens avant 10 h : après, les cartons bloquent les allées.',en:'Most stalls are in New China Plaza. Come before 10 am — later, carts block the aisles.'} },
+  { id:'gz-baima', c:'guangzhou', zh:'白马服装市场', py:'Báimǎ', en:'Baima Clothing Market',
+    addr:'广州市越秀区站南路16号', district:'越秀区', metro:'广州火车站 (L2/L5), sortie D', hours:'08:00–18:00',
+    type:'mixed', cats:['textile'],
+    note:{fr:'Le niveau le plus propre de Guangzhou : marques locales, coupes travaillées. Prix plus hauts, qualité plus stable.',en:'The cleanest level in Guangzhou: local brands, proper cuts. Higher prices, steadier quality.'} },
+  { id:'gz-zhanxi', c:'guangzhou', zh:'站西服装批发城', py:'Zhànxī Guǎngchǎng', en:'Zhanxi Plaza',
+    addr:'广州市越秀区站西路57号', district:'越秀区', metro:'广州火车站 (L2/L5), sortie D', hours:'09:00–18:00',
+    type:'wholesale', cats:['textile','shoes'],
+    note:{fr:'Le fameux « Sharik ». Un seul pâté de maisons, mais vêtements, sacs, chaussures et montres.',en:'The famous “Sharik”. One block, but clothes, bags, shoes and watches.'} },
+  { id:'gz-shahe', c:'guangzhou', zh:'沙河服装批发市场', py:'Shāhé', en:'Shahe Clothing Market',
+    addr:'广州市天河区先烈东路149号', district:'天河区', metro:'沙河顶 (L6)', hours:'04:30–14:00',
+    type:'wholesale', cats:['textile'], lat:23.150965, lng:113.309421,
+    note:{fr:'Le moins cher, le plus tôt. Ouverture à l’aube, tout est fini vers 14 h. Achète par lots de 3 à 5 pièces.',en:'Cheapest, earliest. Opens at dawn, finished by 2 pm. Buy in bundles of 3–5 pieces.'} },
+  { id:'gz-qfc', c:'guangzhou', zh:'广州国际轻纺城', py:'Guójì Qīngfǎngchéng', en:'Guangzhou International Textile City',
+    addr:'广州市海珠区金纺路2号', district:'海珠区', metro:'中大 (L8)', hours:'09:00–18:30',
+    type:'wholesale', cats:['fabric'], lat:23.088483, lng:113.298181,
+    note:{fr:'Tissus, dentelle, boutons, étiquettes. Le quartier entier (中大) fait 10 000 boutiques : commence par ce bâtiment.',en:'Fabrics, lace, buttons, labels. The whole Zhongda area has 10,000 shops: start with this building.'} },
+  { id:'gz-mbc', c:'guangzhou', zh:'美博城', py:'Měibóchéng', en:'MBC Beauty Exchange Center',
+    addr:'广州市越秀区广园西路121号', district:'越秀区', metro:'三元里 (L2), sortie D', hours:'09:00–18:00',
+    type:'wholesale', cats:['beauty'], lat:23.155980, lng:113.252181,
+    note:{fr:'Cosmétiques, matériel de salon, emballage beauté. Le plus grand centre de gros beauté d’Asie.',en:'Cosmetics, salon equipment, beauty packaging. Asia’s largest beauty wholesale centre.'} },
+  { id:'gz-yongfu', c:'guangzhou', zh:'金永福汽配城', py:'Jīn Yǒngfú', en:'Jinyongfu Auto Parts City',
+    addr:'广州市越秀区永福路48号', district:'越秀区', metro:'小北 (L5) puis 8 min de taxi', hours:'09:00–18:00',
+    type:'wholesale', cats:['auto'],
+    note:{fr:'Freins, filtres, amortisseurs, accessoires. Plusieurs bâtiments le long de 永福路 : note le numéro de l’immeuble.',en:'Brakes, filters, shocks, accessories. Several buildings along Yongfu Road: note the building number.'} },
+  { id:'gz-zg', c:'guangzhou', zh:'中港皮具城', py:'Zhōnggǎng', en:'Zhonggang Leather City',
+    addr:'广州市白云区三元里大道11-21号', district:'白云区', metro:'三元里 (L2), sortie A1', hours:'09:00–18:00',
+    type:'wholesale', cats:['shoes'],
+    note:{fr:'Sacs et petite maroquinerie. À 300 m du monument de Sanyuanli, entrée côté 解放北路.',en:'Bags and small leather goods. 300 m from the Sanyuanli monument, entrance on Jiefang North Road.'} },
+  { id:'gz-dashatou', c:'guangzhou', zh:'盛贤大沙头旧货市场', py:'Dàshātóu', en:'Shengxian Dashatou Second-hand Market',
+    addr:'广州市越秀区大沙头绿荫路2号', district:'越秀区', metro:'东湖 (L6), sortie B2', hours:'09:00–18:00',
+    type:'mixed', cats:['electronics','components'], lat:23.116712, lng:113.284490,
+    note:{fr:'Appareils photo, son, ordinateurs d’occasion. Le marché que personne ne t’indiquera : il est derrière le parc.',en:'Cameras, audio, used computers. The market nobody tells you about: it sits behind the park.'} },
+
+  /* ---- Foshan ---- */
+  { id:'fs-lecong', c:'foshan', zh:'乐从家具城', py:'Lècóng', en:'Lecong Furniture City',
+    addr:'佛山市顺德区佛山大道南（325国道乐从段）', district:'顺德区', metro:'Pas de métro : taxi depuis 佛山西站', hours:'09:00–18:30',
+    type:'wholesale', cats:['furniture'], lat:22.933056, lng:113.091285,
+    note:{fr:'180 bâtiments sur 10 km. Ne visite pas à pied : choisis 2 ou 3 buildings selon ton produit, sinon tu y passes trois jours.',en:'180 buildings over 10 km. Don’t walk it: pick 2–3 buildings by product, or you lose three days.'} },
+  { id:'fs-shagang', c:'foshan', zh:'石湾沙岗陶瓷批发市场', py:'Shíwān Shāgǎng', en:'Shiwan Shagang Ceramics Market',
+    addr:'佛山市禅城区镇中路', district:'禅城区', metro:'Pas de métro', hours:'08:30–21:30',
+    type:'wholesale', cats:['construction'], lat:22.991899, lng:113.092719,
+    note:{fr:'Carrelage, sanitaires, robinetterie. Livraison en conteneur possible depuis l’entrepôt du marché.',en:'Tiles, sanitaryware, taps. Container shipping can be arranged from the market warehouse.'} },
+  { id:'fs-valves', c:'foshan', zh:'佛山水暖阀门批发城', py:'Shuǐnuǎn Fámén', en:'Foshan Plumbing & Valves Market',
+    addr:'佛山市禅城区佛山大道中', district:'禅城区', metro:'Pas de métro', hours:'09:00–18:00',
+    type:'wholesale', cats:['construction','machines'],
+    note:{fr:'Robinetterie, vannes, raccords. Utile pour l’eau et le bâtiment, pas pour l’électroménager.',en:'Taps, valves, fittings. For water and construction, not appliances.'} },
+
+  /* ---- Shenzhen ---- */
+  { id:'sz-seg', c:'shenzhen', zh:'赛格电子市场', py:'Sàigé', en:'SEG Electronics Market',
+    addr:'深圳市福田区华强北路1002号赛格广场1-10层', district:'福田区', metro:'华强北 (L2/L7), sortie A', hours:'09:30–19:00',
+    type:'wholesale', cats:['electronics','components'], lat:22.541427, lng:114.087513,
+    note:{fr:'Le bâtiment repère de Huaqiangbei. Composants au sous-sol et en bas, ordinateurs et accessoires au-dessus.',en:'The landmark building of Huaqiangbei. Components below, computers and accessories above.'} },
+  { id:'sz-mingtong', c:'shenzhen', zh:'明通数码城', py:'Míngtōng', en:'Mingtong Digital City',
+    addr:'深圳市福田区华发北路与振华路交叉口西南100米', district:'福田区', metro:'华强北 (L2/L7)', hours:'14:00–22:00',
+    type:'wholesale', cats:['electronics','components'], lat:22.544581, lng:114.089058,
+    note:{fr:'Téléphones et pièces. Ouvre l’après-midi seulement : ne viens pas le matin.',en:'Phones and parts. Afternoon only: don’t come in the morning.'} },
+  { id:'sz-shuibei', c:'shenzhen', zh:'水贝国际珠宝交易中心', py:'Shuǐbèi', en:'Shuibei International Jewellery Exchange',
+    addr:'深圳市罗湖区贝丽北路2号', district:'罗湖区', metro:'田贝 (L7), sortie E', hours:'09:00–21:00',
+    type:'wholesale', cats:['jewelry'], lat:22.567329, lng:114.127860,
+    note:{fr:'Or, argent, jade, diamants. Prix au gramme affiché ; demande le certificat pour chaque pièce.',en:'Gold, silver, jade, diamonds. Price per gram displayed; ask for the certificate on every piece.'} },
+  { id:'sz-sungang', c:'shenzhen', zh:'笋岗文具玩具礼品城', py:'Sǔngǎng', en:'Sungang Stationery & Toys City',
+    addr:'深圳市罗湖区宝安北路2033号1-4楼', district:'罗湖区', metro:'笋岗 (L7)', hours:'08:30–19:00',
+    type:'wholesale', cats:['packing'], lat:22.559113, lng:114.108754,
+    note:{fr:'Papeterie, jouets, cadeaux d’entreprise. Bon endroit pour l’emballage et le petit matériel scolaire.',en:'Stationery, toys, corporate gifts. Good for packaging and school supplies.'} },
+
+  /* ---- Yiwu ---- */
+  { id:'yw-1', c:'yiwu', zh:'国际商贸城一区', py:'Yī Qū', en:'International Trade City, District 1',
+    addr:'义乌市稠州北路555号', district:'福田街道', metro:'国际商贸城 (D), 90 m', hours:'08:30–17:30',
+    type:'wholesale', cats:['packing','jewelry'], lat:29.327904, lng:120.103175,
+    note:{fr:'Jouets, fleurs artificielles, bijoux fantaisie, artisanat. C’est par ici qu’on commence Yiwu.',en:'Toys, artificial flowers, costume jewellery, crafts. This is where you start in Yiwu.'} },
+  { id:'yw-2', c:'yiwu', zh:'国际商贸城二区', py:'Èr Qū', en:'International Trade City, District 2',
+    addr:'义乌市国际商贸城二区（稠州北路）', district:'福田街道', metro:'国际商贸城 (A), 320 m', hours:'08:30–17:30',
+    type:'wholesale', cats:['machines','packing'], lat:29.334408, lng:120.106947,
+    note:{fr:'Parapluies, sacs, quincaillerie, petit électroménager, outils. Deuxième étage : outils et serrures.',en:'Umbrellas, bags, hardware, small appliances, tools. Second floor: tools and locks.'} },
+  { id:'yw-3', c:'yiwu', zh:'国际商贸城三区', py:'Sān Qū', en:'International Trade City, District 3',
+    addr:'义乌市国际商贸城三区（稠州路）', district:'福田街道', metro:'国际商贸城', hours:'08:30–17:30',
+    type:'wholesale', cats:['packing','beauty','fabric'],
+    note:{fr:'Papeterie, cosmétiques, accessoires textiles (boutons, fermetures), lunettes.',en:'Stationery, cosmetics, textile trims (buttons, zips), eyewear.'} },
+  { id:'yw-4', c:'yiwu', zh:'国际商贸城四区', py:'Sì Qū', en:'International Trade City, District 4',
+    addr:'义乌市福田街道诚信大道与福田路交叉口东侧100米（国际商贸城四区东）', district:'福田街道', metro:'国际商贸城', hours:'08:30–17:30',
+    type:'wholesale', cats:['textile','shoes','packing'], lat:29.339939, lng:120.115594,
+    note:{fr:'Chaussettes, collants, bonneterie, chaussures, sacs et emballage. Un étage par famille de produit.',en:'Socks, tights, knitwear, shoes, bags and packaging. One floor per product family.'} },
+  { id:'yw-5', c:'yiwu', zh:'国际商贸城五区', py:'Wǔ Qū', en:'International Trade City, District 5',
+    addr:'义乌市国际商贸城五区（春风大道，银海路以北）', district:'福田街道', metro:'国际商贸城', hours:'08:30–16:30',
+    type:'wholesale', cats:['packing'],
+    note:{fr:'Import-export et produits du monde : utile si tu veux compléter un conteneur avec autre chose que du chinois.',en:'Import-export and world goods: useful to fill a container with more than Chinese products.'} },
+  { id:'yw-huangyuan', c:'yiwu', zh:'篁园服装市场', py:'Huángyuán', en:'Huangyuan Clothing Market',
+    addr:'义乌市稠城街道江滨中路180号', district:'稠城街道', metro:'Pas de métro : 10 min de taxi', hours:'07:30–20:30',
+    type:'wholesale', cats:['textile'], lat:29.299983, lng:120.082300,
+    note:{fr:'Prêt-à-porter homme, femme, enfant. Plus proche du centre-ville que le 商贸城.',en:'Men’s, women’s and children’s clothing. Closer to downtown than the Trade City.'} },
+  { id:'yw-sczl', c:'yiwu', zh:'国际生产资料市场', py:'Shēngchǎn Zīliào', en:'International Production Materials Market',
+    addr:'义乌市雪峰西路1566号', district:'北苑', metro:'Pas de métro : taxi', hours:'08:30–15:30',
+    type:'wholesale', cats:['machines'],
+    note:{fr:'Machines alimentaires, imprimerie, pièces détachées, tissus techniques. Ferme tôt : 15 h 30.',en:'Food machines, printing, spare parts, technical fabrics. Closes early: 3:30 pm.'} },
+
+  /* ---- Shanghai ---- */
+  { id:'sh-qipu', c:'shanghai', zh:'上海新七浦服装市场', py:'Xīn Qīpǔ', en:'New Qipu Clothing Market',
+    addr:'上海市静安区七浦路179号', district:'静安区', metro:'天潼路 (L10/L12), sortie 6', hours:'08:00–17:00',
+    type:'wholesale', cats:['textile'], lat:31.245260, lng:121.481539,
+    note:{fr:'1 100 boutiques sur 5 niveaux. Le rez-de-chaussée est le plus rapide pour voir les tendances.',en:'1,100 shops over 5 floors. Ground floor is the fastest way to read trends.'} },
+  { id:'sh-qipu303', c:'shanghai', zh:'七浦路服装批发市场', py:'Qīpǔlù', en:'Qipu Road Clothing Market',
+    addr:'上海市静安区七浦路303号', district:'静安区', metro:'天潼路 (L10/L12)', hours:'08:00–18:00',
+    type:'wholesale', cats:['textile'],
+    note:{fr:'L’autre gros bâtiment de la rue. Même famille de produits, moins de monde que le 179.',en:'The other big building on the street. Same products, fewer people than No. 179.'} },
+  { id:'sh-fuyou', c:'shanghai', zh:'城隍庙福佑门小商品批发市场', py:'Fúyòumén', en:'Chenghuangmiao Small Goods Market',
+    addr:'上海市黄浦区福佑路427号', district:'黄浦区', metro:'豫园 (L10/L14), sortie 1', hours:'08:00–17:30',
+    type:'mixed', cats:['packing','jewelry'], lat:31.228290, lng:121.488673,
+    note:{fr:'Bazar, cadeaux, articles de fête. Mélange de gros et de détail : vérifie le prix au carton.',en:'Bazaar, gifts, party goods. Mixed wholesale and retail: ask for the carton price.'} },
+
+  /* ---- Beijing ---- */
+  { id:'bj-hongqiao', c:'beijing', zh:'红桥市场', py:'Hóngqiáo', en:'Hongqiao Pearl Market',
+    addr:'北京市东城区天坛东路9号', district:'东城区', metro:'天坛东门 (L5), sortie A', hours:'09:00–19:00',
+    type:'mixed', cats:['jewelry'],
+    note:{fr:'Perles d’eau douce et de mer, soie, artisanat. Un huitième des perles vendues dans le monde passe ici.',en:'Freshwater and sea pearls, silk, crafts. One eighth of the world’s pearls are sold here.'} },
+  { id:'bj-panjiayuan', c:'beijing', zh:'潘家园旧货市场', py:'Pānjiāyuán', en:'Panjiayuan Antique Market',
+    addr:'北京市朝阳区华威里18号', district:'朝阳区', metro:'潘家园 (L10)', hours:'08:30–20:00',
+    type:'retail', cats:['jewelry','packing'], lat:39.875426, lng:116.458263,
+    note:{fr:'Antiquités, pierres, artisanat. Le samedi matin, les marchands des rues sortent leurs pièces.',en:'Antiques, stones, crafts. On Saturday morning the street dealers bring out their pieces.'} },
+  { id:'bj-xiushui', c:'beijing', zh:'秀水街', py:'Xiùshuǐ', en:'Silk Street',
+    addr:'北京市朝阳区秀水东街8号', district:'朝阳区', metro:'永安里 (L1)', hours:'09:30–21:00',
+    type:'retail', cats:['textile','jewelry'],
+    note:{fr:'Soie, sur-mesure, artisanat. Plus touristique que gros : utile pour un échantillon, pas pour un conteneur.',en:'Silk, tailoring, crafts. More tourist than wholesale: good for a sample, not a container.'} }
+];
+
+/* Tarifs officiels — compteur, 2026 */
+const TAXI = {
+  guangzhou: { base:12, baseKm:3, perKm:2.6, night:0.30, nightTxt:'23:00–05:00', long:[{from:15,pct:.2},{from:25,pct:.5}] },
+  shenzhen:  { base:10, baseKm:2, perKm:2.7, night:0.30, nightTxt:'23:00–06:00', long:[{from:20,pct:.3},{from:35,pct:.6}] },
+  shanghai:  { base:14, baseKm:3, perKm:2.7, night:0.30, nightTxt:'23:00–05:00', long:[{from:15,pct:.5}] },
+  beijing:   { base:13, baseKm:3, perKm:2.3, night:0.20, nightTxt:'23:00–05:00', long:[{from:15,pct:.5}] },
+  foshan:    { base:10, baseKm:2.5, perKm:2.8, night:0.15, nightTxt:'23:00–05:00', long:[{from:12,pct:.2},{from:25,pct:.5}] },
+  yiwu:      { base:8, baseKm:2, perKm:2.5, night:0.10, nightTxt:'23:00–05:00', long:[{from:6,pct:.4}] }
+};
+
+const ORIGINS = {
+  guangzhou: [{fr:'Aéroport de Baiyun',en:'Baiyun Airport',km:31},{fr:'Gare de Guangzhou-Sud',en:'Guangzhou South Station',km:21},{fr:'Gare de Guangzhou-Est',en:'Guangzhou East Station',km:7}],
+  shenzhen:  [{fr:'Aéroport de Bao’an',en:'Bao’an Airport',km:33},{fr:'Gare de Shenzhen-Nord',en:'Shenzhen North Station',km:11},{fr:'Port de Luohu',en:'Luohu border',km:6}],
+  yiwu:      [{fr:'Aéroport de Yiwu',en:'Yiwu Airport',km:8},{fr:'Gare de Yiwu',en:'Yiwu Railway Station',km:9}],
+  shanghai:  [{fr:'Aéroport de Pudong',en:'Pudong Airport',km:46},{fr:'Aéroport de Hongqiao',en:'Hongqiao Airport',km:20},{fr:'Gare de Hongqiao',en:'Hongqiao Station',km:19}],
+  beijing:   [{fr:'Aéroport de Pékin-Capitale',en:'Beijing Capital Airport',km:29},{fr:'Aéroport de Daxing',en:'Daxing Airport',km:52},{fr:'Gare de Pékin-Sud',en:'Beijing South Station',km:9}],
+  foshan:    [{fr:'Aéroport de Baiyun',en:'Baiyun Airport',km:52},{fr:'Gare de Foshan-Ouest',en:'Foshan West Station',km:16}]
+};
+
+/* =====================================================================
+   2. Textes d'interface
+   ===================================================================== */
+const T = {
+  fr: {
+    navCities:'Villes', navTaxi:'Taxi', navAbout:'À propos', cityLbl:'Ville',
+    eyebrow:'Marchés de gros · Chine',
+    h1:'Trouve le marché. Donne l’adresse au chauffeur.',
+    heroSub:'Les adresses exactes des marchés de gros en Chine, l’épingle sur Amap et le prix du taxi. Sans compte, sans installation.',
+    ctaCity:'Choisir une ville', ctaTaxi:'Estimer un taxi',
+    statCities:'villes', statMarkets:'marchés', statCats:'catégories',
+    sCities:'Par où commencer', sCitiesSub:'Six villes, six spécialités. Choisis celle de ton produit — pas celle qui est la plus proche de ton hôtel.',
+    sCats:'Qu’est-ce que tu achètes ?', sCatsSub:'Douze familles de produits. Touche une catégorie pour voir les marchés, toutes villes confondues.',
+    sHow:'Comment ça marche', sHowSub:'Trois gestes, et tu es dans le bon bâtiment.',
+    step1:'Choisis la ville et le produit', step1d:'Deux filtres, c’est tout. La ville te dit où aller, la catégorie te dit quel bâtiment.',
+    step2:'Ouvre la fiche', step2d:'Nom en chinois, adresse complète, métro, horaires et épingle de carte.',
+    step3:'Copie, ou ouvre Amap', step3d:'L’adresse chinoise se colle dans Didi. Le bouton Amap ouvre la carte et commande le taxi.',
+    sTaxi:'Le prix du taxi, sans surprise', sTaxiSub:'Tarifs officiels du compteur, ville par ville. Un repère avant de monter dans la voiture.',
+    seeEstimator:'Voir l’estimateur',
+    searchPh:'Chercher : 中文, pinyin ou anglais',
+    searchEmpty:'Rien trouvé. Essaie le nom chinois, ou parcours les villes ci-dessous.',
+    results:'Résultats',
+    markets:'marchés', market:'marché',
+    fillAll:'Toutes les villes', favs:'Mes marchés', favEmpty:'Aucun marché enregistré. Touche l’étoile sur une fiche.',
+    copy:'Copier l’adresse', copied:'Adresse copiée', 
+    openAmap:'Ouvrir dans Amap', driver:'Montrer au chauffeur',
+    driverHint:'Montre cet écran au chauffeur', driverSub:'Appuie à nouveau pour fermer',
+    address:'Adresse', metro:'Métro', hours:'Horaires', type:'Type', cats:'Produits', since:'Depuis',
+    taxiFrom:'Taxi depuis l’aéroport ou la gare', taxiNote:'Compteur officiel, hors attente et hors suppléments aéroport. Didi peut être moins cher hors pointe.',
+    pin:'Épingle Amap', noPin:'Épingle à confirmer',
+    back:'Retour',
+    wholesale:'Gros uniquement', mixed:'Gros et détail', retail:'Détail',
+    taxiTitle:'Estimer un taxi', taxiSub:'Choisis la ville et la distance. Le calcul suit le compteur officiel, avec une fourchette honnête.',
+    from:'Point de départ', dist:'Distance (km)', nightChk:'Trajet de nuit', 
+    fareLbl:'Prix estimé', fareNote:'Fourchette : circulation, attente et suppléments peuvent ajouter 15 à 20 %.',
+    rates:'Tarifs officiels', rateBase:'Prise en charge', rateKm:'Au-delà', rateNight:'Nuit', rateLong:'Longue distance',
+    aboutTitle:'À propos', aboutSub:'Pourquoi cette app existe, et ce qu’elle ne fera jamais.',
+    dataNote:'Les adresses sont relevées sur les sources publiques et les fiches Amap. Avant de partir, vérifie l’entrée du bâtiment : les marchés ferment, déménagent, changent d’étage.',
+    noAccount:'Aucun compte. Aucune donnée personnelle. Tout tient dans une page.',
+    offline:'Ajoute la page à ton écran d’accueil : elle reste disponible même quand le réseau tombe dans les sous-sols des marchés.'
+  },
+  en: {
+    navCities:'Cities', navTaxi:'Taxi', navAbout:'About', cityLbl:'City',
+    eyebrow:'Wholesale markets · China',
+    h1:'Find the market. Give the address to the driver.',
+    heroSub:'Exact addresses of China’s wholesale markets, the Amap pin and the taxi price. No account, no install.',
+    ctaCity:'Choose a city', ctaTaxi:'Estimate a taxi',
+    statCities:'cities', statMarkets:'markets', statCats:'categories',
+    sCities:'Where to start', sCitiesSub:'Six cities, six specialities. Pick the one for your product — not the one closest to your hotel.',
+    sCats:'What are you buying?', sCatsSub:'Twelve product families. Tap a category to see the markets across all cities.',
+    sHow:'How it works', sHowSub:'Three taps, and you are in the right building.',
+    step1:'Pick the city and the product', step1d:'Two filters, that’s it. The city tells you where, the category tells you which building.',
+    step2:'Open the card', step2d:'Chinese name, full address, metro, opening hours and the map pin.',
+    step3:'Copy, or open Amap', step3d:'The Chinese address pastes into Didi. Amap opens the map and orders the taxi.',
+    sTaxi:'Taxi price, no surprise', sTaxiSub:'Official meter fares, city by city. A reference before you get in the car.',
+    seeEstimator:'Open the estimator',
+    searchPh:'Search: 中文, pinyin or English',
+    searchEmpty:'Nothing found. Try the Chinese name, or browse the cities below.',
+    results:'Results',
+    markets:'markets', market:'market',
+    fillAll:'All cities', favs:'My markets', favEmpty:'No saved market yet. Tap the star on a card.',
+    copy:'Copy the address', copied:'Address copied',
+    openAmap:'Open in Amap', driver:'Show the driver',
+    driverHint:'Show this screen to the driver', driverSub:'Tap again to close',
+    address:'Address', metro:'Metro', hours:'Hours', type:'Type', cats:'Products', since:'From',
+    taxiFrom:'Taxi from the airport or the station', taxiNote:'Official meter, excluding waiting and airport surcharges. Didi may be cheaper off-peak.',
+    pin:'Amap pin', noPin:'Pin to confirm',
+    back:'Back',
+    wholesale:'Wholesale only', mixed:'Wholesale + retail', retail:'Retail',
+    taxiTitle:'Estimate a taxi', taxiSub:'Pick the city and the distance. The maths follows the official meter, with an honest range.',
+    from:'Starting point', dist:'Distance (km)', nightChk:'Night trip',
+    fareLbl:'Estimated fare', fareNote:'Range: traffic, waiting and surcharges can add 15–20 %.',
+    rates:'Official fares', rateBase:'Flag fall', rateKm:'Per km after', rateNight:'Night', rateLong:'Long distance',
+    aboutTitle:'About', aboutSub:'Why this app exists, and what it will never do.',
+    dataNote:'Addresses come from public sources and Amap listings. Before you go, check the building entrance: markets close, move, and change floors.',
+    noAccount:'No account. No personal data. Everything fits in one page.',
+    offline:'Add the page to your home screen: it stays available when the signal drops in market basements.'
+  }
+};
+
+/* =====================================================================
+   3. État et utilitaires
+   ===================================================================== */
+
+return { CITIES: CITIES, CATS: CATS, MARKETS: MARKETS, TAXI: TAXI, ORIGINS: ORIGINS, T: T };
+})();

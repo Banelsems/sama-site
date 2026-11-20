@@ -11,9 +11,10 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 |---|---|---|
 | `index.html` | Accueil | promesse, trois niveaux de préparation, objections |
 | `score-de-preparation.html` | Le test | 12 questions → score sur 10 |
-| `outils.html` | Outils | le menu Outils : les deux calculatrices seulement |
+| `outils.html` | Outils | le menu Outils : les deux calculatrices et l'annuaire des marchés |
 | `calculatrice.html` | Calcul « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
 | `calcul-transport.html` | Calcul transport & CBM | volume des colis, poids taxable, fret |
+| `marches.html` | Marchés & taxi | 29 marchés de gros dans 6 villes, adresse en chinois, Amap, taxi |
 | `comment-ca-marche.html` | Comment ça marche | méthode en 6 étapes |
 | `mon-histoire.html` | Notre histoire | origine, parcours |
 | `preuves.html` | Preuves | compte rendu, devis, captures masquées |
@@ -24,7 +25,7 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 
 ## Les menus Outils et Bibliothèque
 
-La navigation tient en sept entrées : **Accueil · Outils ▾ · Bibliothèque ▾ · Comment ça marche · Notre histoire · Preuves · Questions**. Chaque bouton ouvre un panneau de deux liens, et le troisième lien du panneau mène à la page qui les rassemble (« Tous les outils », « Toute la bibliothèque »).
+La navigation tient en sept entrées : **Accueil · Outils ▾ · Bibliothèque ▾ · Comment ça marche · Notre histoire · Preuves · Questions**. Chaque bouton ouvre un panneau de deux ou trois liens, et le dernier lien du panneau mène à la page qui les rassemble (« Tous les outils », « Toute la bibliothèque »).
 
 Outils → `outils.html` :
 
@@ -32,6 +33,7 @@ Outils → `outils.html` :
 |---|---|---|
 | Vrai prix d'une pièce | `calculatrice.html` | coût de revient réel, prix de vente conseillé, alertes |
 | Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison |
+| Marchés & taxi | `marches.html` | 29 marchés de gros, 6 villes : adresse en chinois, épingle Amap, métro, horaires, taxi, favoris |
 
 Bibliothèque → `bibliotheque.html` :
 
@@ -50,9 +52,9 @@ Les deux calculateurs se parlent : le calcul transport peut envoyer son fret au 
 
 | Chemin | Contenu |
 |---|---|
-| `assets/css/` | `style.css` (tout le site) et `calculatrice.css` (les deux calculateurs) |
-| `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (coût de revient), `calcul-transport.js` (fret et CBM) |
-| `assets/data/` | `quiz-data.js` : questions, scores, textes du test |
+| `assets/css/` | `style.css` (tout le site), `calculatrice.css` (les deux calculateurs) et `marches.css` (l'annuaire, scopé sous `.mkt-app`) |
+| `assets/js/` | `config.js` (réglages centralisés), `main.js` (menu, CTA mobile, galerie, service worker), `quiz.js` (le test), `calculatrice.js` (coût de revient), `calcul-transport.js` (fret et CBM), `marches.js` (annuaire des marchés) |
+| `assets/data/` | `quiz-data.js` (questions, scores, textes du test) et `marches.js` (villes, marchés, tarifs de taxi, textes FR/EN) |
 | `assets/fonts/` | Bricolage Grotesque et Figtree, servies en local (SIL Open Font License) |
 | `assets/img/` | photos WebP, captures masquées, icônes, `og.jpg`, `og-calculatrice.jpg` et `og-transport.jpg` |
 | `docs/` | les PDF publics (guide, présentation de l'équipe, écosystème, compte rendu, devis) |
@@ -86,14 +88,14 @@ python3 tools/build.py --domain samasourcing.site        # base + fichier CNAME
 python3 tools/build.py --domain samasourcing.site --no-cname
 ```
 
-Le contrôle vérifie que la navigation (7 entrées, deux menus déroulants) et le pied de page sont identiques sur les 11 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
+Le contrôle vérifie que la navigation (7 entrées, deux menus déroulants) et le pied de page sont identiques sur les 12 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
 
 La bascule remplace l'URL de base dans les `canonical`, `og:url`, `twitter:image`, `sitemap.xml`, `robots.txt`, `llms.txt`, `<base>` de `404.html` et `config.js`, en une passe. Aucun autre fichier n'est touché.
 
 ## Hors ligne
 
 - `sw.js` met en cache les pages et les ressources après la première visite (HTTPS uniquement ; en `file://` il ne s'enregistre pas, ce qui est normal). Stratégie : réseau d'abord pour les pages, cache d'abord pour les ressources. **Après une modification de fichier, incrémente `VERSION` en tête de `sw.js`** pour forcer le rafraîchissement des caches.
-- Le test et les deux calculateurs gardent leurs données dans `localStorage` (`sama-quiz-v3`, `sama-calc-v1`, `sama-fret-v1`). Aucune requête réseau, aucune donnée envoyée.
+- Le test, les deux calculateurs et l'annuaire gardent leurs données dans `localStorage` (`sama-quiz-v3`, `sama-calc-v1`, `sama-fret-v1`, `sama-favs`, `sama-lang`). Aucune requête réseau, aucune donnée envoyée.
 
 ## Sécurité
 

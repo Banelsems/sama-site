@@ -178,10 +178,63 @@ Le problème n'était pas le calcul, c'était le formulaire : trente-quatre cham
 
 - Valeurs par défaut du coût de revient, stockage local vidé : 4 200 $ de marchandise, 1 060 $ de transport, CIF 5 281,04 $, total 10 776,81 $ (dont 798,28 $ de change), **30 175 069 CDF**, 1 128 pièces vendables, **26 751 CDF par pièce** (9,55 $), ×2,73 le prix usine, 38 216 / 53 502 / 133 755 CDF à 30, 50 et 80 %. Identiques aux chiffres de référence.
 - Fret par défaut, stockage local vidé : 1,440 m³, 216,0 kg, 158,40 $ de fret, 338,40 $ avec annexes, 1,44 CBM facturé, 1,57 $/kg, 235 $/m³, 28,20 $/colis, comparaison 338 / 3 980 / 5 380 $.
-- `python3 tools/build.py` : 11 pages, aucun écart. Contrôle des liens, des `id` dupliqués et des références `aria` : 0 erreur, 0 alerte.
+- `python3 tools/build.py` : 11 pages à l'époque, aucun écart. Contrôle des liens, des `id` dupliqués et des références `aria` : 0 erreur, 0 alerte.
 - Rendu contrôlé à 390 px et en bureau : les trois blocs visibles tiennent sans débordement horizontal, le panneau « Ajuster » s'ouvre et referme proprement, la comparaison des modes reste lisible.
 
-## 7. Ce qui reste à faire par le propriétaire du site
+## 7. Troisième outil : « Marchés & taxi » (21 novembre 2026)
+
+L'application « SAMA Markets » (29 marchés de gros, 6 villes, 12 catégories, épingle Amap, estimation de taxi, favoris, FR/EN) devait entrer dans le menu Outils du site — pas comme un cadre embarqué, mais comme une vraie page du site, avec ses propres styles, sa CSP et son hors ligne.
+
+### 7.1 Ce qui a été refusé, et pourquoi
+
+Le README de l'application proposait de la reprendre telle quelle. Trois obstacles l'interdisaient :
+
+| Obstacle | Décision |
+|---|---|
+| L'application charge ses polices chez `miaoda.feishu.cn` | remplacées par `assets/fonts/fonts.css`, servies en local (aucune requête tiers) |
+| Elle porte un `<script>` en ligne, bloqué par `script-src 'self'` | script extrait dans `assets/js/marches.js`, chargé en `defer` |
+| Ses classes `.btn`, `.card`, `.nav`, `.section` écraseraient celles du site | toute sa feuille est réécrite sous `.mkt-app` (voir 7.2) |
+
+Les deux autres solutions (iframe, ou recopie en renommant chaque classe) ont été écartées : la première casse le référencement, le hors ligne et la hauteur de page ; la seconde demande de renommer près de 200 sélecteurs à la main, avec un risque de collision à chaque classe oubliée.
+
+### 7.2 Comment la feuille de style a été reprise
+
+Un script de conversion (`build_marches.py`, hors du dépôt) découpe le fichier unique de l'application et applique trois règles :
+
+- chaque sélecteur reçoit le préfixe `.mkt-app` — `.btn` devient `.mkt-app .btn`, `body` devient `.mkt-app` ; la spécificité (0,2,0) passe devant celle du site, donc un `.card` de l'annuaire reste un `.card` d'annuaire ;
+- `html` et `*` sont supprimés (ils viseraient toute la page), les `@media` sont traités en récursif, les `@keyframes` restent globales sous leurs noms propres (`spin`, `rise-safe`, `pop`) ;
+- le bloc `:root` est conservé tel quel : ses variables (`--night`, `--paper`, `--line`…) sont déjà celles du site, et les redéclarer sous `.mkt-app` les aurait figées pour toute la page.
+
+Par-dessus, une trentaine de lignes d'adaptation : la barre de l'application (noire, collante, `.site-header`) devient une sous-barre claire et statique sous la navigation du site ; le hero et le `page-hero` de l'app perdent la moitié de leur réserve verticale ; sous 720 px, ses trois liens (Villes, Taxi, À propos) passent sur une seconde ligne au lieu de disparaître — sans eux, un client au téléphone ne peut plus changer d'outil depuis le haut de la page.
+
+### 7.3 La page `marches.html`
+
+- **Ce que le visiteur voit d'abord** : la barre du site, puis celle de l'application (Villes · Taxi · À propos · FR/EN), puis le hero de l'application — qui est déjà écrit pour ce sujet, d'où l'absence de second hero.
+- **L'annuaire en clair**, sous l'application : les six villes en `<details>`, les 29 marchés avec le nom chinois, le pinyin, l'adresse en chinois, le quartier, le métro, les horaires, le type (gros / gros et détail) et la note de terrain. Cette partie est générée à partir de `data/markets.json` : elle reste lisible sans JavaScript, se copie et s'imprime, et donne aux moteurs de recherche le contenu que les routes `#/…` ne leur donnent pas.
+- **« Ce que cette page ne fait pas »** : trois cartes du site (négociation, vérification du fournisseur, réservation) pour couper court à ce que les clients imaginent.
+- **Le pied de page du site**, le CTA final et le bouton WhatsApp restent ceux des autres pages. La barre d'action collante du site a été retirée : sur une fiche marché, l'application a déjà la sienne, et deux barres se superposaient en bas d'écran.
+- JSON-LD : `Organization` et `WebSite` repris de l'accueil, plus `WebPage`, `BreadcrumbList`, `ItemList` des six villes et un `WebApplication` (`SAMA Markets`, gratuit) qui décrit l'outil.
+
+### 7.4 Deux corrections apportées au comportement de l'application
+
+- **La recherche ne trouvait que le nom du marché.** Taper « yiwu » ou « meubles » ne donnait rien, alors que c'est ce qu'un client tape. Le filtre couvre maintenant le nom, le pinyin, l'adresse, le quartier, la ville et les catégories, et ignore les accents (« pekin » trouve Pékin). Le correctif est appliqué par le générateur, pas à la main.
+- **« 1 marchés »** dans les favoris : pluriel corrigé (`market` / `markets`).
+
+### 7.5 Vérifications
+
+- `python3 tools/build.py` : 12 pages, navigation et pied de page identiques, sitemap à jour, aucun écart.
+- Contrôle des liens, des `id` dupliqués et des références `aria` : 13 fichiers, 0 erreur, 0 alerte.
+- Dans le navigateur, en local (`http://localhost:8766/marches.html`) : liste des villes, recherche par pinyin et par chinois, fiche marché, copie de l'adresse (« Adresse copiée »), ouverture d'Amap, écran plein écran pour le chauffeur, estimateur de taxi (Guangzhou, aéroport de Baiyun, 31 km : 98–115 ¥), bascule FR/EN, favoris (étoile puis « Mes marchés »), annuaire déplié, menu Outils à trois entrées au-dessus de 1120 px.
+- En 390 px : aucun débordement horizontal (`scrollWidth` = 390). La barre d'action collante de l'application débordait de 15 px (boutons du site trop larges) ; ses boutons sont maintenant compressibles.
+- `sw.js` passe en `sama-2026-11-21a` et met en cache `marches.html`, `marches.css`, `marches.js` (données et logique).
+
+### 7.6 Ce que la page laisse volontairement de côté
+
+- Onze marchés sur vingt-neuf n'ont pas d'épingle vérifiée : la fiche affiche « épingle à confirmer » et le bouton Amap propose une recherche par nom, pas un point sur la carte. C'est une information, pas un défaut à masquer.
+- Aucun prix, aucune marge, aucun devis : l'annuaire donne des portes, pas des tarifs.
+- L'application garde sa propre navigation par ancre (`#/city/…`, `#/m/…`) : ces URL ne sont pas indexées individuellement, c'est pourquoi l'annuaire en clair existe en bas de page.
+
+## 8. Ce qui reste à faire par le propriétaire du site
 
 1. Renseigner les réseaux sociaux dans `config.js` (ou les laisser vides : les liens disparaissent proprement).
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.

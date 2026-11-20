@@ -5,7 +5,7 @@
 
    Après une modification de fichier, incrémente VERSION pour forcer la mise à jour.
 */
-var VERSION = 'sama-2026-11-20c';
+var VERSION = 'sama-2026-11-21a';
 var CORE = [
   './',
   'index.html',
@@ -13,6 +13,7 @@ var CORE = [
   'bibliotheque.html',
   'calculatrice.html',
   'calcul-transport.html',
+  'marches.html',
   'score-de-preparation.html',
   'comment-ca-marche.html',
   'mon-histoire.html',
@@ -22,6 +23,7 @@ var CORE = [
   '404.html',
   'assets/css/style.css',
   'assets/css/calculatrice.css',
+  'assets/css/marches.css',
   'assets/fonts/fonts.css',
   'assets/js/config.js',
   'assets/js/main.js',
@@ -29,6 +31,8 @@ var CORE = [
   'assets/js/calculatrice.js',
   'assets/js/calcul-transport.js',
   'assets/data/quiz-data.js',
+  'assets/data/marches.js',
+  'assets/js/marches.js',
   'assets/img/favicon.svg',
   'assets/img/hero-800.webp',
   'assets/img/hero-1600.webp',
