@@ -5,11 +5,12 @@
 
    Après une modification de fichier, incrémente VERSION pour forcer la mise à jour.
 */
-var VERSION = 'sama-2026-11-20';
+var VERSION = 'sama-2026-11-20c';
 var CORE = [
   './',
   'index.html',
   'outils.html',
+  'bibliotheque.html',
   'calculatrice.html',
   'calcul-transport.html',
   'score-de-preparation.html',

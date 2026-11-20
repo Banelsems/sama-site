@@ -868,7 +868,7 @@ img, svg, video { max-width: 100%; }
 @media print { .wa-float { display: none; } }
 
 /* ==========================================================================
-   Menu « Outils » + hub outils.html
+   Menus « Outils » et « Bibliothèque » + hubs
    Un seul point d'entrée pour la calculatrice du vrai prix, le calcul de fret
    et la bibliothèque de documents. Le sous-menu est un vrai bouton accessible :
    aria-expanded, fermeture par Échap ou clic extérieur, jamais de lien mort.
@@ -893,22 +893,22 @@ img, svg, video { max-width: 100%; }
   border-bottom: 1.5px solid currentColor; transform: rotate(45deg); transition: transform 200ms var(--ease-out);
 }
 .nav-tools-btn[aria-expanded="true"] .nav-tools-caret { transform: rotate(-135deg); margin-top: 2px; }
-#nav-tools-menu {
+.nav-tools-menu {
   display: grid; gap: 2px; margin: 6px 0 10px 10px; padding: 4px 0 4px 12px;
   border-left: 2px solid var(--night-2); list-style: none;
 }
-#nav-tools-menu[hidden] { display: none; }
-#nav-tools-menu a {
+.nav-tools-menu[hidden] { display: none; }
+.nav-tools-menu a {
   display: grid; gap: 2px; padding: 9px 6px; border: 0; border-radius: 8px;
   color: var(--paper); font-size: .95rem; font-weight: 700; text-decoration: none;
 }
-#nav-tools-menu a::after { display: none; }
-#nav-tools-menu a:hover { background: rgba(255, 255, 255, .08); color: var(--paper); }
-#nav-tools-menu a[aria-current="page"] { color: var(--yellow); }
+.nav-tools-menu a::after { display: none; }
+.nav-tools-menu a:hover { background: rgba(255, 255, 255, .08); color: var(--paper); }
+.nav-tools-menu a[aria-current="page"] { color: var(--yellow); }
 .nt-title { display: block; line-height: 1.25; }
 .nt-desc { display: block; margin-top: 2px; color: var(--mist-ink); font-size: .8rem; font-weight: 500; line-height: 1.35; }
-#nav-tools-menu .nav-tools-all { margin-top: 4px; color: var(--yellow); font-size: .82rem; font-weight: 700; letter-spacing: .01em; }
-#nav-tools-menu .nav-tools-all:hover { background: none; text-decoration: underline; text-underline-offset: 3px; }
+.nav-tools-menu .nav-tools-all { margin-top: 4px; color: var(--yellow); font-size: .82rem; font-weight: 700; letter-spacing: .01em; }
+.nav-tools-menu .nav-tools-all:hover { background: none; text-decoration: underline; text-underline-offset: 3px; }
 .site-header.menu-open .nav-tools { display: block; }
 .site-header.menu-open .nav-tools-btn { padding: 14px 4px; font-size: 1.1rem; color: var(--paper); border-bottom: 1px solid var(--night-2); }
 .site-header.menu-open .nav-tools-btn::after { display: none; }
@@ -916,17 +916,17 @@ img, svg, video { max-width: 100%; }
 @media (min-width: 1120px) {
   .nav-tools { display: flex; }
   .nav-tools-btn { padding: 0; font-size: .95rem; color: var(--mist-ink); }
-  #nav-tools-menu {
+  .nav-tools-menu {
     position: absolute; top: calc(100% + 15px); left: -16px; z-index: 70;
     width: 308px; margin: 0; padding: 8px; gap: 2px;
     background: var(--night); border: 1px solid var(--night-2); border-radius: 16px;
     box-shadow: 0 28px 56px -28px rgba(0, 0, 0, .75); animation: nt-in 180ms var(--ease-out);
   }
-  #nav-tools-menu a { padding: 10px 12px; font-size: .95rem; color: var(--paper); }
-  #nav-tools-menu .nav-tools-all { margin-top: 4px; border-top: 1px solid var(--night-2); border-radius: 0 0 8px 8px; padding-top: 12px; }
+  .nav-tools-menu a { padding: 10px 12px; font-size: .95rem; color: var(--paper); }
+  .nav-tools-menu .nav-tools-all { margin-top: 4px; border-top: 1px solid var(--night-2); border-radius: 0 0 8px 8px; padding-top: 12px; }
 }
 @keyframes nt-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { #nav-tools-menu { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .nav-tools-menu { animation: none; } }
 @media print { .nav-tools { display: none; } }
 
 /* Hub : les trois outils, en cartes cliquables */

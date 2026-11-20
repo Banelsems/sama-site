@@ -38,8 +38,8 @@
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=24">
-  <link rel="stylesheet" href="assets/css/calculatrice.css?v=4">
+  <link rel="stylesheet" href="assets/css/style.css?v=25">
+  <link rel="stylesheet" href="assets/css/calculatrice.css?v=6">
 
   <script type="application/ld+json">
 {
@@ -167,16 +167,24 @@
       <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">S</span>Sama Sourcing</a>
       <nav class="nav" id="menu" aria-label="Menu principal">
           <a href="index.html">Accueil</a>
-          <a href="score-de-preparation.html">Le test</a>
         <div class="nav-tools" data-nav-tools>
           <button class="nav-tools-btn" type="button" aria-expanded="false" aria-controls="nav-tools-menu" aria-haspopup="true">
             Outils<span class="nav-tools-caret" aria-hidden="true"></span>
           </button>
           <div class="nav-tools-menu" id="nav-tools-menu" hidden>
-            <a href="calculatrice.html"><span class="nt-title">Vrai prix d’une pièce</span><span class="nt-desc">Produit, fret, douane, change, pertes</span></a>
-            <a href="calcul-transport.html" aria-current="page"><span class="nt-title">Transport &amp; CBM</span><span class="nt-desc">Volume, poids taxable, fret maritime ou aérien</span></a>
-            <a href="documents.html"><span class="nt-title">Documents</span><span class="nt-desc">Guides et PDF à télécharger</span></a>
+            <a href="calculatrice.html"><span class="nt-title">Vrai prix d’une pièce</span><span class="nt-desc">Ce que ta pièce te coûte vraiment</span></a>
+            <a href="calcul-transport.html" aria-current="page"><span class="nt-title">Transport &amp; CBM</span><span class="nt-desc">Le fret que le transitaire va facturer</span></a>
             <a class="nav-tools-all" href="outils.html">Tous les outils</a>
+          </div>
+        </div>
+        <div class="nav-tools" data-nav-tools>
+          <button class="nav-tools-btn" type="button" aria-expanded="false" aria-controls="nav-bib-menu" aria-haspopup="true">
+            Bibliothèque<span class="nav-tools-caret" aria-hidden="true"></span>
+          </button>
+          <div class="nav-tools-menu" id="nav-bib-menu" hidden>
+            <a href="score-de-preparation.html"><span class="nt-title">Le test</span><span class="nt-desc">12 questions, un score sur 10</span></a>
+            <a href="documents.html"><span class="nt-title">Documents</span><span class="nt-desc">Guides et PDF à télécharger</span></a>
+            <a class="nav-tools-all" href="bibliotheque.html">Toute la bibliothèque</a>
           </div>
         </div>
           <a href="comment-ca-marche.html">Comment ça marche</a>
@@ -233,29 +241,10 @@
 
       <form class="calc-form" id="vt-form" novalidate>
 
-        <!-- 1. Le mode -->
-        <fieldset class="calc-group" id="g-mode">
-          <legend><span class="calc-step" aria-hidden="true">1</span>Le mode<span class="calc-group-note">Ce que tu as réservé, pas ce que tu espères</span></legend>
-          <div class="calc-grid">
-            <div class="calc-field calc-field-wide">
-              <label for="vt-mode">Mode de transport</label>
-              <div class="calc-input">
-                <select id="vt-mode" name="vt-mode" aria-describedby="vt-mode-note">
-                  <option value="lcl" selected>Maritime — groupage (LCL), au m³</option>
-                  <option value="fcl20">Maritime — conteneur 20 pieds</option>
-                  <option value="fcl40">Maritime — conteneur 40 pieds</option>
-                  <option value="air">Aérien — au kilo taxable</option>
-                  <option value="express">Express — porte à porte</option>
-                </select>
-              </div>
-              <p class="vt-mode-note" id="vt-mode-note">Groupage : tu paies le volume occupé, souvent avec un minimum de 1 m³.</p>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- 2. Les colis -->
+        <!-- 1. Les cartons : la seule chose que le client sait vraiment -->
         <fieldset class="calc-group" id="g-colis">
-          <legend><span class="calc-step" aria-hidden="true">2</span>Les colis<span class="calc-group-note">Dimensions en centimètres, poids brut par colis</span></legend>
+          <legend><span class="calc-step" aria-hidden="true">1</span>Tes cartons<span class="calc-group-note">Une ligne par type de carton, en centimètres</span></legend>
+          <p class="calc-group-foot">Pas les dimensions exactes sous la main ? Mesure un carton au mètre ruban : à 5 cm près, le résultat ne change presque pas.</p>
 
           <div class="vt-rows" id="vt-rows"></div>
 
@@ -263,38 +252,38 @@
             <div class="vt-row">
               <div class="vt-cell vt-cell-name">
                 <div class="vt-cell">
-                  <span class="vt-lab" aria-hidden="true">Désignation</span>
-                  <input data-k="name" type="text" maxlength="40" placeholder="Carton textile" autocomplete="off" aria-label="Désignation du colis">
+                  <span class="vt-lab" aria-hidden="true">Produit</span>
+                  <input data-k="name" type="text" maxlength="40" placeholder="Carton textile" autocomplete="off" aria-label="Nom du produit, facultatif">
                 </div>
-                <button class="vt-del" type="button" aria-label="Retirer ce colis">×</button>
+                <button class="vt-del" type="button" aria-label="Retirer ce carton">×</button>
                 <p class="vt-row-meta" data-meta>À renseigner</p>
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Colis</span>
-                <input data-k="qty" type="number" inputmode="numeric" min="0" step="1" placeholder="12" aria-label="Nombre de colis identiques">
+                <span class="vt-lab" aria-hidden="true">Cartons</span>
+                <input data-k="qty" type="number" inputmode="numeric" min="0" step="1" placeholder="12" aria-label="Nombre de cartons identiques">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">L (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Long. (cm)</span>
                 <input data-k="l" type="number" inputmode="decimal" min="0" step="1" placeholder="60" aria-label="Longueur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">l (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Larg. (cm)</span>
                 <input data-k="w" type="number" inputmode="decimal" min="0" step="1" placeholder="50" aria-label="Largeur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">H (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Haut. (cm)</span>
                 <input data-k="h" type="number" inputmode="decimal" min="0" step="1" placeholder="40" aria-label="Hauteur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">kg / colis</span>
-                <input data-k="kg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="18" aria-label="Poids brut par colis en kilos">
+                <span class="vt-lab" aria-hidden="true">Poids (kg)</span>
+                <input data-k="kg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="18" aria-label="Poids brut d'un carton en kilos">
               </div>
             </div>
           </template>
 
           <div class="vt-add-row">
             <button class="btn btn-outline btn-small" type="button" id="vt-add">
-              <svg aria-hidden="true"><use href="#i-plus"/></svg>Ajouter un colis
+              <svg aria-hidden="true"><use href="#i-plus"/></svg>J'ai plusieurs types de cartons
             </button>
             <button class="btn btn-outline btn-small" type="button" id="vt-demo">
               <svg aria-hidden="true"><use href="#i-play"/></svg>Charger l'exemple
@@ -306,62 +295,29 @@
           <p class="calc-line"><span id="vt-vol-kg-label">Poids en tonnes (W/M)</span><b id="vt-vol-kg">—</b></p>
         </fieldset>
 
-        <!-- 3. Le prix du transitaire -->
-        <fieldset class="calc-group" id="g-tarif">
-          <legend><span class="calc-step" aria-hidden="true">3</span>Le prix du transitaire<span class="calc-group-note">Son devis, hors annexes</span></legend>
+        <!-- 2. Le mode : une seule question -->
+        <fieldset class="calc-group" id="g-mode">
+          <legend><span class="calc-step" aria-hidden="true">2</span>Il part comment ?<span class="calc-group-note">Le mode que tu as réservé</span></legend>
           <div class="calc-grid">
-            <div class="calc-field">
-              <label for="vt-tarif" id="t-tarif-label">Prix du m³</label>
+            <div class="calc-field calc-field-wide">
+              <label for="vt-mode">Mode de transport</label>
               <div class="calc-input">
-                <input id="vt-tarif" name="vt-tarif" type="number" inputmode="decimal" min="0" step="1" value="110" aria-describedby="h-vt-tarif">
-                <span class="calc-unit" id="unit-tarif" aria-hidden="true">$/CBM</span>
-              </div>
-              <p class="calc-hint" id="h-vt-tarif">Le prix annoncé pour ce mode, hors annexes. Change-le dès que tu as un devis.</p>
-            </div>
-            <div class="calc-field" id="vt-field-conteneurs" hidden>
-              <label for="vt-conteneurs">Nombre de conteneurs</label>
-              <div class="calc-input">
-                <input id="vt-conteneurs" name="vt-conteneurs" type="number" inputmode="numeric" min="1" max="12" step="1" value="1" aria-describedby="h-vt-conteneurs">
-                <span class="calc-unit" aria-hidden="true">×</span>
-              </div>
-              <p class="calc-hint" id="h-vt-conteneurs">Deux conteneurs, c'est deux fois le prix — et souvent deux fois les annexes.</p>
-            </div>
-            <div class="calc-field" id="vt-field-minimum" hidden>
-              <label for="vt-minimum">Minimum facturé</label>
-              <div class="calc-input">
-                <input id="vt-minimum" name="vt-minimum" type="number" inputmode="decimal" min="0" step="0.1" value="1" aria-describedby="h-vt-minimum">
-                <span class="calc-unit" aria-hidden="true">CBM</span>
-              </div>
-              <p class="calc-hint" id="h-vt-minimum">La plupart des groupeurs facturent 1 m³ minimum, certains 2. L'aérien facture souvent 45 kg minimum.</p>
-            </div>
-            <div class="calc-field" id="vt-field-diviseur" hidden>
-              <label for="vt-diviseur">Diviseur volumétrique</label>
-              <div class="calc-input">
-                <select id="vt-diviseur" name="vt-diviseur" aria-describedby="h-vt-diviseur">
-                  <option value="6000" selected>6 000 — 1 m³ ≈ 167 kg (standard)</option>
-                  <option value="5000">5 000 — 1 m³ = 200 kg (plus cher)</option>
+                <select id="vt-mode" name="vt-mode" aria-describedby="vt-mode-note">
+                  <option value="lcl" selected>Bateau, groupage (le plus courant)</option>
+                  <option value="fcl20">Bateau, conteneur 20 pieds</option>
+                  <option value="fcl40">Bateau, conteneur 40 pieds</option>
+                  <option value="air">Avion, au kilo</option>
+                  <option value="express">Express, porte à porte</option>
                 </select>
               </div>
-              <p class="calc-hint" id="h-vt-diviseur">Le chiffre que ton transitaire applique. 6 000 est le plus courant, l'express facture souvent 5 000.</p>
-            </div>
-            <div class="calc-field calc-field-wide" id="vt-field-wm">
-              <label class="calc-check" for="vt-wm">
-                <input id="vt-wm" name="vt-wm" type="checkbox" checked aria-describedby="h-vt-wm">
-                <span><b>Règle W/M (poids ou mesure)</b></span>
-              </label>
-              <p class="calc-hint" id="h-vt-wm">Cochée : le transitaire facture l'unité la plus élevée entre le volume (1 m³) et le poids (1 000 kg). Décoche seulement si son devis dit « au volume uniquement ».</p>
+              <p class="vt-mode-note" id="vt-mode-note">Groupage : tu paies le volume occupé, souvent avec un minimum de 1 m³.</p>
             </div>
           </div>
-          <p class="calc-line"><span>Fret retenu</span><b id="vt-freight">—</b></p>
-          <details class="calc-help">
-            <summary>Pourquoi 1 m³ = 167 kg ?<span aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></span></summary>
-            <p>Un avion facture la place occupée, pas seulement la masse : un carton de plumes bloque autant de soute qu'un carton de fer. La convention est un rapport volume / poids. Avec 6 000 cm³ par kilo, 1 m³ (1 000 000 cm³) pèse « 167 kg » aux yeux du transporteur. Un diviseur plus petit (5 000) rend le volume encore plus cher : c'est un choix commercial du transitaire, pas une loi physique.</p>
-          </details>
         </fieldset>
 
-        <!-- 4. Les annexes -->
+        <!-- 3. Les frais en plus -->
         <fieldset class="calc-group" id="g-annexes">
-          <legend><span class="calc-step" aria-hidden="true">4</span>Les annexes<span class="calc-group-note">Le devis les oublie souvent, la facture non</span></legend>
+          <legend><span class="calc-step" aria-hidden="true">3</span>Les frais en plus<span class="calc-group-note">Ce que le devis ajoute au fret</span></legend>
           <div class="calc-grid">
             <div class="calc-field calc-field-wide">
               <label for="vt-annexes">Annexes du transitaire</label>
@@ -372,7 +328,74 @@
               <p class="calc-hint" id="h-vt-annexes">Connaissement (B/L), THC, frais de documents, magasinage, livraison au port. Un groupage réel tourne souvent entre 120 et 250 $.</p>
             </div>
           </div>
+          <p class="calc-group-foot">Tu ne sais pas encore ? Laisse 180 $ : c'est un ordre de grandeur pour un groupage réel. Le devis du transitaire te donnera le chiffre exact.</p>
         </fieldset>
+
+        <!-- 4. Le reste : replié, jamais obligatoire -->
+        <details class="calc-expert" id="vt-expert">
+          <summary>
+            <span class="calc-expert-open" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></span>
+            <span class="calc-expert-text">
+              <b>Ajuster le prix du transitaire</b>
+              <span>Facultatif. Prix au m³, minimum facturé, règle W/M — déjà rempli avec des ordres de grandeur prudents.</span>
+            </span>
+          </summary>
+          <div class="calc-expert-body">
+            <p class="calc-expert-note">Rien à toucher si tu n'as pas de devis. Si le transitaire t'a donné un prix, mets-le ici : tout se recalcule tout seul.</p>
+
+            <fieldset class="calc-group calc-group-flat" id="g-tarif">
+              <legend class="calc-legend-plain">Le devis du transitaire<span class="calc-group-note">Hors annexes</span></legend>
+              <div class="calc-grid">
+                <div class="calc-field">
+                  <label for="vt-tarif" id="t-tarif-label">Prix du m³</label>
+                  <div class="calc-input">
+                    <input id="vt-tarif" name="vt-tarif" type="number" inputmode="decimal" min="0" step="1" value="110" aria-describedby="h-vt-tarif">
+                    <span class="calc-unit" id="unit-tarif" aria-hidden="true">$/CBM</span>
+                  </div>
+                  <p class="calc-hint" id="h-vt-tarif">Le prix annoncé pour ce mode, hors annexes. Change-le dès que tu as un devis.</p>
+                </div>
+                <div class="calc-field" id="vt-field-conteneurs" hidden>
+                  <label for="vt-conteneurs">Nombre de conteneurs</label>
+                  <div class="calc-input">
+                    <input id="vt-conteneurs" name="vt-conteneurs" type="number" inputmode="numeric" min="1" max="12" step="1" value="1" aria-describedby="h-vt-conteneurs">
+                    <span class="calc-unit" aria-hidden="true">×</span>
+                  </div>
+                  <p class="calc-hint" id="h-vt-conteneurs">Deux conteneurs, c'est deux fois le prix — et souvent deux fois les annexes.</p>
+                </div>
+                <div class="calc-field" id="vt-field-minimum" hidden>
+                  <label for="vt-minimum">Minimum facturé</label>
+                  <div class="calc-input">
+                    <input id="vt-minimum" name="vt-minimum" type="number" inputmode="decimal" min="0" step="0.1" value="1" aria-describedby="h-vt-minimum">
+                    <span class="calc-unit" aria-hidden="true">CBM</span>
+                  </div>
+                  <p class="calc-hint" id="h-vt-minimum">La plupart des groupeurs facturent 1 m³ minimum, certains 2. L'aérien facture souvent 45 kg minimum.</p>
+                </div>
+                <div class="calc-field" id="vt-field-diviseur" hidden>
+                  <label for="vt-diviseur">Diviseur volumétrique</label>
+                  <div class="calc-input">
+                    <select id="vt-diviseur" name="vt-diviseur" aria-describedby="h-vt-diviseur">
+                      <option value="6000" selected>6 000 — 1 m³ ≈ 167 kg (standard)</option>
+                      <option value="5000">5 000 — 1 m³ = 200 kg (plus cher)</option>
+                    </select>
+                  </div>
+                  <p class="calc-hint" id="h-vt-diviseur">Le chiffre que ton transitaire applique. 6 000 est le plus courant, l'express facture souvent 5 000.</p>
+                </div>
+                <div class="calc-field calc-field-wide" id="vt-field-wm">
+                  <label class="calc-check" for="vt-wm">
+                    <input id="vt-wm" name="vt-wm" type="checkbox" checked aria-describedby="h-vt-wm">
+                    <span><b>Règle W/M (poids ou mesure)</b></span>
+                  </label>
+                  <p class="calc-hint" id="h-vt-wm">Cochée : le transitaire facture l'unité la plus élevée entre le volume (1 m³) et le poids (1 000 kg). Décoche seulement si son devis dit « au volume uniquement ».</p>
+                </div>
+              </div>
+              <p class="calc-line"><span>Fret retenu</span><b id="vt-freight">—</b></p>
+              <details class="calc-help">
+                <summary>Pourquoi 1 m³ = 167 kg ?<span aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></span></summary>
+                <p>Un avion facture la place occupée, pas seulement la masse : un carton de plumes bloque autant de soute qu'un carton de fer. La convention est un rapport volume / poids. Avec 6 000 cm³ par kilo, 1 m³ (1 000 000 cm³) pèse « 167 kg » aux yeux du transporteur. Un diviseur plus petit (5 000) rend le volume encore plus cher : c'est un choix commercial du transitaire, pas une loi physique.</p>
+              </details>
+            </fieldset>
+          </div>
+        </details>
       </form>
 
       <!-- Panneau de résultats -->
@@ -493,8 +516,8 @@
       <p class="footer-name">Sama Sourcing</p>
       <ul class="footer-nav" aria-label="Pages">
           <li><a href="index.html">Accueil</a></li>
-          <li><a href="score-de-preparation.html">Le test</a></li>
           <li><a href="outils.html">Outils</a></li>
+          <li><a href="bibliotheque.html">Bibliothèque</a></li>
           <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
           <li><a href="mon-histoire.html">Notre histoire</a></li>
           <li><a href="preuves.html">Preuves</a></li>
@@ -521,7 +544,7 @@
   </a>
 
   <script src="assets/js/config.js?v=1" defer></script>
-  <script src="assets/js/main.js?v=9" defer></script>
+  <script src="assets/js/main.js?v=11" defer></script>
   <script src="assets/js/calcul-transport.js?v=1" defer></script>
 </body>
 </html>

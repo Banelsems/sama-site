@@ -140,9 +140,48 @@ Vérifié à la main sur l'exemple par défaut, 12 colis de 60 × 50 × 40 cm et
 
 Le calculateur existant n'a pas bougé : même page, mêmes calculs, mêmes champs. Un bouton du nouveau calculateur passe le relais à l'ancien (`?fret=&annexes=&mode=&src=fret`), qui pré-remplit son transport forfaitaire et ses annexes. Sans `src=fret`, rien n'est lu : un lien partagé ne peut pas modifier un brouillon enregistré.
 
-Dix pages au total (plus la 404) ; les deux nouvelles sont dans `sitemap.xml`, `sw.js` et `llms.txt` : `outils.html` et `calcul-transport.html`, avec `og-transport.jpg` pour le partage.
+Onze pages au total (plus la 404) ; les deux nouvelles sont dans `sitemap.xml`, `sw.js` et `llms.txt` : `outils.html` et `calcul-transport.html`, avec `og-transport.jpg` pour le partage.
 
-## 6. Ce qui reste à faire par le propriétaire du site
+## 6. Menu Bibliothèque et calculatrices simplifiées (20 novembre 2026)
+
+Deux demandes : un menu « Bibliothèque » qui reprend le test et les documents pour laisser « Outils » aux seules calculatrices ; et des calculatrices réellement utilisables par un client qui n'est pas à l'aise avec l'informatique.
+
+### 6.1 La navigation
+
+- Sept entrées partout : Accueil · **Outils ▾** · **Bibliothèque ▾** · Comment ça marche · Notre histoire · Preuves · Questions. Pied de page identique, avec `outils.html` et `bibliotheque.html`.
+- « Outils » ouvre deux entrées (Vrai prix d'une pièce, Transport & CBM) et « Tous les outils ». « Bibliothèque » ouvre Le test de préparation et Les documents, plus « Toute la bibliothèque ». Ouvrir un panneau ferme l'autre : une seule fonction, `navGroups`, traite les deux.
+- La pastille « page courante » reste posée à l'exécution par `main.js`, jamais écrite dans le HTML : `tools/build.py` compare les blocs de navigation entre pages.
+- Nouvelle page `bibliotheque.html` : deux cartes d'outils, « Dans quel ordre », « Ce que la bibliothèque ne fait pas », avec `CollectionPage`, `BreadcrumbList` et `ItemList` en JSON-LD. `outils.html` perd sa carte Documents et renvoie vers la Bibliothèque.
+
+### 6.2 Le coût de revient : trois questions, puis « Ajuster »
+
+Le problème n'était pas le calcul, c'était le formulaire : trente-quatre champs d'un coup, dont la moitié que le client ne connaît pas (diviseur volumétrique, code HS, THC). La page est réorganisée, pas simplifiée au rabais.
+
+| Bloc | Contenu | Statut |
+|---|---|---|
+| 1. Ton produit | prix usine, devise de la facture, quantité | visible, obligatoire |
+| 2. Il arrive comment ? | mode, volume, ou le total du devis | visible, pré-rempli |
+| 3. Où tu vends | pays, devise de vente, taux | visible, pré-rempli |
+| 4. Ajuster les prix, la douane et les frais | marge de change, tarif et annexes, douane, paiement et assurance, port, pertes, prix de vente | **replié** dans un `<details>`, sept réglages déjà remplis |
+
+- Les libellés des modes sont passés en langage courant : « Bateau, groupage — je paie au m³ (le plus courant) », « Avion — je paie au kilo », etc.
+- Un lien du bloc transport mène au calcul du volume : « Tu ne connais pas le volume ? Calcule-le en 30 secondes ».
+- Aucun identifiant n'a changé : `calculatrice.js` lit toujours les mêmes trente-quatre `id`, le calcul, le stockage local et le pont `?fret=` sont intacts.
+
+### 6.3 Le fret : les cartons d'abord, le tarif du transitaire ensuite
+
+- Ordre revu : **1. Tes cartons** (une ligne par type : nombre, longueur, largeur, hauteur en cm, poids d'un carton) → **2. Il part comment ?** → **3. Les frais en plus** (annexes) → **4. Ajuster le prix du transitaire**, replié.
+- Le champ « Désignation » devient « Produit » et passe en facultatif ; « Ajouter un colis » devient « J'ai plusieurs types de cartons ». Les libellés des cellules sont abrégés (Cartons, Long., Larg., Haut., Poids) pour tenir sur un écran de téléphone.
+- Le panneau replié contient le prix au m³, le nombre de conteneurs, le minimum facturé, le diviseur volumétrique et la règle W/M, avec l'explication « Pourquoi 1 m³ = 167 kg ? ».
+
+### 6.4 Vérifications refaites après la refonte
+
+- Valeurs par défaut du coût de revient, stockage local vidé : 4 200 $ de marchandise, 1 060 $ de transport, CIF 5 281,04 $, total 10 776,81 $ (dont 798,28 $ de change), **30 175 069 CDF**, 1 128 pièces vendables, **26 751 CDF par pièce** (9,55 $), ×2,73 le prix usine, 38 216 / 53 502 / 133 755 CDF à 30, 50 et 80 %. Identiques aux chiffres de référence.
+- Fret par défaut, stockage local vidé : 1,440 m³, 216,0 kg, 158,40 $ de fret, 338,40 $ avec annexes, 1,44 CBM facturé, 1,57 $/kg, 235 $/m³, 28,20 $/colis, comparaison 338 / 3 980 / 5 380 $.
+- `python3 tools/build.py` : 11 pages, aucun écart. Contrôle des liens, des `id` dupliqués et des références `aria` : 0 erreur, 0 alerte.
+- Rendu contrôlé à 390 px et en bureau : les trois blocs visibles tiennent sans débordement horizontal, le panneau « Ajuster » s'ouvre et referme proprement, la comparaison des modes reste lisible.
+
+## 7. Ce qui reste à faire par le propriétaire du site
 
 1. Renseigner les réseaux sociaux dans `config.js` (ou les laisser vides : les liens disparaissent proprement).
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.

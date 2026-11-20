@@ -132,6 +132,44 @@
 .calc-note-warn svg { background: #fff; color: var(--warn, #B54708); }
 .calc-note-warn b { color: var(--warn, #B54708); }
 
+/* ---------- Options avancées, repliées ----------
+   Le formulaire montre trois questions. Tout le reste (tarif du transitaire,
+   annexes, douane, paiement, port, pertes, prix de vente) vit ici : présent,
+   calculé, mais fermé tant qu'on n'a pas besoin d'y toucher. */
+.calc-expert {
+  border: 1px solid var(--line); border-radius: var(--r-lg); background: #F7FAFF;
+  overflow: hidden;
+}
+.calc-expert > summary {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 16px 18px; cursor: pointer; list-style: none;
+}
+.calc-expert > summary::-webkit-details-marker { display: none; }
+.calc-expert-open {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 999px;
+  background: var(--paper); border: 1px solid var(--line); color: var(--blue-deep);
+}
+.calc-expert-open svg { width: 16px; height: 16px; stroke-width: 2.4; transition: transform 220ms var(--ease-out); }
+.calc-expert[open] .calc-expert-open { background: var(--yellow); border-color: var(--yellow); color: var(--night); }
+.calc-expert[open] .calc-expert-open svg { transform: rotate(45deg); }
+.calc-expert-text b { display: block; font-family: var(--display); font-size: 1.04rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.2; }
+.calc-expert-text span { display: block; margin-top: 3px; font-size: .84rem; line-height: 1.35; color: var(--ink-2); }
+.calc-expert-body { display: grid; gap: 14px; padding: 2px 12px 14px; }
+.calc-expert-note { margin: 0 6px 2px; font-size: .85rem; line-height: 1.45; color: var(--ink-2); }
+.calc-legend-plain { font-size: 1.02rem !important; letter-spacing: -.01em; }
+.calc-legend-plain .calc-group-note { margin-left: 0; }
+
+/* Groupe imbriqué dans le panneau « Ajuster » : une seule carte, pas deux */
+.calc-group-flat { border: 0; background: transparent; padding: 0; gap: 14px; }
+
+/* Phrase de renvoi vers l'autre calculatrice, et note de fin de bloc */
+.calc-aside-link {
+  margin: 0; padding: 11px 13px; border-radius: 12px; background: #F3F7FF;
+  font-size: .86rem; line-height: 1.45; color: var(--ink-2);
+}
+.calc-aside-link a { color: var(--blue-deep); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.calc-group-foot { margin: 0; font-size: .84rem; line-height: 1.45; color: var(--ink-2); }
+
 /* ---------- Le panneau de résultats ---------- */
 .calc-side { display: grid; gap: 14px; min-width: 0; }
 .calc-result {

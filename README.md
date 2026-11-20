@@ -11,25 +11,36 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 |---|---|---|
 | `index.html` | Accueil | promesse, trois niveaux de préparation, objections |
 | `score-de-preparation.html` | Le test | 12 questions → score sur 10 |
-| `outils.html` | Outils | le menu Outils : les deux calculatrices et la bibliothèque |
+| `outils.html` | Outils | le menu Outils : les deux calculatrices seulement |
 | `calculatrice.html` | Calcul « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
 | `calcul-transport.html` | Calcul transport & CBM | volume des colis, poids taxable, fret |
 | `comment-ca-marche.html` | Comment ça marche | méthode en 6 étapes |
 | `mon-histoire.html` | Notre histoire | origine, parcours |
 | `preuves.html` | Preuves | compte rendu, devis, captures masquées |
-| `documents.html` | Documents | bibliothèque PDF à télécharger |
+| `bibliotheque.html` | Bibliothèque | le test de préparation et les documents PDF |
+| `documents.html` | Documents | les PDF à télécharger |
 | `questions.html` | Questions | FAQ (8 réponses) |
 | `404.html` | Erreur | page servie automatiquement par GitHub Pages |
 
-## Le menu Outils
+## Les menus Outils et Bibliothèque
 
-La navigation tient en sept entrées : **Accueil · Le test · Outils ▾ · Comment ça marche · Notre histoire · Preuves · Questions**. « Outils » est un bouton qui ouvre un panneau de trois liens, et renvoie vers `outils.html` (« Tous les outils ») :
+La navigation tient en sept entrées : **Accueil · Outils ▾ · Bibliothèque ▾ · Comment ça marche · Notre histoire · Preuves · Questions**. Chaque bouton ouvre un panneau de deux liens, et le troisième lien du panneau mène à la page qui les rassemble (« Tous les outils », « Toute la bibliothèque »).
+
+Outils → `outils.html` :
 
 | Entrée | Page | Ce qu'elle fait |
 |---|---|---|
 | Vrai prix d'une pièce | `calculatrice.html` | coût de revient réel, prix de vente conseillé, alertes |
 | Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison |
-| Documents | `documents.html` | bibliothèque PDF |
+
+Bibliothèque → `bibliotheque.html` :
+
+| Entrée | Page | Ce qu'elle fait |
+|---|---|---|
+| Le test de préparation | `score-de-preparation.html` | 12 questions, score sur 10, ce qui manque avant de payer |
+| Les documents | `documents.html` | les PDF à télécharger (guides, gabarits, exemples) |
+
+Les deux panneaux sont indépendants : ouvrir l'un ferme l'autre. Ils se ferment au clic extérieur, à `Échap`, et quand on choisit un lien.
 
 Le panneau se ferme au clic extérieur, à `Échap`, et quand on choisit un lien. Au clavier il reste utilisable : le bouton porte `aria-expanded` et `aria-controls`, les liens suivent dans l'ordre. En dessous de 1120 px (et dans le menu mobile) le panneau s'affiche en liste indentée plutôt qu'en carte flottante.
 
@@ -75,7 +86,7 @@ python3 tools/build.py --domain samasourcing.site        # base + fichier CNAME
 python3 tools/build.py --domain samasourcing.site --no-cname
 ```
 
-Le contrôle vérifie que la navigation (7 entrées, menu Outils compris) et le pied de page sont identiques sur les 10 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
+Le contrôle vérifie que la navigation (7 entrées, deux menus déroulants) et le pied de page sont identiques sur les 11 pages, qu'aucune URL absolue ne pointe ailleurs que sur la base, que chaque page figure dans `sitemap.xml` et que `robots.txt` pointe vers le bon plan. Il sort en code 1 en cas d'écart : utilisable avant chaque `git push`.
 
 La bascule remplace l'URL de base dans les `canonical`, `og:url`, `twitter:image`, `sitemap.xml`, `robots.txt`, `llms.txt`, `<base>` de `404.html` et `config.js`, en une passe. Aucun autre fichier n'est touché.
 

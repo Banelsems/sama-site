@@ -80,45 +80,68 @@
     document.querySelectorAll('.nav a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
   }
 
-  /* ---------- Sous-menu « Outils » ----------
+  /* ---------- Sous-menus « Outils » et « Bibliothèque » ----------
      Un bouton, pas un lien : aria-expanded + hidden. Il s'ouvre au clic et au
      survol (souris seulement), se ferme par Échap, par clic extérieur et quand
-     le focus sort du bloc. Si le JS ne tourne pas, le menu reste fermé : les
-     outils restent atteignables par outils.html et par le pied de page. */
-  var toolsNav = document.querySelector('[data-nav-tools]');
-  var toolsBtn = toolsNav ? toolsNav.querySelector('.nav-tools-btn') : null;
-  var toolsMenu = document.getElementById('nav-tools-menu');
-  if (toolsNav && toolsBtn && toolsMenu) {
-    var setTools = function (open) {
-      toolsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) toolsMenu.removeAttribute('hidden');
-      else toolsMenu.setAttribute('hidden', '');
+     le focus sort du bloc. Si le JS ne tourne pas, les deux menus restent
+     fermés : chaque entrée reste atteignable par outils.html, bibliotheque.html
+     et le pied de page. */
+  var hoverQuery = window.matchMedia('(hover: hover) and (min-width: 1120px)');
+  // « pinned » : le panneau a été ouvert par un clic, pas par un survol. Sans
+  // cette distinction, un clic sur le bouton après un survol refermait le menu
+  // que la souris venait d'ouvrir — et un second clic le rouvrait.
+  var navGroups = Array.prototype.slice.call(document.querySelectorAll('[data-nav-tools]')).map(function (nav) {
+    return {
+      nav: nav,
+      btn: nav.querySelector('.nav-tools-btn'),
+      menu: nav.querySelector('.nav-tools-menu'),
+      pinned: false
     };
-    var isOpen = function () { return toolsBtn.getAttribute('aria-expanded') === 'true'; };
-    // État initial : le sous-menu est ouvert si la page courante est un outil,
-    // uniquement en mobile (en desktop le panneau flottant resterait ouvert).
-    toolsBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      setTools(!isOpen());
+  }).filter(function (g) { return g.btn && g.menu; });
+
+  var closeAll = function (except) {
+    navGroups.forEach(function (g) {
+      if (g === except) return;
+      g.pinned = false;
+      g.btn.setAttribute('aria-expanded', 'false');
+      g.menu.setAttribute('hidden', '');
     });
-    var hoverQuery = window.matchMedia('(hover: hover) and (min-width: 1120px)');
-    toolsNav.addEventListener('mouseenter', function () { if (hoverQuery.matches) setTools(true); });
-    toolsNav.addEventListener('mouseleave', function () { if (hoverQuery.matches) setTools(false); });
+  };
+
+  navGroups.forEach(function (g) {
+    var nav = g.nav, btn = g.btn, menu = g.menu;
+    var isOpen = function () { return btn.getAttribute('aria-expanded') === 'true'; };
+    var setOpen = function (open) {
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { menu.removeAttribute('hidden'); closeAll(g); }
+      else { menu.setAttribute('hidden', ''); g.pinned = false; }
+    };
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      // Ouvert au survol : le clic le fixe. Fixé : le clic le referme.
+      if (isOpen() && g.pinned) { setOpen(false); }
+      else { g.pinned = true; setOpen(true); }
+    });
+    nav.addEventListener('mouseenter', function () { if (hoverQuery.matches && !g.pinned) setOpen(true); });
+    nav.addEventListener('mouseleave', function () { if (hoverQuery.matches && !g.pinned) setOpen(false); });
     document.addEventListener('click', function (e) {
-      if (isOpen() && !toolsNav.contains(e.target)) setTools(false);
+      if (isOpen() && !nav.contains(e.target)) setOpen(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen()) { setTools(false); toolsBtn.focus(); }
+      if (e.key === 'Escape' && isOpen()) { setOpen(false); btn.focus(); }
     });
-    toolsNav.addEventListener('focusout', function (e) {
-      if (!toolsNav.contains(e.relatedTarget)) setTools(false);
+    // Le focus qui quitte le bloc referme le panneau (navigation clavier).
+    nav.addEventListener('focusout', function (e) {
+      if (!nav.contains(e.relatedTarget)) setOpen(false);
     });
-    // Un clic sur un outil referme le sous-menu et le menu mobile.
-    toolsMenu.addEventListener('click', function (e) { if (e.target.closest('a')) setTools(false); });
-    // Page courante = un outil : le parent s'allume, sans toucher au HTML
+    // Un clic sur une entrée referme le menu (et le menu mobile).
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest('a')) { setOpen(false); if (siteHeader) siteHeader.classList.remove('menu-open'); }
+    });
+    // Page courante = un enfant : le parent s'allume, sans toucher au HTML
     // (le contrôle de cohérence doit voir la même nav sur toutes les pages).
-    if (toolsMenu.querySelector('a[aria-current="page"]')) toolsBtn.classList.add('is-current');
-  }
+    if (menu.querySelector('a[aria-current="page"]')) btn.classList.add('is-current');
+  });
 
   /* ---------- Barre fixe mobile : après le haut de page, avant l'appel final ---------- */
   var bar = document.getElementById('sticky-cta');

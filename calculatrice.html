@@ -39,8 +39,8 @@
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=24">
-  <link rel="stylesheet" href="assets/css/calculatrice.css?v=4">
+  <link rel="stylesheet" href="assets/css/style.css?v=25">
+  <link rel="stylesheet" href="assets/css/calculatrice.css?v=6">
 
   <script type="application/ld+json">
   {
@@ -168,16 +168,24 @@
       <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">S</span>Sama Sourcing</a>
                   <nav class="nav" id="menu" aria-label="Menu principal">
           <a href="index.html">Accueil</a>
-          <a href="score-de-preparation.html">Le test</a>
         <div class="nav-tools" data-nav-tools>
           <button class="nav-tools-btn" type="button" aria-expanded="false" aria-controls="nav-tools-menu" aria-haspopup="true">
             Outils<span class="nav-tools-caret" aria-hidden="true"></span>
           </button>
           <div class="nav-tools-menu" id="nav-tools-menu" hidden>
-            <a href="calculatrice.html" aria-current="page"><span class="nt-title">Vrai prix d’une pièce</span><span class="nt-desc">Produit, fret, douane, change, pertes</span></a>
-            <a href="calcul-transport.html"><span class="nt-title">Transport &amp; CBM</span><span class="nt-desc">Volume, poids taxable, fret maritime ou aérien</span></a>
-            <a href="documents.html"><span class="nt-title">Documents</span><span class="nt-desc">Guides et PDF à télécharger</span></a>
+            <a href="calculatrice.html" aria-current="page"><span class="nt-title">Vrai prix d’une pièce</span><span class="nt-desc">Ce que ta pièce te coûte vraiment</span></a>
+            <a href="calcul-transport.html"><span class="nt-title">Transport &amp; CBM</span><span class="nt-desc">Le fret que le transitaire va facturer</span></a>
             <a class="nav-tools-all" href="outils.html">Tous les outils</a>
+          </div>
+        </div>
+        <div class="nav-tools" data-nav-tools>
+          <button class="nav-tools-btn" type="button" aria-expanded="false" aria-controls="nav-bib-menu" aria-haspopup="true">
+            Bibliothèque<span class="nav-tools-caret" aria-hidden="true"></span>
+          </button>
+          <div class="nav-tools-menu" id="nav-bib-menu" hidden>
+            <a href="score-de-preparation.html"><span class="nt-title">Le test</span><span class="nt-desc">12 questions, un score sur 10</span></a>
+            <a href="documents.html"><span class="nt-title">Documents</span><span class="nt-desc">Guides et PDF à télécharger</span></a>
+            <a class="nav-tools-all" href="bibliotheque.html">Toute la bibliothèque</a>
           </div>
         </div>
           <a href="comment-ca-marche.html">Comment ça marche</a>
@@ -234,385 +242,413 @@
 
       <form class="calc-form" id="calc-form" novalidate>
 
-        <!-- 1. La commande -->
+        <!-- 1. Le produit : la seule question vraiment obligatoire -->
         <fieldset class="calc-group" id="g-commande">
-          <legend><span class="calc-step" aria-hidden="true">1</span>La commande<span class="calc-group-note">Ce que tu achètes, et à quel prix</span></legend>
+          <legend><span class="calc-step" aria-hidden="true">1</span>Ton produit<span class="calc-group-note">Le prix chez l'usine, la quantité, et la devise de la facture</span></legend>
           <div class="calc-grid">
             <div class="calc-field">
-              <label for="prix-usine">Prix usine, par pièce</label>
-              <div class="calc-input">
-                <input id="prix-usine" name="prix-usine" type="number" inputmode="decimal" min="0" step="0.01" value="3.5" aria-describedby="h-prix-usine">
-                <span class="calc-unit" data-unit="achat" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-prix-usine">Le prix annoncé par le fournisseur, avant tout le reste.</p>
-            </div>
+                          <label for="prix-usine">Prix usine, par pièce</label>
+                          <div class="calc-input">
+                            <input id="prix-usine" name="prix-usine" type="number" inputmode="decimal" min="0" step="0.01" value="3.5" aria-describedby="h-prix-usine">
+                            <span class="calc-unit" data-unit="achat" aria-hidden="true">USD</span>
+                          </div>
+                          <p class="calc-hint" id="h-prix-usine">Le prix annoncé par le fournisseur, avant tout le reste.</p>
+                        </div>
             <div class="calc-field">
-              <label for="devise-achat">Devise de la facture</label>
-              <div class="calc-input">
-                <select id="devise-achat" name="devise-achat" aria-describedby="h-devise-achat">
-                  <option value="CNY">Yuan (CNY)</option>
-                  <option value="USD" selected>Dollar US (USD)</option>
-                  <option value="EUR">Euro (EUR)</option>
-                  <option value="AUTRE">Autre devise</option>
-                </select>
-              </div>
-              <p class="calc-hint" id="h-devise-achat">La devise dans laquelle l'usine te facture.</p>
-            </div>
+                          <label for="devise-achat">Devise de la facture</label>
+                          <div class="calc-input">
+                            <select id="devise-achat" name="devise-achat" aria-describedby="h-devise-achat">
+                              <option value="CNY">Yuan (CNY)</option>
+                              <option value="USD" selected>Dollar US (USD)</option>
+                              <option value="EUR">Euro (EUR)</option>
+                              <option value="AUTRE">Autre devise</option>
+                            </select>
+                          </div>
+                          <p class="calc-hint" id="h-devise-achat">La devise dans laquelle l'usine te facture.</p>
+                        </div>
             <div class="calc-field" id="field-devise-autre" hidden>
-              <label for="devise-autre">Code de ta devise</label>
-              <div class="calc-input">
-                <input id="devise-autre" name="devise-autre" type="text" maxlength="5" value="" placeholder="GBP" autocomplete="off" aria-describedby="h-devise-autre">
-              </div>
-              <p class="calc-hint" id="h-devise-autre">Trois lettres : GBP, INR, AED, TRY…</p>
-            </div>
-            <div class="calc-field">
-              <label for="quantite">Quantité commandée</label>
-              <div class="calc-input">
-                <input id="quantite" name="quantite" type="number" inputmode="numeric" min="1" step="1" value="1200" aria-describedby="h-quantite">
-                <span class="calc-unit" aria-hidden="true">pièces</span>
-              </div>
-              <p class="calc-hint" id="h-quantite">Ce que tu paies à l'usine, pertes comprises.</p>
-            </div>
-          </div>
-          <p class="calc-line"><span>Valeur marchandise</span><b id="out-valeur">—</b></p>
-        </fieldset>
-
-        <!-- 2. Le change et le risque de change -->
-        <fieldset class="calc-group" id="g-change">
-          <legend><span class="calc-step" aria-hidden="true">2</span>Le change<span class="calc-group-note">Le taux du jour, et le coussin de sécurité</span></legend>
-          <div class="calc-grid">
+                          <label for="devise-autre">Code de ta devise</label>
+                          <div class="calc-input">
+                            <input id="devise-autre" name="devise-autre" type="text" maxlength="5" value="" placeholder="GBP" autocomplete="off" aria-describedby="h-devise-autre">
+                          </div>
+                          <p class="calc-hint" id="h-devise-autre">Trois lettres : GBP, INR, AED, TRY…</p>
+                        </div>
             <div class="calc-field" id="field-taux-cny" hidden>
-              <label for="taux-cny">1 dollar US = ? yuans</label>
-              <div class="calc-input">
-                <input id="taux-cny" name="taux-cny" type="number" inputmode="decimal" min="0" step="0.01" value="7.15" aria-describedby="h-taux">
-              </div>
-              <p class="calc-hint" id="h-taux-cny">Taux du jour, pas celui du mois dernier.</p>
-            </div>
+                          <label for="taux-cny">1 dollar US = ? yuans</label>
+                          <div class="calc-input">
+                            <input id="taux-cny" name="taux-cny" type="number" inputmode="decimal" min="0" step="0.01" value="7.15" aria-describedby="h-taux">
+                          </div>
+                          <p class="calc-hint" id="h-taux-cny">Taux du jour, pas celui du mois dernier.</p>
+                        </div>
             <div class="calc-field" id="field-taux-eur" hidden>
-              <label for="taux-eur">1 dollar US = ? euros</label>
-              <div class="calc-input">
-                <input id="taux-eur" name="taux-eur" type="number" inputmode="decimal" min="0" step="0.01" value="0.86" aria-describedby="h-taux">
-              </div>
-              <p class="calc-hint" id="h-taux-eur">Taux du jour, pas celui du mois dernier.</p>
-            </div>
+                          <label for="taux-eur">1 dollar US = ? euros</label>
+                          <div class="calc-input">
+                            <input id="taux-eur" name="taux-eur" type="number" inputmode="decimal" min="0" step="0.01" value="0.86" aria-describedby="h-taux">
+                          </div>
+                          <p class="calc-hint" id="h-taux-eur">Taux du jour, pas celui du mois dernier.</p>
+                        </div>
             <div class="calc-field" id="field-taux-autre" hidden>
-              <label for="taux-autre">1 dollar US = ? <span id="lbl-devise-autre">GBP</span></label>
-              <div class="calc-input">
-                <input id="taux-autre" name="taux-autre" type="number" inputmode="decimal" min="0" step="0.0001" value="0.79" aria-describedby="h-taux-autre">
-              </div>
-              <p class="calc-hint" id="h-taux-autre">Le taux de ta banque, frais exclus.</p>
-            </div>
+                          <label for="taux-autre">1 dollar US = ? <span id="lbl-devise-autre">GBP</span></label>
+                          <div class="calc-input">
+                            <input id="taux-autre" name="taux-autre" type="number" inputmode="decimal" min="0" step="0.0001" value="0.79" aria-describedby="h-taux-autre">
+                          </div>
+                          <p class="calc-hint" id="h-taux-autre">Le taux de ta banque, frais exclus.</p>
+                        </div>
             <div class="calc-field">
-              <label for="devise-locale">Tu vends en</label>
-              <div class="calc-input">
-                <select id="devise-locale" name="devise-locale" aria-describedby="h-devise-locale">
-                  <option value="CDF" selected>Franc congolais (CDF)</option>
-                  <option value="XOF">Franc CFA BCEAO (XOF)</option>
-                  <option value="XAF">Franc CFA BEAC (XAF)</option>
-                  <option value="NGN">Naira (NGN)</option>
-                  <option value="GHS">Cedi (GHS)</option>
-                  <option value="KES">Shilling kényan (KES)</option>
-                  <option value="ZAR">Rand (ZAR)</option>
-                  <option value="USD">Dollar US (USD)</option>
-                  <option value="EUR">Euro (EUR)</option>
-                </select>
-              </div>
-              <p class="calc-hint" id="h-devise-locale">La monnaie dans laquelle tu encaisses tes ventes.</p>
-            </div>
-            <div class="calc-field">
-              <label for="taux-local">1 dollar US = ? <span id="lbl-devise-locale">francs congolais</span></label>
-              <div class="calc-input">
-                <input id="taux-local" name="taux-local" type="number" inputmode="decimal" min="0" step="1" value="2800" aria-describedby="h-taux-local">
-                <span class="calc-unit" id="unit-taux-local" aria-hidden="true">CDF</span>
-              </div>
-              <p class="calc-hint" id="h-taux-local">Taux du marché, celui auquel tu changes vraiment.</p>
-            </div>
-            <div class="calc-field calc-field-wide">
-              <label for="marge-change">Marge de sécurité de change : <output id="out-marge" for="marge-change">0 %</output></label>
-              <div class="calc-input calc-input-range">
-                <input id="marge-change" name="marge-change" type="range" min="0" max="20" step="1" value="8" aria-describedby="h-marge-change">
-              </div>
-              <p class="calc-hint" id="h-marge-change">Recommandé : 5 à 15 %. À 0 %, tu paries que ta monnaie ne bougera pas. À 15 %, tu couvres une dévaluation forte. Ce pourcentage s'ajoute à ton coût final, en monnaie locale.</p>
-            </div>
+                          <label for="quantite">Quantité commandée</label>
+                          <div class="calc-input">
+                            <input id="quantite" name="quantite" type="number" inputmode="numeric" min="1" step="1" value="1200" aria-describedby="h-quantite">
+                            <span class="calc-unit" aria-hidden="true">pièces</span>
+                          </div>
+                          <p class="calc-hint" id="h-quantite">Ce que tu paies à l'usine, pertes comprises.</p>
+                        </div>
           </div>
-          <details class="calc-help">
-            <summary>Où trouver un taux correct ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
-            <div>
-              <p>Demande à ta banque ou à ton changeur le taux réel appliqué, frais compris — c'est souvent 2 à 4 % plus cher que le taux affiché sur les sites. Prends ensuite <b>le taux le plus mauvais pour toi</b> parmi ceux que tu peux réellement obtenir : c'est celui qui doit entrer dans le calcul.</p>
-            </div>
-          </details>
+          <p class="calc-line"><span>Valeur de la marchandise</span><b id="out-valeur">—</b></p>
         </fieldset>
 
-        <!-- 3. Le transport -->
+        <!-- 2. Le transport : seulement ce que tu sais déjà -->
         <fieldset class="calc-group" id="g-transport">
-          <legend><span class="calc-step" aria-hidden="true">3</span>Le transport<span class="calc-group-note">De l'usine au port de destination</span></legend>
+          <legend><span class="calc-step" aria-hidden="true">2</span>Il arrive comment ?<span class="calc-group-note">Un devis, un volume, un conteneur : tu donnes ce que tu sais</span></legend>
           <div class="calc-grid">
             <div class="calc-field">
-              <label for="transport-mode">Mode de transport</label>
-              <div class="calc-input">
-                <select id="transport-mode" name="transport-mode" aria-describedby="h-transport-mode">
-                  <option value="lcl" selected>LCL — groupage maritime (par CBM)</option>
-                  <option value="fcl20">FCL — conteneur 20 pieds</option>
-                  <option value="fcl40">FCL — conteneur 40 pieds</option>
-                  <option value="air">Aérien (par kg)</option>
-                  <option value="express">Express (par kg)</option>
-                </select>
-              </div>
-              <p class="calc-hint" id="h-transport-mode">Le mode que tu as réellement réservé, pas celui que tu espères.</p>
-            </div>
+                          <label for="transport-mode">Mode de transport</label>
+                          <div class="calc-input">
+                            <select id="transport-mode" name="transport-mode" aria-describedby="h-transport-mode">
+                              <option value="lcl" selected>Bateau, groupage (le plus courant)</option>
+                              <option value="fcl20">Bateau, conteneur 20 pieds</option>
+                              <option value="fcl40">Bateau, conteneur 40 pieds</option>
+                              <option value="air">Avion, au kilo</option>
+                              <option value="express">Express, porte à porte</option>
+                            </select>
+                          </div>
+                          <p class="calc-hint" id="h-transport-mode">Celui que tu as réservé. Si tu ne sais pas encore, laisse le groupage : c'est le moins cher pour un petit volume.</p>
+                        </div>
             <div class="calc-field">
-              <label for="transport-qte" id="t-qte-label">Volume</label>
-              <div class="calc-input">
-                <input id="transport-qte" name="transport-qte" type="number" inputmode="decimal" min="0" step="0.1" value="8" aria-describedby="h-transport-qte">
-                <span class="calc-unit" id="t-qte-unit" aria-hidden="true">CBM</span>
-              </div>
-              <p class="calc-hint" id="h-transport-qte">Le volume facturable, pas le volume estimé au doigt mouillé.</p>
-            </div>
+                          <label for="transport-qte" id="t-qte-label">Volume</label>
+                          <div class="calc-input">
+                            <input id="transport-qte" name="transport-qte" type="number" inputmode="decimal" min="0" step="0.1" value="8" aria-describedby="h-transport-qte">
+                            <span class="calc-unit" id="t-qte-unit" aria-hidden="true">CBM</span>
+                          </div>
+                          <p class="calc-hint" id="h-transport-qte">Le volume facturable, pas le volume estimé au doigt mouillé.</p>
+                        </div>
             <div class="calc-field">
-              <label for="transport-tarif" id="t-tarif-label">Tarif par CBM</label>
-              <div class="calc-input">
-                <input id="transport-tarif" name="transport-tarif" type="number" inputmode="decimal" min="0" step="0.5" value="110" aria-describedby="h-transport-tarif">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-transport-tarif">Le prix du transitaire, hors frais annexes.</p>
-            </div>
-            <div class="calc-field">
-              <label for="transport-forfait">Forfait total (si tu as un devis)</label>
-              <div class="calc-input">
-                <input id="transport-forfait" name="transport-forfait" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-transport-forfait">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-transport-forfait">Renseigne-le et il remplace le calcul par CBM ou par kg.</p>
-            </div>
-            <div class="calc-field">
-              <label for="transport-annexes">Frais annexes (THC, documents, camion usine → port)</label>
-              <div class="calc-input">
-                <input id="transport-annexes" name="transport-annexes" type="number" inputmode="decimal" min="0" step="1" value="180" aria-describedby="h-transport-annexes">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-transport-annexes">Souvent oubliés : ils sortent pourtant de ta poche.</p>
-            </div>
+                          <label for="transport-forfait">Ou : le total du devis, si tu en as un</label>
+                          <div class="calc-input">
+                            <input id="transport-forfait" name="transport-forfait" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-transport-forfait">
+                            <span class="calc-unit" aria-hidden="true">USD</span>
+                          </div>
+                          <p class="calc-hint" id="h-transport-forfait">Un seul chiffre, le total du transitaire. Rempli, il remplace le volume et le tarif.</p>
+                        </div>
           </div>
-          <p class="calc-line"><span>Transport retenu</span><b id="out-transport">—</b></p>
-          <details class="calc-help">
-            <summary>Les tarifs pré-remplis sont-ils fiables ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
-            <div>
-              <p>Non : ce sont des <b>ordres de grandeur</b> (Chine → Afrique de l'Ouest et centrale, 2026), pour que la page soit utilisable tout de suite. Un devis de transitaire les remplace toujours. Le fret maritime bouge vite, et le port de destination change tout.</p>
-            </div>
-          </details>
+          <p class="calc-line"><span>Transport compté</span><b id="out-transport">—</b></p>
+          <p class="calc-aside-link">Tu ne connais pas le volume ? <a href="calcul-transport.html">Calcule-le en 30 secondes</a> avec le nombre de cartons et leurs dimensions, puis reviens ici avec le chiffre.</p>
         </fieldset>
 
-        <!-- 4. La douane -->
-        <fieldset class="calc-group" id="g-douane">
-          <legend><span class="calc-step" aria-hidden="true">4</span>La douane<span class="calc-group-note">Droits, TVA, prélèvements — la ligne qui fâche</span></legend>
+        <!-- 3. Le pays et la monnaie : ce qui décide de la douane et du prix affiché -->
+        <fieldset class="calc-group" id="g-pays">
+          <legend><span class="calc-step" aria-hidden="true">3</span>Où tu vends<span class="calc-group-note">Le pays fixe la douane, la monnaie fixe le prix que tu affiches</span></legend>
           <div class="calc-grid">
             <div class="calc-field">
-              <label for="pays">Pays de destination</label>
-              <div class="calc-input">
-                <select id="pays" name="pays" aria-describedby="pays-hint">
-                  <option value="goma" selected>Goma / RDC (port de Matadi)</option>
-                  <option value="douala">Douala / Cameroun</option>
-                  <option value="abidjan">Abidjan / Côte d'Ivoire</option>
-                  <option value="lagos">Lagos / Nigeria</option>
-                  <option value="autre">Autre destination</option>
-                </select>
-              </div>
-              <p class="calc-hint" id="pays-hint">Changer de pays pré-remplit les taux indicatifs ci-dessous.</p>
-            </div>
+                          <label for="pays">Pays de destination</label>
+                          <div class="calc-input">
+                            <select id="pays" name="pays" aria-describedby="pays-hint">
+                              <option value="goma" selected>Goma / RDC (port de Matadi)</option>
+                              <option value="douala">Douala / Cameroun</option>
+                              <option value="abidjan">Abidjan / Côte d'Ivoire</option>
+                              <option value="lagos">Lagos / Nigeria</option>
+                              <option value="autre">Autre destination</option>
+                            </select>
+                          </div>
+                          <p class="calc-hint" id="pays-hint">Changer de pays pré-remplit les taux indicatifs ci-dessous.</p>
+                        </div>
             <div class="calc-field">
-              <label for="hs-code">Code HS approximatif</label>
-              <div class="calc-input">
-                <input id="hs-code" name="hs-code" type="text" inputmode="numeric" maxlength="12" value="" placeholder="ex. 6403" autocomplete="off" aria-describedby="h-hs-code">
-              </div>
-              <p class="calc-hint" id="h-hs-code">Le code douanier de ta marchandise : c'est lui qui fixe le taux de droit.</p>
-            </div>
+                          <label for="devise-locale">Tu vends en</label>
+                          <div class="calc-input">
+                            <select id="devise-locale" name="devise-locale" aria-describedby="h-devise-locale">
+                              <option value="CDF" selected>Franc congolais (CDF)</option>
+                              <option value="XOF">Franc CFA BCEAO (XOF)</option>
+                              <option value="XAF">Franc CFA BEAC (XAF)</option>
+                              <option value="NGN">Naira (NGN)</option>
+                              <option value="GHS">Cedi (GHS)</option>
+                              <option value="KES">Shilling kényan (KES)</option>
+                              <option value="ZAR">Rand (ZAR)</option>
+                              <option value="USD">Dollar US (USD)</option>
+                              <option value="EUR">Euro (EUR)</option>
+                            </select>
+                          </div>
+                          <p class="calc-hint" id="h-devise-locale">La monnaie dans laquelle tu encaisses tes ventes.</p>
+                        </div>
             <div class="calc-field">
-              <label for="douane-droit">Droits de douane</label>
-              <div class="calc-input">
-                <input id="douane-droit" name="douane-droit" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="15" aria-describedby="h-douane-droit">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-              <p class="calc-hint" id="h-douane-droit">Sur la valeur CIF (marchandise + fret + assurance).</p>
-            </div>
-            <div class="calc-field">
-              <label for="douane-tva">TVA / TVA d'importation</label>
-              <div class="calc-input">
-                <input id="douane-tva" name="douane-tva" type="number" inputmode="decimal" min="0" max="40" step="0.01" value="16" aria-describedby="h-douane-tva">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-              <p class="calc-hint" id="h-douane-tva">Calculée sur la valeur CIF <b>plus</b> les droits.</p>
-            </div>
-            <div class="calc-field">
-              <label for="douane-autres">Autres prélèvements</label>
-              <div class="calc-input">
-                <input id="douane-autres" name="douane-autres" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="2" aria-describedby="h-douane-autres">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-              <p class="calc-hint" id="h-douane-autres">Redevances, contrôles, taxes locales sur la valeur CIF.</p>
-            </div>
-            <div class="calc-field">
-              <label for="douane-forfait">Frais fixes de dédouanement</label>
-              <div class="calc-input">
-                <input id="douane-forfait" name="douane-forfait" type="number" inputmode="decimal" min="0" step="1" value="120" aria-describedby="h-douane-forfait">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-douane-forfait">Déclarant, magasin sous douane, amendes éventuelles.</p>
-            </div>
+                          <label for="taux-local">1 dollar US = ? <span id="lbl-devise-locale">francs congolais</span></label>
+                          <div class="calc-input">
+                            <input id="taux-local" name="taux-local" type="number" inputmode="decimal" min="0" step="1" value="2800" aria-describedby="h-taux-local">
+                            <span class="calc-unit" id="unit-taux-local" aria-hidden="true">CDF</span>
+                          </div>
+                          <p class="calc-hint" id="h-taux-local">Taux du marché, celui auquel tu changes vraiment.</p>
+                        </div>
           </div>
-          <p class="calc-line"><span>Valeur CIF (base de taxation)</span><b id="out-cif">—</b></p>
+          <p class="calc-group-foot">Les droits de douane et la TVA du pays sont déjà remplis. Tu peux les corriger dans les options ci-dessous.</p>
           <div class="calc-note calc-note-warn" id="pays-note" role="note">
             <svg aria-hidden="true"><use href="#i-alert"/></svg>
-            <p><b>Valeurs indicatives, pas un verdict.</b> Les taux dépendent du code HS et du régime appliqué. Un transitaire ou un déclarant te donne le chiffre exact en quelques minutes — et souvent, il est plus élevé que ce qu'on croit.</p>
-          </div>
-          <details class="calc-help">
-            <summary>Ce que l'on oublie presque toujours<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
-            <div>
-              <p>La TVA se paie sur la valeur <b>avec</b> les droits, pas sur la valeur seule : 15 % de droits puis 16 % de TVA ne font pas 31 %, mais 33,4 % du total. S'ajoutent les redevances locales, le stockage au port si les documents traînent, et parfois une « motivation » de dossier. Prévois 5 à 10 % de marge d'erreur en plus de ce que tu calcules ici.</p>
-            </div>
-          </details>
+              <p><b>Valeurs indicatives, pas un verdict.</b> Les taux dépendent du code HS et du régime appliqué. Un transitaire ou un déclarant te donne le chiffre exact en quelques minutes — et souvent, il est plus élevé que ce qu'on croit.</p>
+              </div>
         </fieldset>
 
-        <!-- 5. Paiement et assurance -->
-        <fieldset class="calc-group" id="g-paiement">
-          <legend><span class="calc-step" aria-hidden="true">5</span>Paiement &amp; assurance<span class="calc-group-note">Le prix de l'argent qui circule</span></legend>
-          <div class="calc-grid">
-            <div class="calc-field">
-              <label for="paiement-mode">Moyen de paiement</label>
-              <div class="calc-input">
-                <select id="paiement-mode" name="paiement-mode" aria-describedby="h-paiement-mode">
-                  <option value="tt" selected>Virement bancaire (TT)</option>
-                  <option value="alipay">Alipay / WeChat Pay</option>
-                  <option value="wu">Western Union / MoneyGram</option>
-                  <option value="lc">Lettre de crédit (L/C)</option>
-                  <option value="autre">Autre / plusieurs moyens</option>
-                </select>
-              </div>
-              <p class="calc-hint" id="h-paiement-mode">Changer de moyen pré-remplit le taux indicatif des frais.</p>
-            </div>
-            <div class="calc-field">
-              <label for="paiement-taux">Frais de paiement</label>
-              <div class="calc-input">
-                <input id="paiement-taux" name="paiement-taux" type="number" inputmode="decimal" min="0" max="20" step="0.01" value="1.5" aria-describedby="h-paiement-taux">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-              <p class="calc-hint" id="h-paiement-taux">Sur la valeur marchandise seulement, pas sur tout le coût.</p>
-            </div>
-            <div class="calc-field">
-              <label for="paiement-fixe">Frais bancaires fixes</label>
-              <div class="calc-input">
-                <input id="paiement-fixe" name="paiement-fixe" type="number" inputmode="decimal" min="0" step="1" value="45" aria-describedby="h-paiement-fixe">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-paiement-fixe">Frais de virement, commissions fixes, frais de dossier.</p>
-            </div>
-            <div class="calc-field">
-              <label for="assurance-taux">Assurance cargo</label>
-              <div class="calc-input">
-                <input id="assurance-taux" name="assurance-taux" type="number" inputmode="decimal" min="0" max="5" step="0.01" value="0.4" aria-describedby="h-assurance-taux">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-              <p class="calc-hint" id="h-assurance-taux">Sur la valeur CIF. Utile : 0,3 à 0,6 %. Facultative sur le papier, coûteuse à oublier en pratique.</p>
-            </div>
-            <div class="calc-field">
-              <label for="assurance-fixe">ou montant fixe d'assurance</label>
-              <div class="calc-input">
-                <input id="assurance-fixe" name="assurance-fixe" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-assurance-fixe">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-assurance-fixe">Renseigné, il remplace le pourcentage.</p>
-            </div>
-          </div>
-        </fieldset>
+        <!-- 4. Le reste : replié, jamais obligatoire -->
+        <details class="calc-expert" id="calc-expert">
+          <summary>
+            <span class="calc-expert-open" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#i-plus"/></svg></span>
+            <span class="calc-expert-text">
+              <b>Ajuster les prix, la douane et les frais</b>
+              <span>Facultatif. Sept réglages, déjà remplis avec des ordres de grandeur prudents.</span>
+            </span>
+          </summary>
+          <div class="calc-expert-body">
+            <p class="calc-expert-note">Rien à toucher si tu ne sais pas. Si tu as un devis de transitaire, un code HS ou un taux de douane exact, c'est ici — et le résultat se met à jour tout seul.</p>
+            <fieldset class="calc-group" id="g-change">
+              <legend class="calc-legend-plain">La marge de sécurité de change<span class="calc-group-note">De quoi absorber une baisse de ta monnaie entre l'achat et la vente</span></legend>
+              <div class="calc-grid">
 
-        <!-- 6. Port et livraison -->
-        <fieldset class="calc-group" id="g-port">
-          <legend><span class="calc-step" aria-hidden="true">6</span>Port &amp; livraison locale<span class="calc-group-note">Du quai jusqu'à ta boutique</span></legend>
-          <div class="calc-grid">
-            <div class="calc-field">
-              <label for="port-frais">Frais portuaires</label>
-              <div class="calc-input">
-                <input id="port-frais" name="port-frais" type="number" inputmode="decimal" min="0" step="1" value="900" aria-describedby="h-port-frais">
-                <span class="calc-unit" aria-hidden="true">USD</span>
+                <div class="calc-field calc-field-wide">
+                  <label for="marge-change">Marge de sécurité de change : <output id="out-marge" for="marge-change">0 %</output></label>
+                  <div class="calc-input calc-input-range">
+                    <input id="marge-change" name="marge-change" type="range" min="0" max="20" step="1" value="8" aria-describedby="h-marge-change">
+                  </div>
+                  <p class="calc-hint" id="h-marge-change">Recommandé : 5 à 15 %. À 0 %, tu paries que ta monnaie ne bougera pas. À 15 %, tu couvres une dévaluation forte. Ce pourcentage s'ajoute à ton coût final, en monnaie locale.</p>
+                </div>
               </div>
-              <p class="calc-hint" id="h-port-frais">Manutention, stockage, taxes de port, acconage.</p>
-            </div>
-            <div class="calc-field">
-              <label for="port-clearing">Agent de clearing / transitaire local</label>
-              <div class="calc-input">
-                <input id="port-clearing" name="port-clearing" type="number" inputmode="decimal" min="0" step="1" value="350" aria-describedby="h-port-clearing">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-port-clearing">Honoraires du déclarant, hors droits et taxes.</p>
-            </div>
-            <div class="calc-field">
-              <label for="port-inland">Transport jusqu'à ta boutique</label>
-              <div class="calc-input">
-                <input id="port-inland" name="port-inland" type="number" inputmode="decimal" min="0" step="1" value="1200" aria-describedby="h-port-inland">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-port-inland">Camion, essence, péages, déchargement. Matadi → Goma, c'est long.</p>
-            </div>
-            <div class="calc-field">
-              <label for="port-divers">Divers (attente, faux frais, pourboires)</label>
-              <div class="calc-input">
-                <input id="port-divers" name="port-divers" type="number" inputmode="decimal" min="0" step="1" value="150" aria-describedby="h-port-divers">
-                <span class="calc-unit" aria-hidden="true">USD</span>
-              </div>
-              <p class="calc-hint" id="h-port-divers">Personne ne les budgète, tout le monde les paie.</p>
-            </div>
-          </div>
-        </fieldset>
+              <details class="calc-help">
+                <summary>Où trouver un taux correct ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+                <div>
+                  <p>Demande à ta banque ou à ton changeur le taux réel appliqué, frais compris — c'est souvent 2 à 4 % plus cher que le taux affiché sur les sites. Prends ensuite <b>le taux le plus mauvais pour toi</b> parmi ceux que tu peux réellement obtenir : c'est celui qui doit entrer dans le calcul.</p>
+                </div>
+              </details>
+            </fieldset>
 
-        <!-- 7. Les pertes : ce qui réduit le nombre de pièces vendables -->
-        <fieldset class="calc-group" id="g-pertes">
-          <legend><span class="calc-step" aria-hidden="true">7</span>Les pertes<span class="calc-group-note">Ce que tu paies mais que tu ne vends pas</span></legend>
-          <div class="calc-grid">
-            <div class="calc-field">
-              <label for="perte-casse">Casse / pièces abîmées</label>
-              <div class="calc-input">
-                <input id="perte-casse" name="perte-casse" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="2" aria-describedby="h-pertes">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-            </div>
-            <div class="calc-field">
-              <label for="perte-defauts">Défauts (invendables)</label>
-              <div class="calc-input">
-                <input id="perte-defauts" name="perte-defauts" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="3" aria-describedby="h-pertes">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-            </div>
-            <div class="calc-field">
-              <label for="perte-colis">Colis perdus / volés</label>
-              <div class="calc-input">
-                <input id="perte-colis" name="perte-colis" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="1" aria-describedby="h-pertes">
-                <span class="calc-unit" aria-hidden="true">%</span>
-              </div>
-            </div>
-            <div class="calc-field calc-field-readout">
-              <label for="out-pertes">Pertes cumulées</label>
-              <div class="calc-input">
-                <output id="out-pertes" for="perte-casse perte-defauts perte-colis">0 %</output>
-              </div>
-              <p class="calc-hint" id="h-pertes">Casse, défauts, colis perdus : estime-les toi-même. En dessous de 3 % au total, tu te racontes une histoire.</p>
-            </div>
-          </div>
-          <p class="calc-line"><span>Pièces réellement vendables</span><b id="out-vendables">—</b></p>
-        </fieldset>
+            <fieldset class="calc-group" id="g-transport-plus">
+              <legend class="calc-legend-plain">Le prix du transitaire et ses annexes<span class="calc-group-note">Son devis, et les frais qu'il ajoute au fret</span></legend>
+              <div class="calc-grid">
 
-        <!-- 8. Le prix de vente (facultatif) -->
-        <fieldset class="calc-group" id="g-vente">
-          <legend><span class="calc-step" aria-hidden="true">8</span>Ton prix de vente<span class="calc-group-note">Facultatif — pour voir ta vraie marge</span></legend>
-          <div class="calc-grid">
-            <div class="calc-field">
-              <label for="prix-vente">Prix auquel tu comptes vendre, par pièce</label>
-              <div class="calc-input">
-                <input id="prix-vente" name="prix-vente" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-prix-vente">
-                <span class="calc-unit" id="unit-prix-vente" aria-hidden="true">CDF</span>
+                <div class="calc-field">
+                  <label for="transport-tarif" id="t-tarif-label">Tarif par CBM</label>
+                  <div class="calc-input">
+                    <input id="transport-tarif" name="transport-tarif" type="number" inputmode="decimal" min="0" step="0.5" value="110" aria-describedby="h-transport-tarif">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-transport-tarif">Le prix du transitaire, hors frais annexes.</p>
+                </div>
+
+                <div class="calc-field">
+                  <label for="transport-annexes">Frais annexes (THC, documents, camion usine → port)</label>
+                  <div class="calc-input">
+                    <input id="transport-annexes" name="transport-annexes" type="number" inputmode="decimal" min="0" step="1" value="180" aria-describedby="h-transport-annexes">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-transport-annexes">Souvent oubliés : ils sortent pourtant de ta poche.</p>
+                </div>
               </div>
-              <p class="calc-hint" id="h-prix-vente">Laisse à 0 si tu ne sais pas encore : les prix conseillés s'affichent quand même.</p>
-            </div>
+              <details class="calc-help">
+                <summary>Les tarifs pré-remplis sont-ils fiables ?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+                <div>
+                  <p>Non : ce sont des <b>ordres de grandeur</b> (Chine → Afrique de l'Ouest et centrale, 2026), pour que la page soit utilisable tout de suite. Un devis de transitaire les remplace toujours. Le fret maritime bouge vite, et le port de destination change tout.</p>
+                </div>
+              </details>
+            </fieldset>
+
+            <fieldset class="calc-group" id="g-douane">
+              <legend class="calc-legend-plain">La douane<span class="calc-group-note">Droits, TVA, prélèvements — la ligne qui fâche</span></legend>
+              <div class="calc-grid">
+
+                <div class="calc-field">
+                  <label for="hs-code">Code HS approximatif</label>
+                  <div class="calc-input">
+                    <input id="hs-code" name="hs-code" type="text" inputmode="numeric" maxlength="12" value="" placeholder="ex. 6403" autocomplete="off" aria-describedby="h-hs-code">
+                  </div>
+                  <p class="calc-hint" id="h-hs-code">Le code douanier de ta marchandise : c'est lui qui fixe le taux de droit.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="douane-droit">Droits de douane</label>
+                  <div class="calc-input">
+                    <input id="douane-droit" name="douane-droit" type="number" inputmode="decimal" min="0" max="100" step="0.1" value="15" aria-describedby="h-douane-droit">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                  <p class="calc-hint" id="h-douane-droit">Sur la valeur CIF (marchandise + fret + assurance).</p>
+                </div>
+                <div class="calc-field">
+                  <label for="douane-tva">TVA / TVA d'importation</label>
+                  <div class="calc-input">
+                    <input id="douane-tva" name="douane-tva" type="number" inputmode="decimal" min="0" max="40" step="0.01" value="16" aria-describedby="h-douane-tva">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                  <p class="calc-hint" id="h-douane-tva">Calculée sur la valeur CIF <b>plus</b> les droits.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="douane-autres">Autres prélèvements</label>
+                  <div class="calc-input">
+                    <input id="douane-autres" name="douane-autres" type="number" inputmode="decimal" min="0" max="30" step="0.01" value="2" aria-describedby="h-douane-autres">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                  <p class="calc-hint" id="h-douane-autres">Redevances, contrôles, taxes locales sur la valeur CIF.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="douane-forfait">Frais fixes de dédouanement</label>
+                  <div class="calc-input">
+                    <input id="douane-forfait" name="douane-forfait" type="number" inputmode="decimal" min="0" step="1" value="120" aria-describedby="h-douane-forfait">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-douane-forfait">Déclarant, magasin sous douane, amendes éventuelles.</p>
+                </div>
+
+              </div>
+              <p class="calc-line"><span>Valeur CIF (base de taxation)</span><b id="out-cif">—</b></p>
+              <details class="calc-help">
+                <summary>Ce que l'on oublie presque toujours<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+                <div>
+                  <p>La TVA se paie sur la valeur <b>avec</b> les droits, pas sur la valeur seule : 15 % de droits puis 16 % de TVA ne font pas 31 %, mais 33,4 % du total. S'ajoutent les redevances locales, le stockage au port si les documents traînent, et parfois une « motivation » de dossier. Prévois 5 à 10 % de marge d'erreur en plus de ce que tu calcules ici.</p>
+                </div>
+              </details>
+            </fieldset>
+
+            <fieldset class="calc-group" id="g-paiement">
+              <legend class="calc-legend-plain">Paiement &amp; assurance<span class="calc-group-note">Le prix de l'argent qui circule</span></legend>
+              <div class="calc-grid">
+                <div class="calc-field">
+                  <label for="paiement-mode">Moyen de paiement</label>
+                  <div class="calc-input">
+                    <select id="paiement-mode" name="paiement-mode" aria-describedby="h-paiement-mode">
+                      <option value="tt" selected>Virement bancaire (TT)</option>
+                      <option value="alipay">Alipay / WeChat Pay</option>
+                      <option value="wu">Western Union / MoneyGram</option>
+                      <option value="lc">Lettre de crédit (L/C)</option>
+                      <option value="autre">Autre / plusieurs moyens</option>
+                    </select>
+                  </div>
+                  <p class="calc-hint" id="h-paiement-mode">Changer de moyen pré-remplit le taux indicatif des frais.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="paiement-taux">Frais de paiement</label>
+                  <div class="calc-input">
+                    <input id="paiement-taux" name="paiement-taux" type="number" inputmode="decimal" min="0" max="20" step="0.01" value="1.5" aria-describedby="h-paiement-taux">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                  <p class="calc-hint" id="h-paiement-taux">Sur la valeur marchandise seulement, pas sur tout le coût.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="paiement-fixe">Frais bancaires fixes</label>
+                  <div class="calc-input">
+                    <input id="paiement-fixe" name="paiement-fixe" type="number" inputmode="decimal" min="0" step="1" value="45" aria-describedby="h-paiement-fixe">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-paiement-fixe">Frais de virement, commissions fixes, frais de dossier.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="assurance-taux">Assurance cargo</label>
+                  <div class="calc-input">
+                    <input id="assurance-taux" name="assurance-taux" type="number" inputmode="decimal" min="0" max="5" step="0.01" value="0.4" aria-describedby="h-assurance-taux">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                  <p class="calc-hint" id="h-assurance-taux">Sur la valeur CIF. Utile : 0,3 à 0,6 %. Facultative sur le papier, coûteuse à oublier en pratique.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="assurance-fixe">ou montant fixe d'assurance</label>
+                  <div class="calc-input">
+                    <input id="assurance-fixe" name="assurance-fixe" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-assurance-fixe">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-assurance-fixe">Renseigné, il remplace le pourcentage.</p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="calc-group" id="g-port">
+              <legend class="calc-legend-plain">Port &amp; livraison locale<span class="calc-group-note">Du quai jusqu'à ta boutique</span></legend>
+              <div class="calc-grid">
+                <div class="calc-field">
+                  <label for="port-frais">Frais portuaires</label>
+                  <div class="calc-input">
+                    <input id="port-frais" name="port-frais" type="number" inputmode="decimal" min="0" step="1" value="900" aria-describedby="h-port-frais">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-port-frais">Manutention, stockage, taxes de port, acconage.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="port-clearing">Agent de clearing / transitaire local</label>
+                  <div class="calc-input">
+                    <input id="port-clearing" name="port-clearing" type="number" inputmode="decimal" min="0" step="1" value="350" aria-describedby="h-port-clearing">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-port-clearing">Honoraires du déclarant, hors droits et taxes.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="port-inland">Transport jusqu'à ta boutique</label>
+                  <div class="calc-input">
+                    <input id="port-inland" name="port-inland" type="number" inputmode="decimal" min="0" step="1" value="1200" aria-describedby="h-port-inland">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-port-inland">Camion, essence, péages, déchargement. Matadi → Goma, c'est long.</p>
+                </div>
+                <div class="calc-field">
+                  <label for="port-divers">Divers (attente, faux frais, pourboires)</label>
+                  <div class="calc-input">
+                    <input id="port-divers" name="port-divers" type="number" inputmode="decimal" min="0" step="1" value="150" aria-describedby="h-port-divers">
+                    <span class="calc-unit" aria-hidden="true">USD</span>
+                  </div>
+                  <p class="calc-hint" id="h-port-divers">Personne ne les budgète, tout le monde les paie.</p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="calc-group" id="g-pertes">
+              <legend class="calc-legend-plain">Les pertes<span class="calc-group-note">Ce que tu paies mais que tu ne vends pas</span></legend>
+              <div class="calc-grid">
+                <div class="calc-field">
+                  <label for="perte-casse">Casse / pièces abîmées</label>
+                  <div class="calc-input">
+                    <input id="perte-casse" name="perte-casse" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="2" aria-describedby="h-pertes">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                </div>
+                <div class="calc-field">
+                  <label for="perte-defauts">Défauts (invendables)</label>
+                  <div class="calc-input">
+                    <input id="perte-defauts" name="perte-defauts" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="3" aria-describedby="h-pertes">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                </div>
+                <div class="calc-field">
+                  <label for="perte-colis">Colis perdus / volés</label>
+                  <div class="calc-input">
+                    <input id="perte-colis" name="perte-colis" type="number" inputmode="decimal" min="0" max="40" step="0.1" value="1" aria-describedby="h-pertes">
+                    <span class="calc-unit" aria-hidden="true">%</span>
+                  </div>
+                </div>
+                <div class="calc-field calc-field-readout">
+                  <label for="out-pertes">Pertes cumulées</label>
+                  <div class="calc-input">
+                    <output id="out-pertes" for="perte-casse perte-defauts perte-colis">0 %</output>
+                  </div>
+                  <p class="calc-hint" id="h-pertes">Casse, défauts, colis perdus : estime-les toi-même. En dessous de 3 % au total, tu te racontes une histoire.</p>
+                </div>
+              </div>
+              <p class="calc-line"><span>Pièces réellement vendables</span><b id="out-vendables">—</b></p>
+            </fieldset>
+
+            <fieldset class="calc-group" id="g-vente">
+              <legend class="calc-legend-plain">Ton prix de vente<span class="calc-group-note">Facultatif — pour voir ta vraie marge</span></legend>
+              <div class="calc-grid">
+                <div class="calc-field">
+                  <label for="prix-vente">Prix auquel tu comptes vendre, par pièce</label>
+                  <div class="calc-input">
+                    <input id="prix-vente" name="prix-vente" type="number" inputmode="decimal" min="0" step="1" value="" aria-describedby="h-prix-vente">
+                    <span class="calc-unit" id="unit-prix-vente" aria-hidden="true">CDF</span>
+                  </div>
+                  <p class="calc-hint" id="h-prix-vente">Laisse à 0 si tu ne sais pas encore : les prix conseillés s'affichent quand même.</p>
+                </div>
+              </div>
+            </fieldset>
           </div>
-        </fieldset>
+        </details>
+
       </form>
 
       <!-- Panneau de résultats -->
@@ -761,8 +797,8 @@
       <p class="footer-name">Sama Sourcing</p>
                   <ul class="footer-nav" aria-label="Pages">
           <li><a href="index.html">Accueil</a></li>
-          <li><a href="score-de-preparation.html">Le test</a></li>
           <li><a href="outils.html">Outils</a></li>
+          <li><a href="bibliotheque.html">Bibliothèque</a></li>
           <li><a href="comment-ca-marche.html">Comment ça marche</a></li>
           <li><a href="mon-histoire.html">Notre histoire</a></li>
           <li><a href="preuves.html">Preuves</a></li>
@@ -789,7 +825,7 @@
   </a>
 
   <script src="assets/js/config.js?v=1" defer></script>
-  <script src="assets/js/main.js?v=9" defer></script>
+  <script src="assets/js/main.js?v=11" defer></script>
   <script src="assets/js/calculatrice.js?v=3" defer></script>
 </body>
 </html>
