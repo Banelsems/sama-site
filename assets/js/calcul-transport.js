@@ -81,6 +81,10 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   };
+  var toNumText = function (v) {
+    var n = parseFloat(String(v == null ? '' : v).replace(',', '.'));
+    return isFinite(n) ? n : 0;
+  };
   var toNum = function (el, fallback) {
     if (!el) return fallback || 0;
     var v = parseFloat(String(el.value).replace(',', '.'));
@@ -98,10 +102,11 @@
   var addRow = function (data, focus) {
     if (!rowsBox || !tpl) return;
     var node = tpl.content.firstElementChild.cloneNode(true);
-    ['name', 'qty', 'l', 'w', 'h', 'kg'].forEach(function (k) {
+    ['name', 'qty', 'l', 'w', 'h', 'cbm', 'kg'].forEach(function (k) {
       var input = node.querySelector('[data-k="' + k + '"]');
       if (!input) return;
-      input.value = data && data[k] !== undefined && data[k] !== null ? data[k] : '';
+      var v = data && data[k] !== undefined && data[k] !== null ? data[k] : '';
+      input.value = (k === 'cbm' && Number(v) === 0) ? '' : v;
     });
     rowsBox.appendChild(node);
     if (focus) {
@@ -123,13 +128,63 @@
         l: Math.max(0, toNum(row.querySelector('[data-k="l"]'))),
         w: Math.max(0, toNum(row.querySelector('[data-k="w"]'))),
         h: Math.max(0, toNum(row.querySelector('[data-k="h"]'))),
+        // CBM déjà connu (donné par le fournisseur), par colis. Il gagne sur les dimensions.
+        cbm: Math.max(0, toNum(row.querySelector('[data-k="cbm"]'))),
         kg: Math.max(0, toNum(row.querySelector('[data-k="kg"]')))
       };
     });
   };
 
-  var rowCbm = function (r) { return (r.l * r.w * r.h / 1000000) * r.qty; };
+  // CBM d'un colis : celui du fournisseur s'il est donné, sinon L × l × H ÷ 1 000 000.
+  var unitCbm = function (r) {
+    return r.cbm > 0 ? r.cbm : (r.l * r.w * r.h / 1000000);
+  };
+  var rowCbm = function (r) { return unitCbm(r) * r.qty; };
   var rowKg = function (r) { return r.kg * r.qty; };
+
+  /* ---------- Coller une liste de colis ----------
+     Les fournisseurs envoient rarement « L, l, H » : ils envoient une ligne de
+     texte par type de colis. On accepte « Pompe | 10 colis | 50x40x30 | 25 kg »
+     (séparateur |, ; ou tabulation), et « 5 colis · CBM 0,5 · 12 kg ». */
+  var parsePaste = function (text) {
+    var out = [];
+    String(text).split(/\r?\n/).forEach(function (raw) {
+      var line = raw.trim();
+      if (!line) return;
+      var cells = line.split(/\s*[|;]\s*|\t/).map(function (c) { return c.trim(); }).filter(Boolean);
+      var dims = line.match(/(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)\s*[x×*]\s*(\d+(?:[.,]\d+)?)/);
+      var kg = line.match(/(\d+(?:[.,]\d+)?)\s*(?:kg|kgs|kilo|kilos)/i);
+      var cbmA = line.match(/(\d+(?:[.,]\d+)?)\s*(?:cbm|m3|m³)/i);
+      var cbmB = line.match(/(?:cbm|m3|m³)\s*[:=]?\s*(\d+(?:[.,]\d+)?)/i);
+      var qtyA = line.match(/(\d+(?:[.,]\d+)?)\s*(?:colis|cartons?|pcs|pieces|pièces)/i);
+      var qty = qtyA ? Math.round(toNumText(qtyA[1])) : 0;
+      if (!qty && cells.length > 1) {
+        var second = cells[1].match(/[0-9][0-9.,]*/);
+        if (second) qty = Math.round(toNumText(second[0]));
+      }
+      var name = cells.length > 1 ? cells[0] : '';
+      if (!name) {
+        name = line
+          .replace(dims ? dims[0] : '', ' ')
+          .replace(/(\d+(?:[.,]\d+)?)\s*(?:kg|kgs|kilo|kilos|colis|cartons?|pcs|pieces|pièces|cbm|m3|m³)\S*/gi, ' ')
+          .replace(/[0-9][0-9.,]*[x×*]?/g, ' ')
+          .replace(/\s+/g, ' ').trim().slice(0, 40);
+      }
+      var cbm = cbmA ? toNumText(cbmA[1]) : (cbmB ? toNumText(cbmB[1]) : 0);
+      // Un nom réduit à « CBM » ou « kg » n'est pas un nom : on retombe sur « Colis ».
+      if (!name || /^(cbm|m3|kg|kgs|colis|cartons?|pcs)$/i.test(name)) name = 'Colis';
+      out.push({
+        name: name,
+        qty: Math.max(1, qty || 1),
+        l: dims ? toNumText(dims[1]) : '',
+        w: dims ? toNumText(dims[2]) : '',
+        h: dims ? toNumText(dims[3]) : '',
+        cbm: dims ? '' : (cbm ? cbm : ''),   // dimensions et CBM en même temps : les dimensions gagnent, elles sont vérifiables
+        kg: kg ? toNumText(kg[1]) : ''
+      });
+    });
+    return out.slice(0, 12);
+  };
 
   /* ---------- Calcul ----------
      CBM = L × l × H (cm) ÷ 1 000 000, par colis, multiplié par la quantité.
@@ -140,7 +195,11 @@
     s.rows.forEach(function (r) {
       var c = rowCbm(r), k = rowKg(r);
       cbm += c; kg += k; colis += r.qty;
-      rows.push({ name: r.name, qty: r.qty, l: r.l, w: r.w, h: r.h, cbm: c, kg: k, dims: r.l + '×' + r.w + '×' + r.h });
+      rows.push({
+        name: r.name, qty: r.qty, l: r.l, w: r.w, h: r.h, cbm: c, kg: k,
+        supplierCbm: r.cbm > 0,
+        dims: r.cbm > 0 ? 'CBM fournisseur' : r.l + '×' + r.w + '×' + r.h
+      });
     });
 
     var mode = MODES[s.mode] || MODES.lcl;
@@ -302,8 +361,11 @@
       var meta = row.querySelector('[data-meta]');
       var d = r.rows[i];
       if (!meta || !d) return;
-      var empty = !(d.cbm > 0) && !(d.kg > 0);
-      meta.textContent = empty ? 'À renseigner' : num(d.cbm, 3) + ' m³ · ' + num(d.kg, 1) + ' kg';
+      var parts = [];
+      if (d.cbm > 0) parts.push(num(d.cbm, 3) + ' m³');
+      if (d.kg > 0) parts.push(num(d.kg, 1) + ' kg');
+      if (d.supplierCbm) parts.push('CBM fournisseur');
+      meta.textContent = parts.length ? parts.join(' · ') : 'À renseigner';
       meta.classList.toggle('is-empty', empty);
     });
 
@@ -413,6 +475,30 @@
     });
   }
 
+  /* ---------- Coller une liste ---------- */
+  var pasteBox = $('vt-paste');
+  var pasteInto = function () {
+    if (!pasteBox || !rowsBox) return;
+    var rows = parsePaste(pasteBox.value);
+    if (!rows.length) {
+      setStatus('Rien reconnu. Exemple : « Pompe à eau | 10 colis | 50x40x30 | 25 kg ».');
+      return;
+    }
+    rowsBox.innerHTML = '';
+    rows.forEach(function (r) { addRow(r); });
+    update(true);
+    setStatus(rows.length + (rows.length > 1 ? ' types de colis importés' : ' type de colis importé') + ' depuis le texte collé.');
+  };
+  var btnParse = $('vt-parse');
+  if (btnParse) btnParse.addEventListener('click', pasteInto);
+  var btnPasteDemo = $('vt-paste-demo');
+  if (btnPasteDemo) {
+    btnPasteDemo.addEventListener('click', function () {
+      if (pasteBox) pasteBox.value = 'Pompe à eau | 10 colis | 50x40x30 | 25 kg\nMoteur | 2 colis | 80x60x60 | 60 kg';
+      pasteInto();
+    });
+  }
+
   if (rowsBox) {
     rowsBox.addEventListener('click', function (e) {
       var del = e.target.closest('.vt-del');
@@ -421,7 +507,7 @@
       var count = rowsBox.querySelectorAll('.vt-row').length;
       if (count <= 1) {
         // Une seule ligne : on la vide au lieu de la supprimer.
-        ['name', 'qty', 'l', 'w', 'h', 'kg'].forEach(function (k) {
+        ['name', 'qty', 'l', 'w', 'h', 'cbm', 'kg'].forEach(function (k) {
           var el = row.querySelector('[data-k="' + k + '"]');
           if (el) el.value = '';
         });
@@ -447,6 +533,11 @@
     return 'Calcul de fret — Sama Sourcing\n' +
       'Mode : ' + mode.label + '\n' +
       'Colis : ' + r.colis + ' · Volume : ' + num(r.cbm, 3) + ' m³ · Poids réel : ' + num(r.kg, 1) + ' kg\n' +
+      'Détail :\n' + r.rows.map(function (d) {
+        return '· ' + (d.name || 'Colis') + ' — ' + d.qty + ' colis — ' +
+          (d.supplierCbm ? 'CBM fournisseur, ' + num(d.cbm / (d.qty || 1), 3) + ' m³ par colis' : d.dims + ' cm') +
+          (d.kg > 0 ? ' — ' + num(d.kg, 1) + ' kg au total' : '');
+      }).join('\n') + '\n' +
       'Unités facturées : ' + num(r.units, 2) + ' ' + r.unitLabel + '\n' +
       'Fret : ' + money(r.freight) + ' · Annexes : ' + money(r.annexes) + ' · Total : ' + money(r.total) + '\n' +
       'Coût au kg : ' + (isFinite(r.perKg) ? money(r.perKg) : '—') + ' · au m³ : ' + (isFinite(r.perCbm) ? money(r.perCbm, 0) : '—') + '\n' +
@@ -495,6 +586,7 @@
       var minEl = $('vt-minimum'); if (minEl) minEl.value = '';
       var divEl = $('vt-diviseur'); if (divEl) divEl.value = '6000';
       var wm = $('vt-wm'); if (wm) wm.checked = true;
+      if (pasteBox) pasteBox.value = '';
       update(true);
       setStatus('Formulaire vidé. À toi de saisir tes cartons.');
     });

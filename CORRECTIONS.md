@@ -246,7 +246,41 @@ La première version fonctionnait, mais elle se lisait comme deux sites l'un sou
 Vérifié ensuite : `python3 tools/build.py` (12 pages, aucun écart) ; contrôle des liens, `id` et `aria` (13 fichiers, 0 erreur, 0 alerte) ; navigateur en 1078 px et en 390 px — accueil, ville (Guangzhou, 9 marchés), fiche (十三行), estimateur taxi, bascule FR/EN : `scrollWidth` = 390 partout, aucun débordement, aucune erreur console. `marches.css` passe en `?v=7`, `assets/js/marches.js` en `?v=3`, et `sw.js` en `sama-2026-11-21b` pour que le cache hors ligne prenne la nouvelle feuille.
 
 
-## 8. Ce qui reste à faire par le propriétaire du site
+## 8. L'app de transport, greffée sur la page existante (21 novembre 2026)
+
+Le fichier fourni (`sama-transport-cbm.zip`) contenait une page autonome qui refaisait le calcul de fret : maritime au CBM, aérien au kilo, CBM du fournisseur, liste de colis collée, message prêt à envoyer. La page du site (`calcul-transport.html`) faisait déjà le même calcul, avec trois choses que l'app n'avait pas : la comparaison groupage / 20 pieds / 40 pieds, les annexes du transitaire et les points de vigilance.
+
+Remplacer l'un par l'autre aurait donc fait perdre du contenu. Le choix retenu est de **greffer** l'app sur la page existante : on garde la page, et on lui ajoute ce que l'app faisait mieux.
+
+### 8.1 Ce qui a été ajouté
+
+- **Le CBM du fournisseur.** Chaque ligne de colis a maintenant une case `CBM` : quand le fournisseur donne directement le volume d'un carton, on l'écrit là et on laisse les dimensions vides. Le CBM saisi gagne sur les dimensions (il vient du fournisseur, il est vérifiable) ; la ligne affiche alors « CBM fournisseur » sous le nom, et le résumé copié comme le tableau imprimé disent d'où vient le volume.
+- **Le collage d'une liste de colis.** Une zone de texte au-dessus des lignes : une ligne par type de colis, séparateur `|` ou `;`, dimensions `50x40x30`, `CBM 0,5`, poids `25 kg`. Le bouton « Remplir les colis » remplit le formulaire, « Exemple de liste » montre le format attendu. Les formats sans séparateur (`Pompe à eau 10 colis 50x40x30 25 kg`) sont reconnus aussi ; un nom réduit à « CBM » ou « kg » retombe sur « Colis ».
+- **Le résumé copié** liste désormais chaque ligne, en plus des totaux : de quoi coller directement dans WhatsApp sans retaper les cartons.
+
+### 8.2 Ce qui n'a pas été pris
+
+- La barre, le hero et le pied de page de l'app : la page garde le gabarit du site.
+- Sa feuille de style (95 Ko, polices en base64) : les règles utiles ont été réécrites avec les jetons du site, les polices sont celles du site.
+- Sa clé de stockage (`sama_transport_v1`) : la page garde `sama-fret-v1`, pour ne pas mélanger deux historiques.
+- Sa feuille « Message transport » en modale : le site a déjà « Copier le détail » et « Imprimer / PDF », qui font le même travail sans une couche de plus.
+
+### 8.3 Vérifications
+
+Les valeurs de contrôle du README de l'app passent sur la page :
+
+| Saisie | Attendu | Obtenu |
+|---|---|---|
+| Maritime, 2 types de colis collés, 1,176 m³ à 130 $/m³ | 152,88 $ | 152,88 $ |
+| Maritime, W/M, 1 colis 60 × 100 × 100 cm, 800 kg, 130 $/m³, sans minimum | 0,800 t → 104,00 $ | 104,00 $ |
+| Maritime, 5 colis, CBM fournisseur 0,5, 130 $/m³ | 2,500 m³ → 325,00 $ | 325,00 $ |
+| Aérien, 10 colis 50 × 40 × 30, 25 kg, 6,5 $/kg | 250 kg → 1 625,00 $ | 1 625,00 $ |
+
+Aussi : `tools/build.py` (12 pages, aucun écart), contrôle des liens, `id` et `aria` (13 fichiers, 0 erreur), et 390 px — la ligne de colis passe à trois colonnes, `scrollWidth` = 390, aucun débordement. Les libellés de la ligne ont été raccourcis (`Colis`, `Long.`, `Larg.`, `Haut.`, `CBM`, `Poids`) pour que sept colonnes tiennent sans se chevaucher en 554 px ; les unités restent dans les `aria-label` et dans la note du groupe.
+
+`calculatrice.css` passe en `?v=7`, `assets/js/calcul-transport.js` en `?v=6`, `sw.js` en `sama-2026-11-21c`.
+
+## 9. Ce qui reste à faire par le propriétaire du site
 
 1. Renseigner les réseaux sociaux dans `config.js` (ou les laisser vides : les liens disparaissent proprement).
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.

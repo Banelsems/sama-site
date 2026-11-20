@@ -39,7 +39,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css?v=25">
-  <link rel="stylesheet" href="assets/css/calculatrice.css?v=6">
+  <link rel="stylesheet" href="assets/css/calculatrice.css?v=7">
 
   <script type="application/ld+json">
 {
@@ -247,6 +247,18 @@
           <legend><span class="calc-step" aria-hidden="true">1</span>Tes cartons<span class="calc-group-note">Une ligne par type de carton, en centimètres</span></legend>
           <p class="calc-group-foot">Pas les dimensions exactes sous la main ? Mesure un carton au mètre ruban : à 5 cm près, le résultat ne change presque pas.</p>
 
+          <div class="vt-paste">
+            <label class="vt-paste-label" for="vt-paste">Coller ta liste de colis</label>
+            <textarea id="vt-paste" rows="3" placeholder="Pompe à eau | 10 colis | 50x40x30 | 25 kg&#10;Moteur | 2 colis | 80x60x60 | 60 kg"></textarea>
+            <div class="vt-paste-row">
+              <button class="btn btn-outline btn-small" type="button" id="vt-parse">
+                <svg aria-hidden="true"><use href="#i-plus"/></svg>Remplir les colis
+              </button>
+              <button class="btn btn-outline btn-small" type="button" id="vt-paste-demo">Exemple de liste</button>
+            </div>
+            <p class="calc-hint">Une ligne par type de colis : nom, nombre de colis, dimensions en cm (ou CBM), poids brut. Séparateur <b>|</b> ou point-virgule.</p>
+          </div>
+
           <div class="vt-rows" id="vt-rows"></div>
 
           <template id="vt-tpl">
@@ -260,23 +272,27 @@
                 <p class="vt-row-meta" data-meta>À renseigner</p>
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Cartons</span>
+                <span class="vt-lab" aria-hidden="true">Colis</span>
                 <input data-k="qty" type="number" inputmode="numeric" min="0" step="1" placeholder="12" aria-label="Nombre de cartons identiques">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Long. (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Long.</span>
                 <input data-k="l" type="number" inputmode="decimal" min="0" step="1" placeholder="60" aria-label="Longueur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Larg. (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Larg.</span>
                 <input data-k="w" type="number" inputmode="decimal" min="0" step="1" placeholder="50" aria-label="Largeur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Haut. (cm)</span>
+                <span class="vt-lab" aria-hidden="true">Haut.</span>
                 <input data-k="h" type="number" inputmode="decimal" min="0" step="1" placeholder="40" aria-label="Hauteur en centimètres">
               </div>
               <div class="vt-cell">
-                <span class="vt-lab" aria-hidden="true">Poids (kg)</span>
+                <span class="vt-lab" aria-hidden="true">CBM</span>
+                <input data-k="cbm" type="number" inputmode="decimal" min="0" step="0.001" placeholder="—" aria-label="Volume d'un colis en mètres cubes, si le fournisseur le donne déjà">
+              </div>
+              <div class="vt-cell">
+                <span class="vt-lab" aria-hidden="true">Poids</span>
                 <input data-k="kg" type="number" inputmode="decimal" min="0" step="0.1" placeholder="18" aria-label="Poids brut d'un carton en kilos">
               </div>
             </div>
@@ -546,6 +562,6 @@
 
   <script src="assets/js/config.js?v=1" defer></script>
   <script src="assets/js/main.js?v=11" defer></script>
-  <script src="assets/js/calcul-transport.js?v=1" defer></script>
+  <script src="assets/js/calcul-transport.js?v=6" defer></script>
 </body>
 </html>

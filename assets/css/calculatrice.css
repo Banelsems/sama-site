@@ -310,6 +310,19 @@
   margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--sky);
   color: var(--ink-2); font-size: .86rem; line-height: 1.45;
 }
+/* Coller une liste de colis : le fournisseur envoie souvent un tableau, pas des champs. */
+.vt-paste { display: grid; gap: 8px; margin: 0 0 14px; }
+.vt-paste-label { font-size: .7rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.vt-paste textarea {
+  width: 100%; min-height: 76px; padding: 11px 12px; border: 1px solid var(--line);
+  border-radius: 12px; background: var(--paper); font: inherit; font-size: .92rem;
+  line-height: 1.5; color: var(--ink); resize: vertical;
+}
+.vt-paste textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, .13); }
+.vt-paste-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.vt-paste-row .btn { min-height: 42px; padding: 9px 18px; font-size: .92rem; }
+.vt-paste-row .btn svg { width: 16px; height: 16px; flex: none; stroke-width: 2.4; }
+
 .vt-rows { display: grid; gap: 10px; margin-top: 4px; }
 .vt-row {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
@@ -336,7 +349,7 @@
 }
 .vt-del:hover { border-color: var(--error, #D92D20); color: var(--error, #D92D20); }
 @media (min-width: 900px) {
-  .vt-row { grid-template-columns: minmax(190px, 1.9fr) repeat(5, minmax(60px, .75fr)); align-items: end; padding: 12px; }
+  .vt-row { grid-template-columns: minmax(170px, 1.8fr) repeat(6, minmax(52px, .72fr)); align-items: end; padding: 12px; }
   .vt-cell-name { grid-column: auto; }
   .vt-row-meta { grid-column: auto; }
 }

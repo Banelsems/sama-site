@@ -32,7 +32,7 @@ Outils → `outils.html` :
 | Entrée | Page | Ce qu'elle fait |
 |---|---|---|
 | Vrai prix d'une pièce | `calculatrice.html` | coût de revient réel, prix de vente conseillé, alertes |
-| Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison |
+| Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison, CBM fournisseur, liste de colis collée |
 | Marchés & taxi | `marches.html` | 29 marchés de gros, 6 villes : adresse en chinois, épingle Amap, métro, horaires, taxi, favoris |
 
 Bibliothèque → `bibliotheque.html` :
