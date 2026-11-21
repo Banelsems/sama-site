@@ -14,7 +14,7 @@ Conversion : Calendly (appel découverte) + WhatsApp (+86 198 2478 6223).
 | `outils.html` | Outils | le menu Outils : les deux calculatrices et l'annuaire des marchés |
 | `calculatrice.html` | Calcul « Vrai prix d'une pièce » | coût de revient réel (landed cost) |
 | `calcul-transport.html` | Calcul transport & CBM | volume des colis, poids taxable, fret |
-| `marches.html` | Marchés & taxi | 29 marchés dans 6 villes : liste complète `#/all`, ouvert/fermé à l'heure de Chine, adresse en chinois pour le chauffeur, Amap, estimateur de taxi détaillé |
+| `marches.html` | Marchés & taxi | 29 marchés dans 6 villes : recherche partagée (`#/`, `#/all`, villes), filtres ouvert / épingle vérifiée, tri, mode terrain, fiche avec légende des badges, dialogue chauffeur accessible, feuille taxi imprimable |
 | `comment-ca-marche.html` | Comment ça marche | méthode en 6 étapes |
 | `mon-histoire.html` | Notre histoire | origine, parcours |
 | `preuves.html` | Preuves | compte rendu, devis, captures masquées |
@@ -33,7 +33,7 @@ Outils → `outils.html` :
 |---|---|---|
 | Vrai prix d'une pièce | `calculatrice.html` | coût de revient réel, prix de vente conseillé, alertes |
 | Transport & CBM | `calcul-transport.html` | CBM, poids taxable, fret groupage / conteneur / aérien / express, comparaison, CBM fournisseur, liste de colis collée |
-| Marchés & taxi | `marches.html` | 29 marchés, 6 villes : liste complète filtrable, ouvert/fermé, adresse en chinois copiable pour le chauffeur, épingle Amap, métro, horaires, taxi détaillé, marchés voisins, favoris |
+| Marchés & taxi | `marches.html` | 29 marchés, 6 villes : recherche et filtres partagés, ouvert/fermé à l'heure de Chine, favoris avec annulation, notes privées, mode terrain, feuille taxi imprimable, dialogue chauffeur accessible |
 
 Bibliothèque → `bibliotheque.html` :
 

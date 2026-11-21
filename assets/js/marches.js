@@ -6,9 +6,12 @@ var D = window.SAMA_MARKETS || {};
 var CITIES = D.CITIES, CATS = D.CATS, MARKETS = D.MARKETS, TAXI = D.TAXI, ORIGINS = D.ORIGINS, T = D.T;
 if (!CITIES) return;
 
-const state = { lang:'fr', q:'', favs:[], allCity:'', allPin:false, cityCat:{} };
+const state = { lang:'fr', q:'', favs:[], allCity:'', allPin:false, openOnly:false, sort:'', cityCat:{}, notes:{}, hist:[], field:false };
 try { const s = localStorage.getItem('sama-lang'); if (s === 'fr' || s === 'en') state.lang = s; } catch(e){}
 try { const f = JSON.parse(localStorage.getItem('sama-favs') || '[]'); if (Array.isArray(f)) state.favs = f; } catch(e){}
+try { const n = JSON.parse(localStorage.getItem('sama-notes') || '{}'); if (n && typeof n === 'object') state.notes = n; } catch(e){}
+try { const h = JSON.parse(localStorage.getItem('sama-hist') || '[]'); if (Array.isArray(h)) state.hist = h.slice(0, 5); } catch(e){}
+try { state.field = localStorage.getItem('sama-field') === 'on'; } catch(e){}
 const t = k => (T[state.lang][k] || T.fr[k] || k);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const city = id => CITIES.find(c => c.id === id);
@@ -20,8 +23,46 @@ function saveFavs(){ try { localStorage.setItem('sama-favs', JSON.stringify(stat
 function isFav(id){ return state.favs.indexOf(id) > -1; }
 function toggleFav(id){
   const i = state.favs.indexOf(id);
-  if (i > -1) state.favs.splice(i,1); else state.favs.push(id);
-  saveFavs(); rerender();
+  if (i > -1) {
+    state.favs.splice(i,1); saveFavs(); rerender();
+    toast(t('favRemoved'), t('undo'), () => {
+      if (state.favs.indexOf(id) === -1) state.favs.push(id);
+      saveFavs(); rerender(); toast(t('favUndone'));
+    });
+  } else {
+    state.favs.push(id); saveFavs(); rerender();
+    toast(t('favAdded'), t('undo'), () => {
+      const j = state.favs.indexOf(id);
+      if (j > -1) state.favs.splice(j,1);
+      saveFavs(); rerender(); toast(t('favRemoved'));
+    });
+  }
+}
+
+function noteOf(id){ return state.notes[id] || ''; }
+function saveNotes(){ try { localStorage.setItem('sama-notes', JSON.stringify(state.notes)); } catch(e){} }
+let noteTimer = null;
+function setNote(id, val){
+  if (val.trim()) state.notes[id] = val; else delete state.notes[id];
+  clearTimeout(noteTimer);
+  noteTimer = setTimeout(() => { saveNotes(); toast(t('favNoteSaved')); }, 600);
+  saveNotes();
+}
+
+function saveHist(){ try { localStorage.setItem('sama-hist', JSON.stringify(state.hist)); } catch(e){} }
+function pushHistory(q){
+  q = String(q || '').trim();
+  if (q.length < 2) return;
+  state.hist = state.hist.filter(x => x.toLowerCase() !== q.toLowerCase());
+  state.hist.unshift(q);
+  state.hist = state.hist.slice(0, 5);
+  saveHist();
+}
+function setField(on){
+  state.field = !!on;
+  try { localStorage.setItem('sama-field', state.field ? 'on' : 'off'); } catch(e){}
+  const app = document.querySelector('.mkt-app');
+  if (app) app.setAttribute('data-field', state.field ? 'on' : 'off');
 }
 
 function amapUrl(m){
@@ -94,13 +135,25 @@ function openBadge(m){
     (st.soon ? ' · ' + t('closingSoon') : '') + '</span>';
 }
 
-let toastTimer = null;
-function toast(msg){
+let toastTimer = null, toastAction = null;
+function toast(msg, actionLabel, actionFn, ms){
   const el = document.getElementById('toast');
-  el.textContent = msg;
+  if (!el) return;
+  el.innerHTML = '<span class="toast-msg">' + esc(msg) + '</span>' +
+    (actionLabel ? '<button class="toast-act" type="button" data-toast-act>' + esc(actionLabel) + '</button>' : '');
+  toastAction = actionFn || null;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => {
+    el.classList.remove('show');
+    toastAction = null;
+  }, ms || (actionLabel ? 5200 : 3200));
+}
+function hideToast(){
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.classList.remove('show');
+  clearTimeout(toastTimer);
 }
 
 function copyText(txt, okMsg){
@@ -130,8 +183,10 @@ function mktCard(m, showCity){
   const c = city(m.c);
   const pins = m.lat ? '<span class="status status-received">' + t('pin') + '</span>'
                      : '<span class="status status-wait">' + t('noPin') + '</span>';
-  const star = '<button class="fav ' + (isFav(m.id) ? 'on' : '') + '" type="button" data-fav="' + m.id +
-    '" aria-label="' + (isFav(m.id) ? 'Retirer des favoris' : 'Ajouter aux favoris') + '" aria-pressed="' + isFav(m.id) + '">' +
+  const on = isFav(m.id);
+  const star = '<button class="fav ' + (on ? 'on' : '') + '" type="button" data-fav="' + m.id +
+    '" aria-label="' + esc(on ? t('favRemove') : t('favAdd')) +
+    '" aria-pressed="' + on + '">' +
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9z"/></svg></button>';
   return '<div class="mkt-wrap">' +
     '<a class="mkt" href="#/m/' + m.id + '">' +
@@ -140,6 +195,7 @@ function mktCard(m, showCity){
       '<div class="meta"><span>' + esc(m.metro) + '</span><span>' + esc(m.hours) + '</span>' +
         openBadge(m) + (showCity ? '<span>' + esc(c.name) + '</span>' : '') +
         '<span class="tag-type">' + esc(typeLabel(m)) + '</span>' + pins + '</div>' +
+      (noteOf(m.id) ? '<div class="card-note">★ ' + t('noteShort') + ' : ' + esc(noteOf(m.id)) + '</div>' : '') +
     '</a>' + star + '</div>';
 }
 
@@ -170,19 +226,126 @@ function searchHits(qRaw){
   return MARKETS.filter(m => folded(searchHaystack(m)).indexOf(q) > -1);
 }
 
-function emptySearch(){
-  return '<div class="empty">' + t('searchEmpty') + '</div>' +
-    '<div class="chips">' + CITIES.map(c =>
-      '<a class="chip" href="#/city/' + c.id + '">' + c.zh + ' · ' + esc(c.name) + '</a>').join('') + '</div>';
+function openNow(m){ const o = openState(m); return !!(o && o.open); }
+function airportKm(m){ const o = (ORIGINS[m.c] || [])[0]; return o ? o.km : 999; }
+
+function listHtml(list, showCity){
+  return '<div class="mkt-list">' + list.map(m => mktCard(m, showCity)).join('') + '</div>';
+}
+
+/* Un seul filtre pour toutes les listes : recherche, épingle, ouvert, tri. */
+function filtered(list){
+  let out = list.slice();
+  const q = state.q.trim();
+  if (q) out = out.filter(m => folded(searchHaystack(m)).indexOf(folded(q)) > -1);
+  if (state.allPin) out = out.filter(m => m.lat && m.lng);
+  if (state.openOnly) out = out.filter(openNow);
+  if (state.sort === 'open') out = out.sort((a, b) => (openNow(b) ? 1 : 0) - (openNow(a) ? 1 : 0));
+  if (state.sort === 'airport') out = out.sort((a, b) => airportKm(a) - airportKm(b));
+  return out;
+}
+
+function searchBar(){
+  const hist = state.hist.length
+    ? '<div class="hist-row"><span class="hist-lbl">' + t('historyLabel') + '</span>' +
+        state.hist.map(h => '<button type="button" class="chip chip-mini" data-hist="' + esc(h) + '">' + esc(h) + '</button>').join('') +
+        '<button type="button" class="link-btn" data-clear-hist>' + t('historyClear') + '</button></div>'
+    : '';
+  return '<div class="search-wrap">' +
+      '<label class="visually-hidden" for="q">' + t('searchLabel') + '</label>' +
+      '<div class="search-line">' +
+        '<input class="input" id="q" type="search" autocomplete="off" enterkeyhint="search" placeholder="' + esc(t('searchPh')) + '" value="' + esc(state.q) + '">' +
+        (state.q ? '<button class="search-clear" type="button" data-search-clear aria-label="' + esc(t('searchClear')) + '">✕</button>' : '') +
+      '</div>' + hist + '</div>';
+}
+
+function legend(){
+  return '<div class="legend" role="note"><p class="legend-h">' + t('legendTitle') + '</p><ul>' +
+    '<li><span class="open-badge is-open"><i></i>' + t('openNow') + '</span> <span class="open-badge is-closed"><i></i>' + t('closedNow') + '</span> ' + t('legendOpen') + '</li>' +
+    '<li><span class="status status-received">' + t('pin') + '</span> ' + t('legendPin') + '</li>' +
+    '<li><span class="status status-wait">' + t('noPin') + '</span> ' + t('legendNoPin') + '</li>' +
+    '<li><span class="ext-badge" aria-hidden="true">↗</span> ' + t('legendAmap') + '</li>' +
+    '<li>' + t('legendType') + '</li>' +
+    '</ul></div>';
+}
+
+function typeHint(m){
+  return m.type === 'wholesale' ? t('typeHintGros') : m.type === 'retail' ? t('typeHintDetail') : t('typeHintMixed');
+}
+
+function filterBar(chips){
+  const opt = (v, k) => '<option value="' + v + '"' + (state.sort === v ? ' selected' : '') + '>' + t(k) + '</option>';
+  return '<div class="filterbar">' + (chips || '') +
+    '<div class="filter-opts">' +
+      '<label class="check-chip"><input type="checkbox" id="openOnly"' + (state.openOnly ? ' checked' : '') + '> ' + t('openOnly') + '</label>' +
+      '<label class="check-chip"><input type="checkbox" id="pinOnly"' + (state.allPin ? ' checked' : '') + '> ' + t('pinOnly') + '</label>' +
+      '<label class="sort-chip"><span>' + t('sortLabel') + '</span><select id="sortSel" class="sort-sel" aria-label="' + esc(t('sortLabel')) + '">' +
+        opt('', 'sortDefault') + opt('open', 'sortOpen') + opt('airport', 'sortAirport') +
+      '</select></label>' +
+      '<button class="btn btn-outline btn-small" type="button" data-print-sheet>' + t('printSheet') + '</button>' +
+    '</div></div>';
+}
+
+function countLine(shown, total){
+  const q = state.q.trim();
+  return '<p class="count-line" id="countLine" role="status" aria-live="polite">' +
+    (q ? shown + ' ' + (shown === 1 ? t('resultOne') : t('resultsFor')) + ' « ' + esc(q) + ' »'
+       : shown + ' / ' + total + ' ' + t('markets')) + '</p>';
+}
+
+/* Faute de frappe : on propose le mot connu le plus proche (distance ≤ 2). */
+function lev(a, b){
+  const m = a.length, n = b.length, d = [];
+  for (let i = 0; i <= m; i++) { d[i] = [i]; }
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++)
+    d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a.charAt(i-1) === b.charAt(j-1) ? 0 : 1));
+  return d[m][n];
+}
+function suggestFor(raw){
+  const q = folded(String(raw || '').trim()).replace(/[^a-z0-9]/g, '');
+  if (q.length < 3) return [];
+  const pool = [];
+  const add = s => String(s || '').split(/[^A-Za-z]+/).forEach(w => { if (w.length >= 3) pool.push(w); });
+  CITIES.forEach(c => { add(c.name); add(c.sp ? (c.sp.fr + ' ' + c.sp.en) : ''); });
+  MARKETS.forEach(m => { add(m.py); add(m.en); });
+  CATS.forEach(k => add(k.fr + ' ' + k.en));
+  const uniq = pool.filter((w, i) => pool.indexOf(w) === i);
+  const max = q.length > 5 ? 2 : 1;
+  return uniq.map(w => [w, lev(q, folded(w))])
+    .filter(x => x[1] > 0 && x[1] <= max)
+    .sort((a, b) => a[1] - b[1] || a[0].length - b[0].length)
+    .slice(0, 3).map(x => x[0]);
+}
+
+function emptyFor(showCities){
+  const sug = suggestFor(state.q);
+  return '<div class="empty">' + t('searchEmpty') +
+    (sug.length ? '<p class="suggest-line">' + t('typoHint') + ' ' + sug.map(w =>
+      '<button type="button" class="chip chip-mini" data-typo="' + esc(w) + '">' + esc(w) + '</button>').join(' ') + '</p>' : '') +
+    (showCities ? '<p class="empty-cities">' + CITIES.map(c =>
+      '<a class="chip" href="#/city/' + c.id + '">' + c.zh + ' · ' + esc(c.name) + '</a>').join('') + '</p>' : '') +
+    '</div>';
+}
+
+function favButton(id, block){
+  const on = isFav(id);
+  return '<button class="fav-btn' + (on ? ' is-on' : '') + (block ? ' fav-btn-block' : '') + '" type="button" data-fav="' + id + '" aria-pressed="' + on + '" aria-label="' + esc(on ? t('favRemove') : t('favAdd')) + '">' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9z"/></svg>' +
+      '<span>' + (on ? t('favRemove') : t('favAdd')) + '</span></button>';
+}
+
+function verifiedLine(m){
+  const label = (m.lat && m.lng) ? t('verifiedOn') : t('verifiedAddr');
+  return '<p class="verified"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l5 5L20 6"/></svg>' + esc(label) + '</p>';
 }
 
 function viewHome(){
   const q = state.q.trim();
   const hits = q ? searchHits(q) : [];
   const body = q
-    ? (hits.length ? '<div class="mkt-list">' + hits.map(m => mktCard(m, true)).join('') + '</div>' : emptySearch())
+    ? (hits.length ? listHtml(hits, true) : emptyFor(true))
     : '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>';
-  const count = q ? (hits.length + ' ' + (hits.length > 1 ? t('resultsFor') : t('resultOne')) + ' « ' + esc(q) + ' »') : '';
   const cats = q ? '' :
     '<section class="section section-sky"><div class="wrap">' +
       '<div class="section-head"><h2>' + t('sCats') + '</h2><p class="sub">' + t('sCatsSub') + '</p></div>' +
@@ -205,13 +368,12 @@ function viewHome(){
 
     '<section class="section" id="cities"><div class="wrap">' +
       '<div class="section-head"><h2>' + t('sCities') + '</h2><p class="sub">' + t('sCitiesSub') + '</p></div>' +
-      '<div class="field" style="margin-bottom:22px">' +
-        '<label class="visually-hidden" for="q">' + t('searchPh') + '</label>' +
-        '<input class="input" id="q" type="search" autocomplete="off" placeholder="' + t('searchPh') + '" value="' + esc(state.q) + '">' +
-      '</div>' +
-      '<p class="count-line" id="homeCount" role="status" aria-live="polite">' + count + '</p>' +
+      searchBar() +
+      (q ? countLine(hits.length, MARKETS.length)
+         : '<p class="count-line">' + MARKETS.length + ' ' + t('markets') + ' · ' + CITIES.length + ' ' + t('statCities') + '</p>') +
       (state.favs.length ? '<p class="count-line"><a class="more-link" href="#/fav">★ ' + t('favs') + ' (' + state.favs.length + ') →</a></p>' : '') +
-      '<div id="homeBody">' + body + '</div>' +
+      '<div id="listBody">' + body + '</div>' +
+      legend() +
     '</div></section>' +
 
     cats +
@@ -236,18 +398,22 @@ function viewHome(){
     '</div></section>';
 }
 
+function cityBase(cid){
+  const cat = state.cityCat[cid] || '';
+  return marketsOf(cid).filter(m => !cat || m.cats.indexOf(cat) > -1);
+}
+
 function viewCity(cid){
   const c = city(cid);
   if (!c) return viewHome();
-  const list = marketsOf(cid);
-  const openCount = list.filter(m => { const o = openState(m); return o && o.open; }).length;
-  const active = state.cityCat[cid] || '';
-  // Uniquement les produits réellement présents dans cette ville : pas de
-  // filtre qui ne renvoie rien.
-  const catIds = [];
-  list.forEach(m => m.cats.forEach(k => { if (catIds.indexOf(k) === -1) catIds.push(k); }));
-  const shown = active ? list.filter(m => m.cats.indexOf(active) > -1) : list;
+  const base = cityBase(cid);
+  const list = filtered(base);
+  const all = marketsOf(cid);
+  const openCount = all.filter(openNow).length;
 
+  const catIds = [];
+  all.forEach(m => m.cats.forEach(k => { if (catIds.indexOf(k) === -1) catIds.push(k); }));
+  const active = state.cityCat[cid] || '';
   const chips = '<div class="chip-row" role="group" aria-label="' + esc(t('catsHere')) + '">' +
     '<button type="button" class="chip' + (active ? '' : ' is-on') + '" data-citycat="' + cid + '" data-cat="">' + esc(t('allCats')) + '</button>' +
     catIds.map(k => '<button type="button" class="chip' + (active === k ? ' is-on' : '') +
@@ -258,7 +424,7 @@ function viewCity(cid){
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
       '<p class="eyebrow">' + c.zh + '</p>' +
       '<h1>' + esc(c.name) + '</h1>' +
-      '<p>' + esc(c.sp[state.lang]) + ' · ' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) +
+      '<p>' + esc(c.sp[state.lang]) + ' · ' + all.length + ' ' + (all.length > 1 ? t('markets') : t('market')) +
         (openCount ? ' · ' + openCount + ' ' + (openCount > 1 ? t('openPlural') : t('openNow').toLowerCase()) : '') + '</p>' +
       '<div class="hero-actions">' +
         '<a class="btn btn-light" href="#/taxi/' + cid + '">' + esc(t('taxiCta')) + '</a>' +
@@ -266,19 +432,24 @@ function viewCity(cid){
       '</div>' +
     '</div></section>' +
     '<section class="section"><div class="wrap">' +
-      chips +
-      '<p class="count-line" role="status" aria-live="polite">' + shown.length + ' / ' + list.length + ' ' + t('markets') + '</p>' +
-      (shown.length
-        ? '<div class="mkt-list">' + shown.map(m => mktCard(m, false)).join('') + '</div>'
-        : '<div class="empty">' + t('sortNothing') + '</div>') +
+      searchBar() +
+      '<div class="chip-row-wrap">' + chips + '</div>' +
+      filterBar('') +
+      countLine(list.length, base.length) +
+      '<div id="listBody">' +
+        (list.length ? listHtml(list, false) : emptyFor(false)) +
+      '</div>' +
+      legend() +
       '<p class="hours-note">' + t('hoursNote') + '</p>' +
     '</div></section>';
 }
 
+function allBase(){ return MARKETS.filter(m => !state.allCity || m.c === state.allCity); }
+
 function viewAll(){
   const cid = state.allCity;
-  const list = MARKETS.filter(m =>
-    (!cid || m.c === cid) && (!state.allPin || (m.lat && m.lng)));
+  const base = allBase();
+  const list = filtered(base);
 
   const chips = '<div class="chips">' +
     '<button type="button" class="chip' + (cid ? '' : ' is-on') + '" data-allcity="">' + esc(t('fillAll')) + '</button>' +
@@ -286,55 +457,63 @@ function viewAll(){
       '" data-allcity="' + c.id + '">' + c.zh + ' ' + esc(c.name) +
       ' <span class="num">' + countCity(c.id) + '</span></button>').join('') + '</div>';
 
-  const body = cid
-    ? (list.length
-        ? '<div class="mkt-list">' + list.map(m => mktCard(m, false)).join('') + '</div>'
-        : '<div class="empty">' + t('sortNothing') + '</div>')
-    : CITIES.map(c => {
-        const sub = list.filter(m => m.c === c.id);
-        if (!sub.length) return '';
-        return '<div class="city-block">' +
-          '<h2 class="city-head">' + c.zh + ' · ' + esc(c.name) + ' <span>' + sub.length + '</span></h2>' +
-          '<div class="mkt-list">' + sub.map(m => mktCard(m, false)).join('') + '</div></div>';
-      }).join('') || '<div class="empty">' + t('sortNothing') + '</div>';
+  let body;
+  if (list.length) {
+    body = (cid || state.q.trim() || state.sort)
+      ? listHtml(list, true)
+      : CITIES.map(c => {
+          const sub = list.filter(m => m.c === c.id);
+          if (!sub.length) return '';
+          return '<div class="city-block">' +
+            '<h2 class="city-head">' + c.zh + ' · ' + esc(c.name) + ' <span>' + sub.length + '</span></h2>' +
+            listHtml(sub, false) + '</div>';
+        }).join('');
+  } else {
+    body = emptyFor(true);
+  }
+  if (state.openOnly && !list.length && !state.q.trim()) body = '<div class="empty">' + t('openNone') + '</div>';
 
   return '<section class="page-hero"><div class="wrap">' +
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
       '<h1>' + t('allTitle') + '</h1><p>' + t('allSub') + '</p>' +
       '<div class="hero-actions">' +
         '<a class="btn btn-ghost" href="#/taxi">' + esc(t('seeEstimator')) + '</a>' +
+        '<a class="btn btn-ghost" href="#/">' + esc(t('ctaCity')) + '</a>' +
       '</div>' +
     '</div></section>' +
     '<section class="section"><div class="wrap">' +
-      '<div class="filterbar">' + chips +
-        '<label class="check-chip"><input type="checkbox" id="allPin"' + (state.allPin ? ' checked' : '') + '> ' +
-          esc(t('pinOnly')) + '</label>' +
-      '</div>' +
-      '<p class="count-line" role="status" aria-live="polite">' + list.length + ' ' +
-        (list.length > 1 ? t('markets') : t('market')) + '</p>' +
-      body +
+      searchBar() +
+      filterBar(chips) +
+      countLine(list.length, base.length) +
+      '<div id="listBody">' + body + '</div>' +
+      legend() +
       '<p class="hours-note">' + t('hoursNote') + '</p>' +
-      '<p class="hours-note">' + t('allNote') + '</p>' +
     '</div></section>';
 }
 
 function viewCat(cid){
   const c = CATS.find(x => x.id === cid);
   if (!c) return viewHome();
-  const list = MARKETS.filter(m => m.cats.indexOf(cid) > -1);
+  const base = MARKETS.filter(m => m.cats.indexOf(cid) > -1);
+  const list = filtered(base);
   return '<section class="page-hero"><div class="wrap">' +
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
       '<h1>' + esc(c[state.lang]) + '</h1>' +
       '<p>' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) + '</p>' +
     '</div></section>' +
-    '<section class="section"><div class="wrap"><div class="mkt-list">' + list.map(m => mktCard(m, true)).join('') + '</div></div></section>';
+    '<section class="section"><div class="wrap">' +
+      searchBar() + filterBar('') + countLine(list.length, base.length) +
+      '<div id="listBody">' + (list.length ? '<div class="mkt-list">' + list.map(m => mktCard(m, true)).join('') + '</div>' : emptyFor(true)) + '</div>' +
+      legend() +
+    '</div></section>';
 }
 
 function viewFav(){
   const list = MARKETS.filter(m => isFav(m.id));
   return '<section class="page-hero"><div class="wrap">' +
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
-      '<h1>' + t('favs') + '</h1><p>' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) + '</p>' +
+      '<h1>' + t('favs') + '</h1><p>' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) +
+        (list.length ? ' · ' + list.length + ' ' + t('readyTomorrow') : '') + '</p>' +
     '</div></section>' +
     '<section class="section"><div class="wrap">' +
       (list.length ? '<div class="mkt-list">' + list.map(m => mktCard(m, true)).join('') + '</div>' : '<div class="empty">' + t('favEmpty') + '</div>') +
@@ -351,12 +530,17 @@ function viewMarket(id){
   const same = MARKETS.filter(x => x.c === m.c && x.id !== m.id);
   const rel = same.filter(x => x.district === m.district)
     .concat(same.filter(x => x.district !== m.district)).slice(0, 3);
+  const amap = '<a class="btn btn-outline" href="' + amapUrl(m) + '" target="_blank" rel="noopener" aria-label="' + esc(t('openAmapAria')) + '">' +
+      t('openAmap') + ' <span class="ext" aria-hidden="true">↗</span></a>';
 
-  return '<section class="section" style="padding-top:36px"><div class="wrap">' +
+  return '<section class="section mk-page"><div class="wrap">' +
       '<a class="crumb" href="#/city/' + m.c + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>' + esc(c.name) + '</a>' +
       '<div class="mk-title"><p class="py">' + esc(m.py) + ' · ' + c.zh + '</p>' +
         '<h1>' + esc(m.zh) + '</h1>' +
-        '<p class="sub" style="font-size:1.05em">' + esc(m.en) + '</p><div class="mk-status">' + pin + openBadge(m) + '</div></div>' +
+        '<p class="sub mk-en">' + esc(m.en) + '</p>' +
+        '<div class="mk-status">' + pin + openBadge(m) + '</div>' +
+        '<div class="mk-tools">' + verifiedLine(m) + favButton(m.id, false) + '</div>' +
+      '</div>' +
 
       '<div class="addr-card">' +
         '<p class="lbl">' + t('address') + '</p>' +
@@ -364,14 +548,16 @@ function viewMarket(id){
         '<p class="sub-line">' + esc(m.district) + ' · ' + esc(m.metro) + '</p>' +
         '<div class="mk-actions">' +
           '<button class="btn btn-primary" type="button" data-copy-full="' + m.id + '">' + t('copyFull') + '</button>' +
-          '<a class="btn btn-outline" href="' + amapUrl(m) + '" target="_blank" rel="noopener">' + t('openAmap') + '</a>' +
+          amap +
         '</div>' +
+        '<p class="newtab-note">' + esc(t('openAmap')) + ' : ' + esc(t('newTab')) + '</p>' +
         '<button class="btn btn-outline btn-block btn-small" type="button" data-driver="' + m.id + '">' + t('driver') + '</button>' +
       '</div>' +
 
       '<dl class="kv">' +
-        '<div class="kv-row"><dt>' + t('hours') + '</dt><dd>' + esc(m.hours) + ' ' + openBadge(m) + '</dd></div>' +
-        '<div class="kv-row"><dt>' + t('type') + '</dt><dd>' + esc(typeLabel(m)) + '</dd></div>' +
+        '<div class="kv-row"><dt>' + t('hours') + '</dt><dd>' + esc(m.hours) + '</dd></div>' +
+        '<div class="kv-row"><dt>' + t('type') + '</dt><dd>' + esc(typeLabel(m)) +
+          ' <span class="kv-hint">' + esc(typeHint(m)) + '</span></dd></div>' +
         '<div class="kv-row"><dt>' + t('metro') + '</dt><dd>' + esc(m.metro) + '</dd></div>' +
         '<div class="kv-row"><dt>' + t('cats') + '</dt><dd>' + m.cats.map(x =>
           '<a class="kv-link" href="#/cat/' + x + '">' + esc(catName(x)) + '</a>').join(' · ') + '</dd></div>' +
@@ -380,14 +566,22 @@ function viewMarket(id){
 
       (m.note ? '<div class="note-box">' + esc(m.note[state.lang]) + '</div>' : '') +
 
-      (origins.length ? '<div style="margin-top:26px">' +
-        '<h3 style="margin-bottom:10px">' + t('taxiFrom') + '</h3>' +
+      '<div class="note-edit">' +
+        '<label for="myNote">' + t('favNote') + '</label>' +
+        '<textarea id="myNote" class="input note-input" rows="2" data-note="' + m.id +
+          '" placeholder="' + esc(t('favNotePh')) + '">' + esc(noteOf(m.id)) + '</textarea>' +
+      '</div>' +
+
+      (origins.length ? '<div class="taxi-block">' +
+        '<h3>' + t('taxiFrom') + '</h3>' +
         '<ul class="fare-list">' + origins.map(x =>
           '<li><span>' + esc(x.o[state.lang]) + '</span><em>' + x.o.km + ' km</em>' +
             '<b>≈ ' + x.r[0] + '–' + x.r[1] + ' ¥</b></li>').join('') + '</ul>' +
         '<p class="sub-line">' + t('taxiNote') + '</p>' +
-        '<div style="margin-top:14px"><a class="btn btn-outline btn-small" href="#/taxi">' + t('seeEstimator') + '</a></div>' +
+        '<div class="taxi-more"><a class="btn btn-outline btn-small" href="#/taxi/' + m.c + '">' + t('seeEstimator') + '</a></div>' +
       '</div>' : '') +
+
+      '<div class="legend-wrap">' + legend() + '<p class="verify-hint">' + esc(t('verifyHint')) + '</p></div>' +
 
       (rel.length ? '<div class="rel-block">' +
         '<h3>' + t('related') + '</h3>' +
@@ -399,7 +593,7 @@ function viewMarket(id){
 
     '<div class="sticky-bar">' +
       '<button class="btn btn-primary" type="button" data-copy-full="' + m.id + '">' + t('copyFull') + '</button>' +
-      '<a class="btn btn-outline" href="' + amapUrl(m) + '" target="_blank" rel="noopener">' + t('openAmap') + '</a>' +
+      '<button class="btn btn-outline" type="button" data-driver="' + m.id + '">' + t('driver') + '</button>' +
     '</div>';
 }
 
@@ -489,12 +683,31 @@ function currentView(){
 
 function renderNav(){
   const r = routeInfo();
+  const navKey = { home:'navCities', all:'navAll', taxi:'navTaxi', about:'navAbout' };
   document.querySelectorAll('[data-nav]').forEach(a => {
-    const on = (a.dataset.nav === 'home' && ['home','city','cat','market','fav','all'].indexOf(r.v) > -1) || (a.dataset.nav === 'taxi' && r.v === 'taxi') || (a.dataset.nav === 'about' && r.v === 'about');
+    if (navKey[a.dataset.nav]) a.textContent = t(navKey[a.dataset.nav]);
+    const on = (a.dataset.nav === 'home' && ['home','city','cat','market','fav'].indexOf(r.v) > -1) ||
+               (a.dataset.nav === 'all' && r.v === 'all') ||
+               (a.dataset.nav === 'taxi' && r.v === 'taxi') ||
+               (a.dataset.nav === 'about' && r.v === 'about');
     if (on) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
   });
   document.documentElement.lang = state.lang;
   document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === state.lang ? 'true' : 'false'));
+  const tabs = document.querySelector('.mkt-tabs');
+  if (tabs) tabs.setAttribute('aria-label', t('navCities') + ' · ' + t('navAll') + ' · ' + t('navTaxi') + ' · ' + t('navAbout'));
+  const lang = document.querySelector('.mkt-lang');
+  if (lang) lang.setAttribute('aria-label', t('langLabel'));
+  const dx = document.getElementById('driverX');
+  if (dx) dx.setAttribute('aria-label', t('close'));
+  const dc = document.getElementById('driverClose');
+  if (dc) dc.textContent = t('close');
+  const f = document.querySelector('[data-field-toggle]');
+  if (f) {
+    f.setAttribute('aria-pressed', state.field ? 'true' : 'false');
+    f.setAttribute('aria-label', t('fieldModeAria'));
+    f.title = t('fieldMode') + ' — ' + t('fieldModeAria');
+  }
 }
 
 function rerender(){
@@ -574,22 +787,42 @@ function initTaxi(){
    ===================================================================== */
 document.addEventListener('click', e => {
   const scrollBtn = e.target.closest('[data-scroll]');
-  if (scrollBtn) {
-    const el = document.getElementById(scrollBtn.dataset.scroll);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return;
-  }
+  if (scrollBtn) { const el = document.getElementById(scrollBtn.dataset.scroll); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+
+  const toastBtn = e.target.closest('[data-toast-act]');
+  if (toastBtn) { const fn = toastAction; hideToast(); toastAction = null; if (fn) fn(); return; }
 
   const langBtn = e.target.closest('[data-lang]');
   if (langBtn) {
     state.lang = langBtn.dataset.lang;
     try { localStorage.setItem('sama-lang', state.lang); } catch(err){}
-    rerender();
-    return;
+    rerender(); return;
   }
+
+  const fieldBtn = e.target.closest('[data-field-toggle]');
+  if (fieldBtn) { setField(!state.field); rerender(); toast(state.field ? t('fieldModeOn') : t('fieldModeOff')); return; }
 
   const favBtn = e.target.closest('[data-fav]');
   if (favBtn) { e.preventDefault(); e.stopPropagation(); toggleFav(favBtn.dataset.fav); return; }
+
+  const printBtn = e.target.closest('[data-print-sheet]');
+  if (printBtn) { printSheetNow(); return; }
+
+  const clearBtn = e.target.closest('[data-search-clear]');
+  if (clearBtn) {
+    state.q = ''; rerender();
+    const n = document.getElementById('q'); if (n) n.focus();
+    return;
+  }
+
+  const histBtn = e.target.closest('[data-hist]');
+  if (histBtn) { state.q = histBtn.dataset.hist; rerender(); focusEnd(); return; }
+
+  const histClear = e.target.closest('[data-clear-hist]');
+  if (histClear) { state.hist = []; saveHist(); rerender(); return; }
+
+  const typoBtn = e.target.closest('[data-typo]');
+  if (typoBtn) { state.q = typoBtn.dataset.typo; rerender(); focusEnd(); return; }
 
   const copyBtn = e.target.closest('[data-copy]');
   if (copyBtn) { copyText(copyBtn.dataset.copy); return; }
@@ -597,23 +830,18 @@ document.addEventListener('click', e => {
   const copyFullBtn = e.target.closest('[data-copy-full]');
   if (copyFullBtn) {
     const m = MARKETS.find(x => x.id === copyFullBtn.dataset.copyFull);
-    if (m) copyText(m.zh + '\n' + m.addr, t('copiedFull'));
+    if (m) {
+      pushHistory(state.q);
+      copyText(m.zh + '\n' + m.addr, t('copiedFull'));
+    }
     return;
   }
 
   const allCityBtn = e.target.closest('[data-allcity]');
-  if (allCityBtn) {
-    state.allCity = allCityBtn.dataset.allcity || '';
-    rerender();
-    return;
-  }
+  if (allCityBtn) { state.allCity = allCityBtn.dataset.allcity || ''; rerender(); return; }
 
   const cityCatBtn = e.target.closest('[data-citycat]');
-  if (cityCatBtn) {
-    state.cityCat[cityCatBtn.dataset.citycat] = cityCatBtn.dataset.cat || '';
-    rerender();
-    return;
-  }
+  if (cityCatBtn) { state.cityCat[cityCatBtn.dataset.citycat] = cityCatBtn.dataset.cat || ''; rerender(); return; }
 
   const drvBtn = e.target.closest('[data-driver]');
   if (drvBtn) { openDriver(drvBtn.dataset.driver); return; }
@@ -635,50 +863,104 @@ function searchHaystack(m){
   return m.zh + ' ' + m.py + ' ' + m.en + ' ' + m.addr + ' ' + m.district + ' ' + cityWords + ' ' + catWords;
 }
 
-document.addEventListener('change', e => {
-  if (e.target.id === 'allPin') { state.allPin = e.target.checked; rerender(); }
-});
+function focusEnd(){
+  const n = document.getElementById('q');
+  if (!n) return;
+  n.focus();
+  try { n.setSelectionRange(n.value.length, n.value.length); } catch(err){}
+}
 
+/* Recherche partagée : une seule saisie, toutes les listes se remettent à jour. */
 document.addEventListener('input', e => {
   if (e.target.id === 'q') {
+    if (e.isComposing) return;
+    const pos = e.target.selectionStart;
     state.q = e.target.value;
-    const body = document.getElementById('homeBody');
-    if (!body) return;
-    const q = state.q.trim();
-    const count = document.getElementById('homeCount');
-    if (!q) {
-      body.innerHTML = '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>';
-      if (count) count.textContent = '';
-      return;
-    }
-    // Recherche élargie : nom, pinyin, adresse, quartier + ville + catégories, sans accents.
-    const hits = searchHits(q);
-    body.innerHTML = hits.length ? '<div class="mkt-list">' + hits.map(m => mktCard(m, true)).join('') + '</div>'
-                                 : emptySearch();
-    if (count) count.textContent = hits.length + ' ' + (hits.length > 1 ? t('resultsFor') : t('resultOne')) + ' « ' + q + ' »';
+    rerender();
+    const n = document.getElementById('q');
+    if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch(err){} }
+    return;
   }
+  const note = e.target.closest('[data-note]');
+  if (note) setNote(note.dataset.note, note.value);
+});
+
+document.addEventListener('change', e => {
+  if (e.target.id === 'openOnly') { state.openOnly = e.target.checked; rerender(); }
+  else if (e.target.id === 'pinOnly') { state.allPin = e.target.checked; rerender(); }
+  else if (e.target.id === 'sortSel') { state.sort = e.target.value; rerender(); }
 });
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeDriver();
+  if (e.key === 'Enter' && e.target.id === 'q') { pushHistory(state.q); }
 });
+
+/* ---------- feuille taxi imprimable ---------- */
+function printSheetNow(){
+  const r = routeInfo();
+  let list = null, title = '';
+  if (r.v === 'all') { list = filtered(allBase()); title = t('sheetTitle'); }
+  else if (r.v === 'city') { const c = city(r.id); if (!c) return; list = filtered(cityBase(r.id)); title = c.name + ' — ' + t('sheetTitle'); }
+  else return;
+  let el = document.getElementById('printSheet');
+  if (!el) { el = document.createElement('div'); el.id = 'printSheet'; document.body.appendChild(el); }
+  el.innerHTML = '<h1>' + esc(title) + '</h1><p class="sheet-sub">' + esc(t('sheetSub')) + '</p>' +
+    (list.length
+      ? '<table><thead><tr><th>' + esc(t('colMarket')) + '</th><th>' + esc(t('colAddr')) + '</th><th>' + esc(t('colKm')) + '</th><th>' + esc(t('colFare')) + '</th></tr></thead><tbody>' +
+        list.map(m => {
+          const o = (ORIGINS[m.c] || [])[0];
+          const f = o ? fareRange(m.c, o.km, false) : null;
+          return '<tr><td><b>' + esc(m.zh) + '</b><br><span>' + esc(m.en) + '</span></td>' +
+            '<td lang="zh-CN">' + esc(m.addr) + '</td><td>' + (o ? o.km + ' km' : '—') + '</td>' +
+            '<td>' + (f ? '≈ ' + f[0] + '–' + f[1] + ' ¥' : '—') + '</td></tr>';
+        }).join('') + '</tbody></table>'
+      : '<p>' + esc(t('printEmpty')) + '</p>') +
+    '<p class="sheet-foot">' + esc(t('sheetFoot')) + '</p>';
+  window.print();
+}
+
+let lastFocus = null;
+
+/* Piège à focus : Tab boucle dans la boîte de dialogue, Shift+Tab inclus. */
+function trapDriver(e){
+  if (e.key !== 'Tab') return;
+  const el = document.getElementById('driver');
+  if (!el || el.hidden) return;
+  const nodes = el.querySelectorAll('button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  const list = [].filter.call(nodes, n => !n.disabled && n.offsetParent !== null);
+  if (!list.length) return;
+  const first = list[0], last = list[list.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
 
 function openDriver(id){
   const m = MARKETS.find(x => x.id === id);
   if (!m) return;
   const el = document.getElementById('driver');
+  lastFocus = document.activeElement;
   document.getElementById('driverHint').textContent = t('driverHint');
   document.getElementById('driverName').textContent = m.zh;
   document.getElementById('driverAddr').textContent = m.addr;
   document.getElementById('driverSub').textContent = t('driverSub');
+  document.getElementById('driverClose').textContent = t('close');
+  document.getElementById('driverX').setAttribute('aria-label', t('close'));
   el.hidden = false;
   document.body.style.overflow = 'hidden';
+  el.scrollTop = 0;
+  const h = document.getElementById('driverName');
+  if (h) h.focus();
+  document.addEventListener('keydown', trapDriver);
 }
 function closeDriver(){
   const el = document.getElementById('driver');
   if (!el || el.hidden) return;
   el.hidden = true;
   document.body.style.overflow = '';
+  document.removeEventListener('keydown', trapDriver);
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+  lastFocus = null;
 }
 
 let lastHash = '';
@@ -691,5 +973,6 @@ function onRoute(){
 }
 
 window.addEventListener('hashchange', onRoute);
+setField(state.field);
 rerender();
 })();

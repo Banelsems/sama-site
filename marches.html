@@ -39,7 +39,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/fonts/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css?v=25">
-  <link rel="stylesheet" href="assets/css/marches.css?v=11">
+  <link rel="stylesheet" href="assets/css/marches.css?v=16">
 
   <script type="application/ld+json">
 {
@@ -283,12 +283,16 @@
     <div class="wrap mkt-bar-inner">
       <nav class="mkt-tabs" aria-label="Les marchés, le taxi, à propos">
         <a href="#/" data-nav="home">Villes</a>
+        <a href="#/all" data-nav="all">Les 29 marchés</a>
         <a href="#/taxi" data-nav="taxi">Taxi</a>
         <a href="#/about" data-nav="about">À propos</a>
       </nav>
-      <div class="mkt-lang" role="group" aria-label="Langue de cette page">
-        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <div class="mkt-bar-right">
+        <div class="mkt-lang" role="group" aria-label="Langue de cette page">
+          <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="mkt-field" type="button" data-field-toggle aria-pressed="false" aria-label="Mode terrain" title="Mode terrain">◐</button>
       </div>
     </div>
   </div>
@@ -311,12 +315,13 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <div class="driver" id="driver" hidden>
+    <div class="driver" id="driver" role="dialog" aria-modal="true" aria-labelledby="driverName" aria-describedby="driverAddr driverHint" hidden>
+      <button class="driver-x" id="driverX" type="button" data-close-driver aria-label="Fermer">✕</button>
       <p class="hint" id="driverHint"></p>
-      <p class="zh-name" id="driverName"></p>
+      <h2 class="zh-name" id="driverName" tabindex="-1"></h2>
       <p class="zh-addr" id="driverAddr"></p>
       <p class="hint" id="driverSub"></p>
-      <button class="btn btn-yellow close" type="button" data-close-driver>Fermer</button>
+      <button class="btn btn-yellow close" id="driverClose" type="button" data-close-driver>Fermer</button>
     </div>
   </div>
 
@@ -396,7 +401,7 @@
 
   <script src="assets/js/config.js?v=1" defer></script>
   <script src="assets/js/main.js?v=11" defer></script>
-  <script src="assets/data/marches.js?v=6" defer></script>
-  <script src="assets/js/marches.js?v=7" defer></script>
+  <script src="assets/data/marches.js?v=10" defer></script>
+  <script src="assets/js/marches.js?v=18" defer></script>
 </body>
 </html>

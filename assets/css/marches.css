@@ -510,3 +510,175 @@
   padding: 2px 9px; border-radius: 999px; transform: translateY(-1px);
 }
 .mkt-app .count-line { margin: 10px 0 4px; }
+
+/* =====================================================================
+   Novembre 2026 — recherche partagée, légende, mode terrain, feuille taxi
+   ===================================================================== */
+.mkt-app .search-wrap { display: grid; gap: 10px; margin-bottom: 16px; }
+.mkt-app .search-line { position: relative; }
+.mkt-app .search-line .input { width: 100%; padding-right: 56px; }
+.mkt-app .search-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 38px; height: 38px; border: 0; border-radius: 50%;
+  background: var(--sky); color: var(--ink-2); font-size: 1rem; cursor: pointer;
+}
+.mkt-app .hist-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; color: var(--ink-2); }
+.mkt-app .hist-lbl { font-weight: 700; }
+.mkt-app .chip-mini { min-height: 32px; padding: 4px 12px; font-size: .82rem; background: var(--paper); }
+.mkt-app .link-btn { border: 0; background: none; color: var(--blue-deep); font: inherit; font-size: .82rem; text-decoration: underline; cursor: pointer; }
+
+.mkt-app .legend {
+  margin-top: 20px; padding: 16px 18px; border: 1px solid var(--line);
+  border-radius: var(--r-md); background: var(--paper);
+}
+.mkt-app .legend-h { margin: 0 0 8px; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+.mkt-app .legend ul { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; font-size: .84rem; line-height: 1.5; color: var(--ink-2); }
+.mkt-app .legend li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.mkt-app .ext-badge { display: inline-block; font-weight: 800; color: var(--blue-deep); }
+
+.mkt-app .filterbar { display: grid; gap: 10px; justify-content: stretch; }
+.mkt-app .filterbar .chips { justify-content: flex-start; }
+.mkt-app .filter-opts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.mkt-app .sort-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding-left: 14px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--paper);
+  font-size: .88rem; font-weight: 700; color: var(--ink-2);
+}
+.mkt-app .sort-sel { border: 0; background: transparent; font: inherit; font-weight: 700; color: var(--ink); padding: 8px 6px; cursor: pointer; }
+
+/* Fiche : vérification, favori libellé, note, aide */
+.mkt-app .mk-page { padding-top: 28px; }
+.mkt-app .mk-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
+.mkt-app .verified { display: inline-flex; align-items: center; gap: 6px; margin: 0; color: #0A7A4F; font-size: .85rem; font-weight: 700; }
+.mkt-app .verified svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.mkt-app .fav-btn {
+  display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 6px 14px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--paper);
+  color: var(--ink-2); font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.mkt-app .fav-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.mkt-app .fav-btn:hover { border-color: var(--night); color: var(--night); }
+.mkt-app .fav-btn.is-on { background: var(--yellow); border-color: var(--yellow); color: var(--night); }
+.mkt-app .fav-btn.is-on svg { fill: var(--night); }
+.mkt-app .newtab-note { margin: -6px 0 0; font-size: .82rem; color: var(--ink-2); }
+.mkt-app .ext { font-size: .9em; }
+.mkt-app .kv-hint { display: block; margin-top: 2px; font-size: .8rem; font-weight: 500; color: var(--ink-2); }
+.mkt-app .card-note {
+  margin-top: 8px; padding: 6px 10px; border-radius: 8px;
+  background: rgba(255, 255, 255, .75); font-size: .84rem; color: var(--blue-deep);
+}
+.mkt-app .note-edit { display: grid; gap: 6px; margin-top: 18px; }
+.mkt-app .note-edit label { font-size: .8rem; font-weight: 700; color: var(--ink-2); }
+.mkt-app .note-input { min-height: 64px; resize: vertical; font-size: .95rem; line-height: 1.5; }
+.mkt-app .taxi-block { margin-top: 26px; }
+.mkt-app .taxi-block h3 { margin-bottom: 10px; }
+.mkt-app .taxi-more { margin-top: 14px; }
+.mkt-app .legend-wrap { margin-top: 28px; }
+.mkt-app .verify-hint { margin: 10px 0 0; font-size: .82rem; line-height: 1.55; color: var(--ink-2); }
+.mkt-app .suggest-line { margin-top: 10px; }
+.mkt-app .empty-cities { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+
+/* Barre de sous-navigation : lien « liste » + mode terrain */
+.mkt-bar-right { display: inline-flex; align-items: center; gap: 8px; flex: none; }
+.mkt-field {
+  width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%;
+  background: var(--paper); color: var(--ink-2); font-size: .95rem; cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+.mkt-field[aria-pressed="true"] { background: var(--night); border-color: var(--night); color: var(--paper); }
+
+/* Overlay chauffeur : fermeture visible, focus sur le titre */
+.mkt-app .driver-x {
+  position: absolute; top: 18px; right: 18px; width: 44px; height: 44px;
+  border: 1px solid rgba(255, 255, 255, .35); border-radius: 50%;
+  background: transparent; color: var(--paper); font-size: 1.1rem; cursor: pointer;
+}
+.mkt-app .driver .zh-name:focus { outline: none; }
+.mkt-app .driver .zh-name:focus-visible { outline: 3px solid var(--yellow); outline-offset: 6px; border-radius: 8px; }
+
+/* Toast durable, avec action */
+.mkt-app .toast { display: flex; align-items: center; gap: 14px; padding: 10px 12px 10px 20px; border-radius: 16px; }
+.mkt-app .toast.show { pointer-events: auto; }
+.mkt-app .toast-msg { font-weight: 700; }
+.mkt-app .toast-act {
+  border: 0; border-radius: 999px; padding: 8px 14px; background: var(--yellow);
+  color: var(--night); font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer;
+}
+
+/* Micro-animations discrètes (150 ms), désactivées si mouvement réduit */
+.mkt-app .mkt, .mkt-app .chip, .mkt-app .fav-btn, .mkt-app .open-badge, .mkt-app .status {
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mkt-app *, .mkt-app *::before, .mkt-app *::after { animation: none !important; transition: none !important; }
+}
+
+/* Mode terrain : contraste et cibles plus grands */
+.mkt-app[data-field="on"] .mkt { background: #FFFFFF; border: 2px solid var(--night); }
+.mkt-app[data-field="on"] .mkt .meta span, .mkt-app[data-field="on"] .mkt .en, .mkt-app[data-field="on"] .sub-line,
+.mkt-app[data-field="on"] .kv-row dt, .mkt-app[data-field="on"] .legend li { color: #0B1526; }
+.mkt-app[data-field="on"] .btn { min-height: 58px; font-size: 1.06rem; border-width: 2px; }
+.mkt-app[data-field="on"] .chip, .mkt-app[data-field="on"] .check-chip, .mkt-app[data-field="on"] .fav-btn {
+  border-width: 2px; border-color: var(--night); min-height: 44px;
+}
+.mkt-app[data-field="on"] .open-badge.is-closed { background: #E3E8F2; color: #0B1526; }
+.mkt-app[data-field="on"] .addr-card { background: #F2F6FF; }
+.mkt-app[data-field="on"] .mkt, .mkt-app[data-field="on"] .btn, .mkt-app[data-field="on"] .chip { transition: none; }
+
+/* Hero resserré (moins de vide sous le titre) */
+.mkt-app .page-hero { padding-block: 42px 44px; }
+.mkt-app .hero { padding-block: 40px 44px; }
+@media (min-width: 960px) {
+  .mkt-app .page-hero { padding-block: 56px 52px; }
+  .mkt-app .hero { padding-block: 56px 56px; }
+}
+
+/* Feuille taxi imprimable */
+#printSheet { display: none; }
+@media print {
+  body > *:not(#printSheet) { display: none !important; }
+  #printSheet { display: block !important; padding: 0 8mm; color: #000; font-size: 11pt; }
+  #printSheet h1 { margin: 0 0 4pt; font-size: 16pt; }
+  #printSheet .sheet-sub { margin: 0 0 12pt; font-size: 10pt; }
+  #printSheet table { width: 100%; border-collapse: collapse; }
+  #printSheet th, #printSheet td { padding: 6pt 4pt; border-bottom: 1px solid #8C93A3; text-align: left; vertical-align: top; }
+  #printSheet th { font-size: 9pt; text-transform: uppercase; letter-spacing: .06em; }
+  #printSheet td b { font-size: 11.5pt; }
+  #printSheet .sheet-foot { margin-top: 12pt; font-size: 9pt; }
+}
+
+/* Rythme : un hero garde sa respiration, la section qui suit reste proche. */
+.mkt-app .hero + .section, .mkt-app .page-hero + .section { padding-top: 36px; }
+/* Étoile favori : infobulle au survol et au focus clavier. */
+.mkt-app .mkt-wrap .fav { position: absolute; }
+.mkt-app .mkt-wrap .fav::after {
+  content: attr(aria-label);
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 6;
+  padding: 6px 10px; border-radius: 8px; background: var(--night); color: var(--paper);
+  font-size: .78rem; font-weight: 600; white-space: nowrap; pointer-events: none;
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+.mkt-app .mkt-wrap .fav:hover::after, .mkt-app .mkt-wrap .fav:focus-visible::after { opacity: 1; transform: none; }
+@media (max-width: 620px) {
+  .mkt-app .hero + .section, .mkt-app .page-hero + .section { padding-top: 28px; }
+  .mkt-app .mkt-wrap .fav::after { display: none; }
+}
+
+/* Un seul bouton d'effacement : on masque la croix native du champ de recherche. */
+.mkt-app .search-line input[type="search"]::-webkit-search-cancel-button,
+.mkt-app .search-line input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+
+/* Barre de sous-navigation sur mobile : onglets sur une ligne, outils en dessous. */
+@media (max-width: 620px) {
+  .mkt-bar-inner { flex-wrap: wrap; gap: 4px; padding-block: 6px; }
+  .mkt-tabs { flex-wrap: nowrap; width: 100%; margin-right: 0; gap: 18px; }
+  .mkt-tabs a { white-space: nowrap; padding-block: 8px; }
+  .mkt-bar-right { width: 100%; justify-content: flex-end; gap: 10px; padding-bottom: 4px; }
+}
+
+/* Anneau de focus jaune aussi sur les champs (jamais supprimé). */
+.mkt-app input:focus-visible, .mkt-app textarea:focus-visible, .mkt-app select:focus-visible {
+  outline: 3px solid var(--yellow); outline-offset: 2px; border-color: var(--night);
+}

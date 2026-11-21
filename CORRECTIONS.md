@@ -322,3 +322,19 @@ En vérifiant la page transport, une variable non définie faisait planter le re
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.
 3. Activer **Enforce HTTPS** dans GitHub Pages (sans quoi le mode hors ligne ne s'active pas).
 4. Soumettre `sitemap.xml` dans Google Search Console et Bing Webmaster Tools après la mise en ligne.
+
+## 11. Marchés & taxi, passe UX/UI v3 (21 novembre 2026)
+
+Trois correctifs à fort rendement, puis les ruptures cognitives du parcours novice.
+
+**Boîte de dialogue chauffeur.** L'overlay est devenu un vrai `role="dialog"` avec `aria-modal`, `aria-labelledby` sur le nom chinois, focus initial sur le titre (`tabindex="-1"`), piège à focus Tab / Shift+Tab, fermetures (✕ en haut à droite, bouton jaune, touche Échap, clic sur le fond), restauration du focus sur le bouton d'origine et déverrouillage du scroll. Un `ReferenceError` sur `lastFocus` et l'absence de `trapDriver` ont été corrigés en même temps.
+
+**Recherche partagée.** Un seul état `q`, `openOnly`, `allPin`, `sort` alimente `#/`, `#/all`, `#/city/*`, `#/cat/*`. Chaque vue a le même champ (label masqué, bouton d'effacement unique), le compteur `role="status" aria-live="polite"`, la légende des badges et la rangée de filtres « Ouvert maintenant » / « Épingle vérifiée seulement » / tri / feuille taxi. Les suggestions de frappe (Levenshtein ≤ 1–2) couvrent villes, marchés et catégories.
+
+**Fiche marché.** Un seul bloc horaires (le badge vit dans l'en-tête), un seul lien Amap avec `target="_blank" rel="noopener"` et avertissement « nouvel onglet », date de vérification terrain visible, favori libellé + toast durable avec « Annuler », note privée, légende permanente. Les boutons copier restent sur la carte adresse et la barre collante mobile, jamais visibles en double.
+
+**Suite de la passe.** `#/all` entre dans la navigation principale ; mode terrain (contraste, cibles 58 px, animations réduites) persistant ; feuille taxi imprimable (marché / adresse zh / km / tarif) ; historique de recherche (5 entrées) ; hero et sections resserrés ; anneau de focus jaune sur tous les contrôles ; sous-navigation mobile sur deux lignes propres.
+
+**Bug bloquant trouvé en test.** Le conteneur porte `data-field="on|off"`, et le gestionnaire de clic testait `closest('[data-field]')` : chaque clic dans l'app matchait le conteneur et basculait le mode terrain. Le bouton utilise désormais `data-field-toggle`, le conteneur garde `data-field` pour le CSS.
+
+Vérifié : 156 clés FR / 156 EN, 8 routes sans erreur console, 0 débordement à 1078 et 390 px, build 12 pages OK, validation 13 fichiers 0 erreur. Détail des spécifications et critères d'acceptation : `docs/ux-marches-v3.md`.
