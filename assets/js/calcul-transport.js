@@ -366,7 +366,7 @@
       if (d.kg > 0) parts.push(num(d.kg, 1) + ' kg');
       if (d.supplierCbm) parts.push('CBM fournisseur');
       meta.textContent = parts.length ? parts.join(' · ') : 'À renseigner';
-      meta.classList.toggle('is-empty', empty);
+      meta.classList.toggle('is-empty', !parts.length);
     });
 
     // Boutons.

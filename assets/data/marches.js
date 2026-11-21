@@ -197,7 +197,7 @@ const T = {
     step2:'Ouvre la fiche', step2d:'Nom en chinois, adresse complète, métro, horaires et épingle de carte.',
     step3:'Copie, ou ouvre Amap', step3d:'L’adresse chinoise se colle dans Didi. Le bouton Amap ouvre la carte et commande le taxi.',
     sTaxi:'Le prix du taxi, sans surprise', sTaxiSub:'Tarifs officiels du compteur, ville par ville. Un repère avant de monter dans la voiture.',
-    seeEstimator:'Voir l’estimateur',
+    seeEstimator:'Voir l’estimateur', taxiCta:'Estimer un taxi',
     searchPh:'Chercher : 中文, pinyin ou anglais',
     searchEmpty:'Rien trouvé. Essaie le nom chinois, ou parcours les villes ci-dessous.',
     results:'Résultats',
@@ -218,7 +218,16 @@ const T = {
     aboutTitle:'À propos', aboutSub:'Pourquoi cette app existe, et ce qu’elle ne fera jamais.',
     dataNote:'Les adresses sont relevées sur les sources publiques et les fiches Amap. Avant de partir, vérifie l’entrée du bâtiment : les marchés ferment, déménagent, changent d’étage.',
     noAccount:'Aucun compte. Aucune donnée personnelle. Tout tient dans une page.',
-    offline:'Ajoute la page à ton écran d’accueil : elle reste disponible même quand le réseau tombe dans les sous-sols des marchés.'
+    offline:'Ajoute la page à ton écran d’accueil : elle reste disponible même quand le réseau tombe dans les sous-sols des marchés.',
+    allLink:'Les 29 marchés', allTitle:'Les 29 marchés, en une liste', allSub:'Filtre par ville, garde les épingles vérifiées, ouvre la fiche. Tout ce que l’annuaire sait, sur un seul écran.',
+    filterCity:'Ville', pinOnly:'Épingle vérifiée seulement', allNote:'Les épingles « à confirmer » ouvrent une recherche Amap par nom : le chauffeur peut encore trouver, mais tu vérifies l’entrée.',
+    openNow:'Ouvert', openPlural:'ouverts', closedNow:'Fermé', closingSoon:'ferme bientôt', openUntil:'jusqu’à',
+    hoursNote:'Heures de Chine (UTC+8). Un jour férié ou une fermeture d’étage peut changer la donne : appelle avant de traverser la ville.',
+    copyFull:'Copier nom + adresse', copiedFull:'Nom et adresse copiés',
+    taxiBreakdown:'Détail du compteur', fareBase:'Prise en charge', fareKm:'Kilomètres', fareNight:'Majoration de nuit', fareLong:'Longue distance', fareTotal:'Compteur',
+    perPerson:'À trois dans la voiture', perPersonUnit:'¥ par personne', copyFare:'Copier l’estimation', fareCopied:'Estimation copiée',
+    related:'Dans la même ville', resultsFor:'résultats pour', resultOne:'résultat pour', cityCount:'marchés dans cette ville',
+    catsHere:'Filtrer par produit', allCats:'Tous les produits', sortNothing:'Rien dans ce filtre : choisis « tous les produits ».',
   },
   en: {
     navCities:'Cities', navTaxi:'Taxi', navAbout:'About', cityLbl:'City',
@@ -234,7 +243,7 @@ const T = {
     step2:'Open the card', step2d:'Chinese name, full address, metro, opening hours and the map pin.',
     step3:'Copy, or open Amap', step3d:'The Chinese address pastes into Didi. Amap opens the map and orders the taxi.',
     sTaxi:'Taxi price, no surprise', sTaxiSub:'Official meter fares, city by city. A reference before you get in the car.',
-    seeEstimator:'Open the estimator',
+    seeEstimator:'Open the estimator', taxiCta:'Estimate a taxi',
     searchPh:'Search: 中文, pinyin or English',
     searchEmpty:'Nothing found. Try the Chinese name, or browse the cities below.',
     results:'Results',
@@ -255,7 +264,16 @@ const T = {
     aboutTitle:'About', aboutSub:'Why this app exists, and what it will never do.',
     dataNote:'Addresses come from public sources and Amap listings. Before you go, check the building entrance: markets close, move, and change floors.',
     noAccount:'No account. No personal data. Everything fits in one page.',
-    offline:'Add the page to your home screen: it stays available when the signal drops in market basements.'
+    offline:'Add the page to your home screen: it stays available when the signal drops in market basements.',
+    allLink:'All 29 markets', allTitle:'All 29 markets, in one list', allSub:'Filter by city, keep only verified pins, open the card. Everything the directory knows, on one screen.',
+    filterCity:'City', pinOnly:'Verified pin only', allNote:'“Pin to confirm” markets open an Amap name search: the driver can still find them, but you check the entrance.',
+    openNow:'Open', openPlural:'open', closedNow:'Closed', closingSoon:'closing soon', openUntil:'until',
+    hoursNote:'China time (UTC+8). A public holiday or a floor closure can change things: call before crossing the city.',
+    copyFull:'Copy name + address', copiedFull:'Name and address copied',
+    taxiBreakdown:'Meter breakdown', fareBase:'Base fare', fareKm:'Kilometres', fareNight:'Night surcharge', fareLong:'Long distance', fareTotal:'Meter',
+    perPerson:'Three in the car', perPersonUnit:'¥ each', copyFare:'Copy the estimate', fareCopied:'Estimate copied',
+    related:'In the same city', resultsFor:'results for', resultOne:'result for', cityCount:'markets in this city',
+    catsHere:'Filter by product', allCats:'All products', sortNothing:'Nothing in this filter: pick “all products”.',
   }
 };
 

@@ -5,7 +5,7 @@
 
    Après une modification de fichier, incrémente VERSION pour forcer la mise à jour.
 */
-var VERSION = 'sama-2026-11-21c';
+var VERSION = 'sama-2026-11-21e';
 var CORE = [
   './',
   'index.html',

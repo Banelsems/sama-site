@@ -6,7 +6,7 @@ var D = window.SAMA_MARKETS || {};
 var CITIES = D.CITIES, CATS = D.CATS, MARKETS = D.MARKETS, TAXI = D.TAXI, ORIGINS = D.ORIGINS, T = D.T;
 if (!CITIES) return;
 
-const state = { lang:'fr', q:'', favs:[] };
+const state = { lang:'fr', q:'', favs:[], allCity:'', allPin:false, cityCat:{} };
 try { const s = localStorage.getItem('sama-lang'); if (s === 'fr' || s === 'en') state.lang = s; } catch(e){}
 try { const f = JSON.parse(localStorage.getItem('sama-favs') || '[]'); if (Array.isArray(f)) state.favs = f; } catch(e){}
 const t = k => (T[state.lang][k] || T.fr[k] || k);
@@ -34,21 +34,64 @@ function amapUrl(m){
     '&city=' + encodeURIComponent(c.zh) + '&callnative=1&src=sama-markets';
 }
 
-function fareRange(cid, km, night){
+/* Le compteur, ligne par ligne : c'est ce qui rend l'estimation vérifiable
+   (et ce qui évite la question « d'où sort ce chiffre ? » au retour). */
+function fareParts(cid, km, night){
   const c = TAXI[cid];
-  let f = km <= c.baseKm ? c.base : c.base + (km - c.baseKm) * c.perKm;
+  let kmCost = 0, longExtra = 0;
   if (km > c.baseKm) {
-    let extra = 0;
+    kmCost = (km - c.baseKm) * c.perKm;
     c.long.forEach((tier, i) => {
       const next = c.long[i+1] ? c.long[i+1].from : Infinity;
       const start = Math.max(tier.from, c.baseKm);
       const end = Math.min(km, next);
-      if (end > start) extra += (end - start) * c.perKm * tier.pct;
+      if (end > start) longExtra += (end - start) * c.perKm * tier.pct;
     });
-    f += extra;
   }
-  if (night) f *= (1 + c.night);
-  return [Math.round(f), Math.round(f * 1.18)];
+  const base = km > 0 ? c.base : 0;
+  const sub = base + kmCost + longExtra;
+  const nightExtra = night ? sub * c.night : 0;
+  const total = sub + nightExtra;
+  return { base, kmCost, longExtra, nightExtra, total,
+           low: Math.round(total), high: Math.round(total * 1.18) };
+}
+function fareRange(cid, km, night){
+  const f = fareParts(cid, km, night);
+  return [f.low, f.high];
+}
+
+/* ---------- Ouvert ou fermé, maintenant ----------
+   Les horaires sont ceux de la Chine (UTC+8), pas ceux du visiteur : la page
+   se consulte depuis la Belgique ou depuis l'hôtel de Yiwu, l'heure doit rester
+   la même. Un badge reste une indication, jamais une garantie. */
+function cnMinutes(){
+  const p = new Intl.DateTimeFormat('en-GB', { timeZone:'Asia/Shanghai', hour:'2-digit', minute:'2-digit', hour12:false })
+    .formatToParts(new Date());
+  const h = Number((p.find(x => x.type === 'hour') || {}).value || 0) % 24;
+  const m = Number((p.find(x => x.type === 'minute') || {}).value || 0);
+  return h * 60 + m;
+}
+function hoursSpan(m){
+  const x = String(m.hours || '').match(/(\d{1,2})[:h](\d{2})\s*[–—-]\s*(\d{1,2})[:h](\d{2})/);
+  if (!x) return null;
+  return { from: (+x[1]) * 60 + (+x[2]), to: (+x[3]) * 60 + (+x[4]) };
+}
+function fmtHM(mins){
+  return String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
+}
+function openState(m){
+  const span = hoursSpan(m);
+  if (!span) return null;
+  const now = cnMinutes();
+  const open = now >= span.from && now <= span.to;
+  return { open, soon: open && (span.to - now) <= 60, to: span.to };
+}
+function openBadge(m){
+  const st = openState(m);
+  if (!st) return '';
+  return '<span class="open-badge ' + (st.open ? 'is-open' : 'is-closed') + '" title="' + esc(t('hoursNote')) + '">' +
+    '<i aria-hidden="true"></i>' + (st.open ? t('openNow') : t('closedNow')) +
+    (st.soon ? ' · ' + t('closingSoon') : '') + '</span>';
 }
 
 let toastTimer = null;
@@ -79,6 +122,10 @@ function fallbackCopy(txt, done){
 /* =====================================================================
    4. Composants HTML
    ===================================================================== */
+function typeLabel(m){
+  return { wholesale:t('wholesale'), mixed:t('mixed'), retail:t('retail') }[m.type] || '';
+}
+
 function mktCard(m, showCity){
   const c = city(m.c);
   const pins = m.lat ? '<span class="status status-received">' + t('pin') + '</span>'
@@ -91,7 +138,8 @@ function mktCard(m, showCity){
       '<div class="top"><div><div class="zh">' + esc(m.zh) + '</div><div class="en">' + esc(m.en) + '</div></div></div>' +
       '<div class="addr">' + esc(m.addr) + '</div>' +
       '<div class="meta"><span>' + esc(m.metro) + '</span><span>' + esc(m.hours) + '</span>' +
-        (showCity ? '<span>' + esc(c.name) + '</span>' : '') + pins + '</div>' +
+        openBadge(m) + (showCity ? '<span>' + esc(c.name) + '</span>' : '') +
+        '<span class="tag-type">' + esc(typeLabel(m)) + '</span>' + pins + '</div>' +
     '</a>' + star + '</div>';
 }
 
@@ -116,19 +164,25 @@ function chipsCats(activeId, hrefBase){
 /* =====================================================================
    5. Vues
    ===================================================================== */
+function searchHits(qRaw){
+  const q = folded(String(qRaw || '').trim());
+  if (!q) return [];
+  return MARKETS.filter(m => folded(searchHaystack(m)).indexOf(q) > -1);
+}
+
+function emptySearch(){
+  return '<div class="empty">' + t('searchEmpty') + '</div>' +
+    '<div class="chips">' + CITIES.map(c =>
+      '<a class="chip" href="#/city/' + c.id + '">' + c.zh + ' · ' + esc(c.name) + '</a>').join('') + '</div>';
+}
+
 function viewHome(){
-  const q = state.q.trim().toLowerCase();
-  let body;
-  if (q) {
-    const hits = MARKETS.filter(m =>
-      (m.zh + ' ' + m.py + ' ' + m.en + ' ' + m.addr + ' ' + m.district).toLowerCase().indexOf(q) > -1
-    );
-    body = hits.length
-      ? '<div class="mkt-list">' + hits.map(m => mktCard(m, true)).join('') + '</div>'
-      : '<div class="empty">' + t('searchEmpty') + '</div>';
-  } else {
-    body = '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>';
-  }
+  const q = state.q.trim();
+  const hits = q ? searchHits(q) : [];
+  const body = q
+    ? (hits.length ? '<div class="mkt-list">' + hits.map(m => mktCard(m, true)).join('') + '</div>' : emptySearch())
+    : '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>';
+  const count = q ? (hits.length + ' ' + (hits.length > 1 ? t('resultsFor') : t('resultOne')) + ' « ' + esc(q) + ' »') : '';
   const cats = q ? '' :
     '<section class="section section-sky"><div class="wrap">' +
       '<div class="section-head"><h2>' + t('sCats') + '</h2><p class="sub">' + t('sCatsSub') + '</p></div>' +
@@ -142,6 +196,7 @@ function viewHome(){
       '<div class="hero-actions">' +
         '<button class="btn btn-yellow" type="button" data-scroll="cities">' + t('ctaCity') + '</button>' +
         '<a class="btn btn-ghost" href="#/taxi">' + t('ctaTaxi') + '</a>' +
+        '<a class="btn btn-ghost" href="#/all">' + t('allLink') + '</a>' +
       '</div>' +
       '<div class="hero-stats"><span><b>' + CITIES.length + '</b>' + t('statCities') + '</span>' +
         '<span><b>' + MARKETS.length + '</b>' + t('statMarkets') + '</span>' +
@@ -154,6 +209,8 @@ function viewHome(){
         '<label class="visually-hidden" for="q">' + t('searchPh') + '</label>' +
         '<input class="input" id="q" type="search" autocomplete="off" placeholder="' + t('searchPh') + '" value="' + esc(state.q) + '">' +
       '</div>' +
+      '<p class="count-line" id="homeCount" role="status" aria-live="polite">' + count + '</p>' +
+      (state.favs.length ? '<p class="count-line"><a class="more-link" href="#/fav">★ ' + t('favs') + ' (' + state.favs.length + ') →</a></p>' : '') +
       '<div id="homeBody">' + body + '</div>' +
     '</div></section>' +
 
@@ -183,14 +240,81 @@ function viewCity(cid){
   const c = city(cid);
   if (!c) return viewHome();
   const list = marketsOf(cid);
+  const openCount = list.filter(m => { const o = openState(m); return o && o.open; }).length;
+  const active = state.cityCat[cid] || '';
+  // Uniquement les produits réellement présents dans cette ville : pas de
+  // filtre qui ne renvoie rien.
+  const catIds = [];
+  list.forEach(m => m.cats.forEach(k => { if (catIds.indexOf(k) === -1) catIds.push(k); }));
+  const shown = active ? list.filter(m => m.cats.indexOf(active) > -1) : list;
+
+  const chips = '<div class="chip-row" role="group" aria-label="' + esc(t('catsHere')) + '">' +
+    '<button type="button" class="chip' + (active ? '' : ' is-on') + '" data-citycat="' + cid + '" data-cat="">' + esc(t('allCats')) + '</button>' +
+    catIds.map(k => '<button type="button" class="chip' + (active === k ? ' is-on' : '') +
+      '" data-citycat="' + cid + '" data-cat="' + k + '">' + esc(catName(k)) + '</button>').join('') +
+    '</div>';
+
   return '<section class="page-hero"><div class="wrap">' +
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
       '<p class="eyebrow">' + c.zh + '</p>' +
       '<h1>' + esc(c.name) + '</h1>' +
-      '<p>' + esc(c.sp[state.lang]) + ' · ' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) + '</p>' +
+      '<p>' + esc(c.sp[state.lang]) + ' · ' + list.length + ' ' + (list.length > 1 ? t('markets') : t('market')) +
+        (openCount ? ' · ' + openCount + ' ' + (openCount > 1 ? t('openPlural') : t('openNow').toLowerCase()) : '') + '</p>' +
+      '<div class="hero-actions">' +
+        '<a class="btn btn-light" href="#/taxi/' + cid + '">' + esc(t('taxiCta')) + '</a>' +
+        '<a class="btn btn-ghost" href="#/all">' + esc(t('allLink')) + '</a>' +
+      '</div>' +
     '</div></section>' +
     '<section class="section"><div class="wrap">' +
-      '<div class="mkt-list">' + list.map(m => mktCard(m, false)).join('') + '</div>' +
+      chips +
+      '<p class="count-line" role="status" aria-live="polite">' + shown.length + ' / ' + list.length + ' ' + t('markets') + '</p>' +
+      (shown.length
+        ? '<div class="mkt-list">' + shown.map(m => mktCard(m, false)).join('') + '</div>'
+        : '<div class="empty">' + t('sortNothing') + '</div>') +
+      '<p class="hours-note">' + t('hoursNote') + '</p>' +
+    '</div></section>';
+}
+
+function viewAll(){
+  const cid = state.allCity;
+  const list = MARKETS.filter(m =>
+    (!cid || m.c === cid) && (!state.allPin || (m.lat && m.lng)));
+
+  const chips = '<div class="chips">' +
+    '<button type="button" class="chip' + (cid ? '' : ' is-on') + '" data-allcity="">' + esc(t('fillAll')) + '</button>' +
+    CITIES.map(c => '<button type="button" class="chip' + (cid === c.id ? ' is-on' : '') +
+      '" data-allcity="' + c.id + '">' + c.zh + ' ' + esc(c.name) +
+      ' <span class="num">' + countCity(c.id) + '</span></button>').join('') + '</div>';
+
+  const body = cid
+    ? (list.length
+        ? '<div class="mkt-list">' + list.map(m => mktCard(m, false)).join('') + '</div>'
+        : '<div class="empty">' + t('sortNothing') + '</div>')
+    : CITIES.map(c => {
+        const sub = list.filter(m => m.c === c.id);
+        if (!sub.length) return '';
+        return '<div class="city-block">' +
+          '<h2 class="city-head">' + c.zh + ' · ' + esc(c.name) + ' <span>' + sub.length + '</span></h2>' +
+          '<div class="mkt-list">' + sub.map(m => mktCard(m, false)).join('') + '</div></div>';
+      }).join('') || '<div class="empty">' + t('sortNothing') + '</div>';
+
+  return '<section class="page-hero"><div class="wrap">' +
+      '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
+      '<h1>' + t('allTitle') + '</h1><p>' + t('allSub') + '</p>' +
+      '<div class="hero-actions">' +
+        '<a class="btn btn-ghost" href="#/taxi">' + esc(t('seeEstimator')) + '</a>' +
+      '</div>' +
+    '</div></section>' +
+    '<section class="section"><div class="wrap">' +
+      '<div class="filterbar">' + chips +
+        '<label class="check-chip"><input type="checkbox" id="allPin"' + (state.allPin ? ' checked' : '') + '> ' +
+          esc(t('pinOnly')) + '</label>' +
+      '</div>' +
+      '<p class="count-line" role="status" aria-live="polite">' + list.length + ' ' +
+        (list.length > 1 ? t('markets') : t('market')) + '</p>' +
+      body +
+      '<p class="hours-note">' + t('hoursNote') + '</p>' +
+      '<p class="hours-note">' + t('allNote') + '</p>' +
     '</div></section>';
 }
 
@@ -221,54 +345,66 @@ function viewMarket(id){
   const m = MARKETS.find(x => x.id === id);
   if (!m) return viewHome();
   const c = city(m.c);
-  const typeTxt = { wholesale:t('wholesale'), mixed:t('mixed'), retail:t('retail') }[m.type];
   const pin = m.lat ? '<span class="status status-received">' + t('pin') + '</span>'
                     : '<span class="status status-wait">' + t('noPin') + '</span>';
-  const originList = ORIGINS[m.c] || [];
-  const est = originList.length ? fareRange(m.c, originList[0].km, false) : null;
+  const origins = (ORIGINS[m.c] || []).map(o => ({ o: o, r: fareRange(m.c, o.km, false) }));
+  const same = MARKETS.filter(x => x.c === m.c && x.id !== m.id);
+  const rel = same.filter(x => x.district === m.district)
+    .concat(same.filter(x => x.district !== m.district)).slice(0, 3);
 
   return '<section class="section" style="padding-top:36px"><div class="wrap">' +
       '<a class="crumb" href="#/city/' + m.c + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>' + esc(c.name) + '</a>' +
       '<div class="mk-title"><p class="py">' + esc(m.py) + ' · ' + c.zh + '</p>' +
         '<h1>' + esc(m.zh) + '</h1>' +
-        '<p class="sub" style="font-size:1.05em">' + esc(m.en) + '</p>' + pin + '</div>' +
+        '<p class="sub" style="font-size:1.05em">' + esc(m.en) + '</p><div class="mk-status">' + pin + openBadge(m) + '</div></div>' +
 
       '<div class="addr-card">' +
         '<p class="lbl">' + t('address') + '</p>' +
         '<p class="zh-addr">' + esc(m.addr) + '</p>' +
         '<p class="sub-line">' + esc(m.district) + ' · ' + esc(m.metro) + '</p>' +
         '<div class="mk-actions">' +
-          '<button class="btn btn-primary" type="button" data-copy="' + esc(m.addr) + '">' + t('copy') + '</button>' +
+          '<button class="btn btn-primary" type="button" data-copy-full="' + m.id + '">' + t('copyFull') + '</button>' +
           '<a class="btn btn-outline" href="' + amapUrl(m) + '" target="_blank" rel="noopener">' + t('openAmap') + '</a>' +
         '</div>' +
         '<button class="btn btn-outline btn-block btn-small" type="button" data-driver="' + m.id + '">' + t('driver') + '</button>' +
       '</div>' +
 
       '<dl class="kv">' +
-        '<div class="kv-row"><dt>' + t('hours') + '</dt><dd>' + esc(m.hours) + '</dd></div>' +
-        '<div class="kv-row"><dt>' + t('type') + '</dt><dd>' + esc(typeTxt) + '</dd></div>' +
+        '<div class="kv-row"><dt>' + t('hours') + '</dt><dd>' + esc(m.hours) + ' ' + openBadge(m) + '</dd></div>' +
+        '<div class="kv-row"><dt>' + t('type') + '</dt><dd>' + esc(typeLabel(m)) + '</dd></div>' +
         '<div class="kv-row"><dt>' + t('metro') + '</dt><dd>' + esc(m.metro) + '</dd></div>' +
-        '<div class="kv-row"><dt>' + t('cats') + '</dt><dd>' + m.cats.map(x => esc(catName(x))).join(' · ') + '</dd></div>' +
+        '<div class="kv-row"><dt>' + t('cats') + '</dt><dd>' + m.cats.map(x =>
+          '<a class="kv-link" href="#/cat/' + x + '">' + esc(catName(x)) + '</a>').join(' · ') + '</dd></div>' +
       '</dl>' +
+      '<p class="hours-note">' + t('hoursNote') + '</p>' +
 
       (m.note ? '<div class="note-box">' + esc(m.note[state.lang]) + '</div>' : '') +
 
-      (est ? '<div style="margin-top:26px">' +
-        '<h3 style="margin-bottom:10px">' + t('taxiFrom') + ' · ' + esc(originList[0][state.lang]) + '</h3>' +
-        '<div class="fare-big"><span class="num">≈ ' + est[0] + '–' + est[1] + ' ¥</span>' +
-          '<span class="unit">' + originList[0].km + ' km</span>' +
-          '<span class="note">' + t('taxiNote') + '</span></div>' +
+      (origins.length ? '<div style="margin-top:26px">' +
+        '<h3 style="margin-bottom:10px">' + t('taxiFrom') + '</h3>' +
+        '<ul class="fare-list">' + origins.map(x =>
+          '<li><span>' + esc(x.o[state.lang]) + '</span><em>' + x.o.km + ' km</em>' +
+            '<b>≈ ' + x.r[0] + '–' + x.r[1] + ' ¥</b></li>').join('') + '</ul>' +
+        '<p class="sub-line">' + t('taxiNote') + '</p>' +
         '<div style="margin-top:14px"><a class="btn btn-outline btn-small" href="#/taxi">' + t('seeEstimator') + '</a></div>' +
       '</div>' : '') +
+
+      (rel.length ? '<div class="rel-block">' +
+        '<h3>' + t('related') + '</h3>' +
+        '<ul class="rel-list">' + rel.map(x =>
+          '<li><a href="#/m/' + x.id + '"><span class="zh">' + esc(x.zh) + '</span>' +
+            '<span class="en">' + esc(x.en) + ' · ' + esc(x.district) + '</span></a></li>').join('') +
+        '</ul></div>' : '') +
     '</div></section>' +
 
     '<div class="sticky-bar">' +
-      '<button class="btn btn-primary" type="button" data-copy="' + esc(m.addr) + '">' + t('copy') + '</button>' +
+      '<button class="btn btn-primary" type="button" data-copy-full="' + m.id + '">' + t('copyFull') + '</button>' +
       '<a class="btn btn-outline" href="' + amapUrl(m) + '" target="_blank" rel="noopener">' + t('openAmap') + '</a>' +
     '</div>';
 }
 
-function viewTaxi(){
+function viewTaxi(cid){
+  const sel = city(cid) ? cid : CITIES[0].id;
   return '<section class="page-hero"><div class="wrap">' +
       '<a class="crumb" href="#/" style="color:var(--mist-ink)">← ' + t('navCities') + '</a>' +
       '<h1>' + t('taxiTitle') + '</h1><p>' + t('taxiSub') + '</p>' +
@@ -277,7 +413,7 @@ function viewTaxi(){
       '<div class="form-card" id="taxiForm">' +
         '<div class="form-row form-row-2">' +
           '<div class="field"><label class="label" for="txCity">' + t('cityLbl') + '</label>' +
-            '<select class="select" id="txCity">' + CITIES.map(c => '<option value="' + c.id + '">' + esc(c.name) + ' · ' + c.zh + '</option>').join('') + '</select></div>' +
+            '<select class="select" id="txCity">' + CITIES.map(c => '<option value="' + c.id + '"' + (c.id === sel ? ' selected' : '') + '>' + esc(c.name) + ' · ' + c.zh + '</option>').join('') + '</select></div>' +
           '<div class="field"><label class="label" for="txFrom">' + t('from') + '</label>' +
             '<select class="select" id="txFrom"></select></div>' +
         '</div>' +
@@ -285,6 +421,14 @@ function viewTaxi(){
           '<input class="slider" id="txKm" type="range" min="1" max="60" value="20" step="1"></div>' +
         '<label class="chip" for="txNight" style="justify-self:start"><input type="checkbox" id="txNight" style="width:18px;height:18px;margin-right:2px"> ' + t('nightChk') + '</label>' +
         '<div class="fare-big"><span class="unit">' + t('fareLbl') + '</span><span class="num" id="txOut">—</span><span class="note">' + t('fareNote') + '</span></div>' +
+        '<div class="fare-box">' +
+          '<h3 class="fare-box-h">' + t('taxiBreakdown') + '</h3>' +
+          '<div class="fare-lines" id="txLines"></div>' +
+          '<p class="fare-per" id="txPer"></p>' +
+        '</div>' +
+        '<div class="fare-actions">' +
+          '<button class="btn btn-outline btn-small" type="button" id="txCopy">' + t('copyFare') + '</button>' +
+        '</div>' +
       '</div>' +
     '</div></section>' +
     '<section class="section section-sky"><div class="wrap">' +
@@ -324,9 +468,10 @@ function routeInfo(){
   if (p[0] === 'city') return { v:'city', id:p[1] };
   if (p[0] === 'm') return { v:'market', id:p[1] };
   if (p[0] === 'cat') return { v:'cat', id:p[1] };
-  if (p[0] === 'taxi') return { v:'taxi' };
+  if (p[0] === 'taxi') return { v:'taxi', city:p[1] };
   if (p[0] === 'about') return { v:'about' };
   if (p[0] === 'fav') return { v:'fav' };
+  if (p[0] === 'all') return { v:'all' };
   return { v:'home' };
 }
 
@@ -335,16 +480,17 @@ function currentView(){
   if (r.v === 'city') return viewCity(r.id);
   if (r.v === 'market') return viewMarket(r.id);
   if (r.v === 'cat') return viewCat(r.id);
-  if (r.v === 'taxi') return viewTaxi();
+  if (r.v === 'taxi') return viewTaxi(r.city);
   if (r.v === 'about') return viewAbout();
   if (r.v === 'fav') return viewFav();
+  if (r.v === 'all') return viewAll();
   return viewHome();
 }
 
 function renderNav(){
   const r = routeInfo();
   document.querySelectorAll('[data-nav]').forEach(a => {
-    const on = (a.dataset.nav === 'home' && ['home','city','cat','market','fav'].indexOf(r.v) > -1) || (a.dataset.nav === 'taxi' && r.v === 'taxi') || (a.dataset.nav === 'about' && r.v === 'about');
+    const on = (a.dataset.nav === 'home' && ['home','city','cat','market','fav','all'].indexOf(r.v) > -1) || (a.dataset.nav === 'taxi' && r.v === 'taxi') || (a.dataset.nav === 'about' && r.v === 'about');
     if (on) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
   });
   document.documentElement.lang = state.lang;
@@ -372,13 +518,45 @@ function initTaxi(){
     fromSel.innerHTML = list.map((o,i) => '<option value="' + i + '">' + esc(o[state.lang]) + '</option>').join('');
     if (list.length) { km.value = list[0].km; km.max = Math.max(60, list[0].km + 10); }
   }
+  let last = null;
   function compute(){
     const c = citySel.value;
     const kmv = Number(km.value);
     kmOut.textContent = kmv;
-    const r = fareRange(c, kmv, night.checked);
-    out.textContent = '≈ ' + r[0] + '–' + r[1] + ' ¥';
+    const p = fareParts(c, kmv, night.checked);
+    out.textContent = '≈ ' + p.low + '–' + p.high + ' ¥';
+
+    const line = (label, val, cls) => '<div class="fare-line' + (cls ? ' ' + cls : '') +
+      '"><span>' + label + '</span><b>' + val + '</b></div>';
+    let html = line(t('fareBase'), Math.round(p.base) + ' ¥');
+    html += line(t('fareKm') + ' · ' + kmv + ' km', Math.round(p.kmCost) + ' ¥');
+    if (p.longExtra > 0) html += line(t('fareLong'), '+' + Math.round(p.longExtra) + ' ¥');
+    if (p.nightExtra > 0) html += line(t('fareNight') + ' (' + Math.round(TAXI[c].night * 100) + ' %)', '+' + Math.round(p.nightExtra) + ' ¥');
+    html += line(t('fareTotal'), Math.round(p.total) + ' ¥', 'is-total');
+    const lines = document.getElementById('txLines');
+    if (lines) lines.innerHTML = html;
+
+    const per = document.getElementById('txPer');
+    if (per) per.textContent = t('perPerson') + ' : ≈ ' + Math.round(p.low / 3) + '–' +
+      Math.round(p.high / 3) + ' ' + t('perPersonUnit');
+
+    last = { c: c, kmv: kmv, night: night.checked, p: p, from: (ORIGINS[c][Number(fromSel.value)] || {}) };
   }
+  const btnCopy = document.getElementById('txCopy');
+  if (btnCopy) btnCopy.addEventListener('click', () => {
+    if (!last) return;
+    const cc = city(last.c);
+    const txt = 'Taxi — Sama Sourcing\n' +
+      cc.name + ' · ' + cc.zh + '\n' +
+      (last.from.fr ? 'Départ : ' + (last.from[state.lang] || last.from.fr) + '\n' : '') +
+      'Distance : ' + last.kmv + ' km' + (last.night ? ' · trajet de nuit' : '') + '\n' +
+      'Estimation : ' + last.p.low + '–' + last.p.high + ' ¥\n' +
+      'Compteur : prise en charge ' + Math.round(last.p.base) + ' ¥, km ' +
+      Math.round(last.p.kmCost) + ' ¥' +
+      (last.p.nightExtra ? ', nuit +' + Math.round(last.p.nightExtra) + ' ¥' : '') + '\n' +
+      'Hors attente et hors suppléments.';
+    copyText(txt, t('fareCopied'));
+  });
   fillOrigins(); compute();
 
   citySel.addEventListener('change', () => { fillOrigins(); compute(); });
@@ -416,6 +594,27 @@ document.addEventListener('click', e => {
   const copyBtn = e.target.closest('[data-copy]');
   if (copyBtn) { copyText(copyBtn.dataset.copy); return; }
 
+  const copyFullBtn = e.target.closest('[data-copy-full]');
+  if (copyFullBtn) {
+    const m = MARKETS.find(x => x.id === copyFullBtn.dataset.copyFull);
+    if (m) copyText(m.zh + '\n' + m.addr, t('copiedFull'));
+    return;
+  }
+
+  const allCityBtn = e.target.closest('[data-allcity]');
+  if (allCityBtn) {
+    state.allCity = allCityBtn.dataset.allcity || '';
+    rerender();
+    return;
+  }
+
+  const cityCatBtn = e.target.closest('[data-citycat]');
+  if (cityCatBtn) {
+    state.cityCat[cityCatBtn.dataset.citycat] = cityCatBtn.dataset.cat || '';
+    rerender();
+    return;
+  }
+
   const drvBtn = e.target.closest('[data-driver]');
   if (drvBtn) { openDriver(drvBtn.dataset.driver); return; }
 
@@ -436,17 +635,27 @@ function searchHaystack(m){
   return m.zh + ' ' + m.py + ' ' + m.en + ' ' + m.addr + ' ' + m.district + ' ' + cityWords + ' ' + catWords;
 }
 
+document.addEventListener('change', e => {
+  if (e.target.id === 'allPin') { state.allPin = e.target.checked; rerender(); }
+});
+
 document.addEventListener('input', e => {
   if (e.target.id === 'q') {
     state.q = e.target.value;
     const body = document.getElementById('homeBody');
     if (!body) return;
-    const q = state.q.trim().toLowerCase();
-    if (!q) { body.innerHTML = '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>'; return; }
+    const q = state.q.trim();
+    const count = document.getElementById('homeCount');
+    if (!q) {
+      body.innerHTML = '<div class="city-grid">' + CITIES.map(cityCard).join('') + '</div>';
+      if (count) count.textContent = '';
+      return;
+    }
     // Recherche élargie : nom, pinyin, adresse, quartier + ville + catégories, sans accents.
-    const hits = MARKETS.filter(m => folded(searchHaystack(m)).indexOf(folded(q)) > -1);
+    const hits = searchHits(q);
     body.innerHTML = hits.length ? '<div class="mkt-list">' + hits.map(m => mktCard(m, true)).join('') + '</div>'
-                                 : '<div class="empty">' + t('searchEmpty') + '</div>';
+                                 : emptySearch();
+    if (count) count.textContent = hits.length + ' ' + (hits.length > 1 ? t('resultsFor') : t('resultOne')) + ' « ' + q + ' »';
   }
 });
 

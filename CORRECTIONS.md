@@ -280,7 +280,43 @@ Aussi : `tools/build.py` (12 pages, aucun écart), contrôle des liens, `id` et 
 
 `calculatrice.css` passe en `?v=7`, `assets/js/calcul-transport.js` en `?v=6`, `sw.js` en `sama-2026-11-21c`.
 
-## 9. Ce qui reste à faire par le propriétaire du site
+## 9. Marchés & taxi, deuxième passe (21 novembre 2026)
+
+La page tenait debout, mais elle servait surtout à descendre dans une ville. Trois manques concrets ont été traités : voir les vingt-neuf marchés d'un coup, savoir si le marché est ouvert maintenant, et donner au chauffeur de taxi ce dont il a vraiment besoin.
+
+### 9.1 Une liste complète, filtrable
+
+- **`#/all` : les 29 marchés sur un écran.** Regroupés par ville avec le nombre en tête de bloc, filtre par ville, case « épingle vérifiée seulement », compteur qui suit le filtre.
+- **Les catégories, seulement celles qui existent.** Dans une ville, la rangée de puces ne propose que les produits réellement présents (Shenzhen : 5 puces pour 4 marchés), pas de filtre qui renvoie zéro.
+- **Le compteur devient vivant** : `2 / 4 marchés`, mis à jour à chaque filtre, en `role="status"` pour les lecteurs d'écran.
+- **La recherche s'élargit** au pinyin, à l'adresse, au quartier, au nom de ville et aux catégories (FR et EN), sans accents. Le nombre de résultats s'affiche sous la barre, et un résultat vide propose directement les six villes.
+
+### 9.2 Ouvert, fermé, bientôt fermé
+
+Un badge à côté des horaires, calculé à l'heure de Chine (`Asia/Shanghai`, jamais l'heure locale du visiteur) : vert « Ouvert », gris « Fermé », plus la mention « ferme bientôt » dans l'heure qui précède. Le badge suit la fiche (grand) et les cartes (petit). Un marché sans horaires connus n'affiche rien plutôt qu'une supposition. Une note rappelle qu'un jour férié peut fermer un étage.
+
+### 9.3 Le chauffeur, et le vrai coût du trajet
+
+- **« Copier nom + adresse »** copie le nom chinois et l'adresse sur deux lignes : c'est ce qu'on colle dans Didi, et ce que le chauffeur lit. L'ancien bouton ne copiait que l'adresse. Le geste existe dans la carte d'adresse et dans la barre collée en bas.
+- **Tous les trajets, pas un seul.** La fiche liste chaque point de départ de la ville (aéroport, gares) avec les kilomètres et la fourchette, au lieu d'un seul exemple.
+- **Le compteur se détaille.** L'estimateur affiche la prise en charge, les kilomètres, le supplément longue distance, le total, la fourchette haute, et le prix par personne à trois — plus un bouton qui copie l'estimation entière pour l'envoyer.
+- **Depuis une ville, on arrive avec la ville déjà choisie.** `#/taxi/shenzhen` présélectionne Shenzhen dans l'estimateur ; le bouton du hero de la ville y mène directement.
+
+### 9.4 Fiche : ce qui manquait
+
+Titre avec badge d'ouverture, horaires et type (gros / mixte / détail) dans le bloc d'infos, produits cliquables vers la catégorie, note du terrain, et **trois marchés voisins** de la même ville (ceux du même quartier d'abord) pour continuer à pied plutôt que de repartir de zéro.
+
+### 9.5 Un bug trouvé au passage
+
+En vérifiant la page transport, une variable non définie faisait planter le rendu des lignes de colis (`empty is not defined`) : la mention « À renseigner » et sa classe ne s'affichaient plus à chaque frappe, et chaque frappe levait une erreur console. Corrigé (`!parts.length`), `assets/js/calcul-transport.js` passe en `?v=7`.
+
+### 9.6 Vérifications
+
+`python3 tools/build.py` (12 pages, aucun écart). Navigateur, 1078 px et 390 px : accueil, `#/all` (29 marchés, 6 blocs villes), filtre ville (Guangzhou 9), filtre épingle (5), filtres produits de Shenzhen (4 → 2), fiche (白马服装市场, 3 trajets, 3 voisins), taxi (Shenzhen 33 km → 104–123 ¥, détail du compteur, 35–41 ¥ par personne à trois), FR/EN, recherche (`bijoux` → 9 résultats, `zzzz` → 0 + villes). `scrollWidth` = 390 partout, aucune erreur console.
+
+`marches.css` passe en `?v=11`, `assets/data/marches.js` en `?v=6`, `assets/js/marches.js` en `?v=7`, `sw.js` en `sama-2026-11-21e`.
+
+## 10. Ce qui reste à faire par le propriétaire du site
 
 1. Renseigner les réseaux sociaux dans `config.js` (ou les laisser vides : les liens disparaissent proprement).
 2. Décider du domaine : `python3 tools/build.py --base https://<compte>.github.io/sama-sourcing/` pour la phase GitHub, puis `--domain samasourcing.site` si le domaine est acheté.
